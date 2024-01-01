@@ -1,24 +1,17 @@
-// import { IsEmail } from 'class-validator';
 import {
   BaseEntity,
   BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
-  JoinTable,
-  ManyToMany,
-  OneToMany,
-  OneToOne,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-
+import { Role } from '../inputs/enums/role.enum';
 
 @ObjectType()
-@Entity()
+@Entity('users')
 export class User extends BaseEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn('increment')
@@ -39,38 +32,30 @@ export class User extends BaseEntity {
   @Column({ unique: true })
   username: string;
 
-  @Field(() => String, { defaultValue: 'user' })
-  @Column()
-  role: 'admin' | 'user';
+  @Field(() => Role)
+  @Column({ type: 'enum', enum: Role, default: Role.user })
+  role: Role;
 
   @Field(() => Date)
   @CreateDateColumn({
     type: 'timestamp with time zone',
   })
-  createdAt: Date;
+  created_at: Date;
 
   @Field(() => Date)
   @UpdateDateColumn({
     type: 'timestamp with time zone',
   })
-  updatedAt: Date;
-
-  @Field(() => Number)
-  @Column()
-  avatar?: number;
+  updated_at: Date;
 
   @Field()
   @Column({ default: false })
   email_verified: boolean;
-  
-  // @Field({ nullable: true })
-  // @Column({ nullable: true })
-  // reset_token?: number;
 
   @BeforeInsert()
   async beforeInsert() {
     if (!this.role) {
-      this.role = 'user';
+      this.role = Role.user;
     }
   }
 }

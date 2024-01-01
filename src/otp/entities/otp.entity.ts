@@ -14,7 +14,7 @@ export enum OtpType {
 }
 
 @ObjectType()
-@Entity()
+@Entity('otps')
 export class Otp extends BaseEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn('uuid')

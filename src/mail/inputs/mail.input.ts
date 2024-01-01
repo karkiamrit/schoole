@@ -11,7 +11,8 @@ export class CreateMailInput {
   @IsNotEmpty()
   text_content: string;
 
-  @Field({ nullable: true })
+  @Field()
+  @IsNotEmpty()
   html_content: string;
 
   @Field()

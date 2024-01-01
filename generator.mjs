@@ -45,7 +45,7 @@ const createEntityFileText = (
           `  @CreateDateColumn({`,
           `    type: 'timestamp with time zone',`,
           `  })`,
-          `  createdAt: Date;`,
+          `  created_at: Date;`,
           ``,
         ]
       : []),
@@ -55,7 +55,7 @@ const createEntityFileText = (
           `  @UpdateDateColumn({`,
           `    type: 'timestamp with time zone',`,
           `  })`,
-          `  updatedAt: Date;`,
+          `  updated_at: Date;`,
           ``,
         ]
       : []),

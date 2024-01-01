@@ -1,4 +1,3 @@
-import { AddressModule } from './address/address.module';
 import { TokenModule } from './token/token.module';
 import { MailModule } from './mail/mail.module';
 import { OtpModule } from './otp/otp.module';
@@ -46,7 +45,6 @@ import { Module } from '@nestjs/common';
     DeclareModule,
     CronModule,
     HealthModule,
-    AddressModule,
     OtpModule,
     MailModule,
     TokenModule,

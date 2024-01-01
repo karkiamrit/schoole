@@ -9,7 +9,7 @@ import {
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
-@Entity()
+@Entity('mail_templates')
 export class Mail extends BaseEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn('increment')
@@ -35,13 +35,13 @@ export class Mail extends BaseEntity {
   @CreateDateColumn({
     type: 'timestamp with time zone',
   })
-  createdAt: Date;
+  created_at: Date;
 
   @Field()
   @UpdateDateColumn({
     type: 'timestamp with time zone',
   })
-  updatedAt: Date;
+  updated_at: Date;
 }
 
 @ObjectType()
