@@ -1,0 +1,246 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Address {
+  city: String!
+  district: String!
+  id: ID!
+  state: String!
+  ward: Float!
+}
+
+input CreateAddressInput {
+  city: String!
+  district: String!
+  state: String!
+  ward: Float!
+}
+
+input CreateUserInput {
+  avatar: Float!
+  email: String!
+  password: String!
+  phone: String!
+  username: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum Gender {
+  female
+  male
+}
+
+type GetAddressType {
+  count: Float
+  data: [Address!]
+}
+
+input GetManyInput {
+  """count or data or all, default = data"""
+  dataType: String
+
+  """
+  {key: "ASC" or "DESC" or "asc" or "desc" or 1 or -1} or {key: {direction: "ASC" or "DESC" or "asc" or "desc", nulls: "first" or "last" or "FIRST" or "LAST"}}}
+  """
+  order: JSON
+  pagination: IPagination
+  where: JSON
+}
+
+input GetOneInput {
+  where: JSON!
+}
+
+type GetUserType {
+  count: Float
+  data: [User!]
+}
+
+input IPagination {
+  """Started from 0"""
+  page: Int!
+
+  """Size of page"""
+  size: Int!
+}
+
+type Infant {
+  age: Float!
+  createdAt: DateTime!
+  gender: Gender!
+  height: Float!
+  id: ID!
+  parent: User!
+  updatedAt: DateTime!
+  weight: Float!
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+type JwtWithUser {
+  jwt: String!
+  user: User!
+}
+
+type Mail {
+  createdAt: DateTime!
+  html_content: String!
+  id: ID!
+  name: String!
+  subject: String!
+  text_content: String!
+  updatedAt: DateTime!
+}
+
+type Mutation {
+  SignUp(input: SignUpInput!): User!
+  createAddress(input: CreateAddressInput!): Address!
+  createManyUsers(input: [CreateUserInput!]!): [User!]!
+  createUser(input: CreateUserInput!): User!
+  deleteAddress(id: Float!): Address!
+  deleteUser(id: Float!): JSON!
+  forgotPassword(email: String!): Boolean!
+  logout(accessToken: String!): Boolean!
+  requestOtpVerify(email: String!, otpType: String!): Boolean!
+  resetPassword(newPassword: String!, token: String!): Boolean!
+  signIn(input: SignInInput!): JwtWithUser!
+  updateAddress(id: Float!, input: UpdateAddressInput!): Address!
+  updateMe(input: UpdateUserInput!): User!
+  updateUser(id: Float!, input: UpdateUserInput!): User!
+  verifyEmail(email: String!, otpCode: String!): Boolean!
+}
+
+type Payment {
+  createdAt: DateTime!
+  id: ID!
+  method: String!
+  updatedAt: DateTime!
+}
+
+type Query {
+  getManyAddresss(input: GetManyInput): GetAddressType!
+  getManyUsers(input: GetManyInput): GetUserType!
+  getMe: User!
+  getOneAddress(input: GetOneInput!): Address!
+  getOneUser(input: GetOneInput!): User!
+}
+
+input SignInInput {
+  email: String!
+  password: String!
+}
+
+input SignUpInput {
+  avatar: Float
+  email: String!
+  password: String!
+  phone: String
+  username: String!
+}
+
+type Subscription {
+  createdAt: DateTime!
+  id: ID!
+  updatedAt: DateTime!
+  validity: Float!
+}
+
+type Test {
+  createdAt: DateTime!
+  created_by: User!
+  id: ID!
+  isPremium: Boolean!
+  status: String!
+  testSections: [TestSection!]
+  updatedAt: DateTime!
+  users: [User!]
+}
+
+type TestAnswer {
+  answer_description: String!
+  createdAt: DateTime!
+  explanation: String!
+  id: ID!
+  isCorrect: Boolean!
+  testQuestion: TestQuestion
+  updatedAt: DateTime!
+}
+
+type TestQuestion {
+  correct_answer: TestAnswer!
+  createdAt: DateTime!
+  description: String!
+  difficulty: String!
+  id: ID!
+  testAnswers: [TestAnswer!]
+  test_sections: [TestSection!]
+  type: String!
+  updatedAt: DateTime!
+}
+
+type TestSection {
+  createdAt: DateTime!
+  end_time: DateTime
+  id: ID!
+  start_time: DateTime
+  status: String!
+  test: Test
+  test_questions: [TestQuestion!]
+  time_taken: String
+  type: String!
+  updatedAt: DateTime!
+}
+
+input UpdateAddressInput {
+  city: String!
+  district: String!
+  state: String!
+  ward: Float!
+}
+
+input UpdateUserInput {
+  avatar: Float
+  email: String
+  password: String
+  phone: String
+  username: String
+}
+
+type User {
+  avatar: Float!
+  createdAt: DateTime!
+  email: String!
+  email_verified: Boolean!
+  id: ID!
+  phone: String!
+  role: String!
+  updatedAt: DateTime!
+  username: String!
+}
+
+type Vaccination {
+  createdAt: DateTime!
+  id: ID!
+  name: String!
+  updatedAt: DateTime!
+}
+
+type VaccinationData {
+  address: Address!
+  batch_no: Float!
+  createdAt: DateTime!
+  dosage_required: Float!
+  id: ID!
+  initiation_date: DateTime!
+  termination_date: DateTime!
+  time_to_take_after_birth: Float
+  updatedAt: DateTime!
+}
