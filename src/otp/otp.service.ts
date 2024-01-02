@@ -10,7 +10,7 @@ export class OtpService {
   /**
    * Create and save an OTP object to the database.
    * @param {User} user - The user for whom the OTP is created.
-   * @param {OtpType} otpType - The type of the OTP (e.g., PHONE_VERIFICATION).
+   * @param {OtpType} otpType - The type of the OTP (e.g., EMAIL_VERIFICATION).
    * @returns The created OTP object.
    */
   async create(user: User, otpType: OtpType): Promise<Otp> {

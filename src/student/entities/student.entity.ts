@@ -54,6 +54,7 @@ export class Student {
   @Column({ type: 'enum', enum: Gender })
   gender: Gender;
 
+  // we can use simple array for storing interests
   @Field(() => [String], { nullable: true })
   @Column('simple-array', { nullable: true })
   interests?: string[];

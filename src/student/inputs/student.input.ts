@@ -5,6 +5,8 @@ import { User } from 'src/user/entities/user.entity';
 
 @InputType()
 export class CreateStudentInput {
+  //we dont need to explicitly define the user or other association field as input 
+
   @Field(() => String)
   @IsNotEmpty()
   first_name: string;
