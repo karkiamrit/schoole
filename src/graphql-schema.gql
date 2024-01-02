@@ -2,14 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Address {
-  city: String!
-  district: String!
-  id: ID!
-  state: String!
-  ward: Float!
-}
-
 input CreateInstitutionInput {
   full_name: String!
 }
@@ -19,9 +11,10 @@ input CreateStudentInput {
   date_of_birth: DateTime!
   first_name: String!
   gender: String!
+  interests: [String!]
   last_name: String!
+  level: Level!
   middle_name: String
-  user: Int!
 }
 
 input CreateUserInput {
@@ -87,6 +80,7 @@ input IPagination {
 type Institution {
   full_name: String!
   id: ID!
+  user: User!
 }
 
 """
@@ -97,6 +91,16 @@ scalar JSON
 type JwtWithUser {
   jwt: String!
   user: User!
+}
+
+"""The level of education of students"""
+enum Level {
+  high_school
+  higher_secondary
+  pre_primary
+  primary
+  secondary
+  under_graduate
 }
 
 type Mail {
@@ -168,9 +172,12 @@ type Student {
   first_name: String!
   gender: Gender!
   id: ID!
+  interests: [String!]
   last_name: String!
+  level: Level!
   middle_name: String
   updated_at: DateTime!
+  user: User!
 }
 
 input UpdateInstitutionInput {
@@ -178,7 +185,14 @@ input UpdateInstitutionInput {
 }
 
 input UpdateStudentInput {
-  first_name: String!
+  bio: String
+  date_of_birth: DateTime
+  first_name: String
+  gender: String
+  interests: [String!]
+  last_name: String
+  level: Level
+  middle_name: String
 }
 
 input UpdateUserInput {

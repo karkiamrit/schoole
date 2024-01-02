@@ -9,6 +9,8 @@ import {
   CreateInstitutionInput,
   UpdateInstitutionInput,
 } from './inputs/institution.input';
+import { CurrentUser } from 'src/modules/decorators/user.decorator';
+import { User } from 'src/user/entities/user.entity';
 @Resolver()
 export class InstitutionResolver {
   constructor(private readonly institutionService: InstitutionService) {}
@@ -35,8 +37,8 @@ export class InstitutionResolver {
 
   @Mutation(() => Institution)
   @UseGuards(new GraphqlPassportAuthGuard('admin'))
-  createInstitution(@Args('input') input: CreateInstitutionInput) {
-    return this.institutionService.create(input);
+  createInstitution(@Args('input') input: CreateInstitutionInput, @CurrentUser() user: User) {
+    return this.institutionService.create(input, user);
   }
 
   @Mutation(() => [Institution])

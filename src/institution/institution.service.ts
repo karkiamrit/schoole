@@ -8,6 +8,7 @@ import {
 } from './inputs/institution.input';
 
 import { FindOneOptions } from 'typeorm';
+import { User } from 'src/user/entities/user.entity';
 @Injectable()
 export class InstitutionService {
   constructor(private readonly institutionRepository: InstitutionRepository) {}
@@ -26,9 +27,10 @@ export class InstitutionService {
     }
   }
 
-  create(input: CreateInstitutionInput): Promise<Institution> {
+  create(input: CreateInstitutionInput, user: User): Promise<Institution> {
     const institution = new Institution();
     Object.assign(institution, input);
+    institution.user = user;
     return this.institutionRepository.save(institution);
   }
 
