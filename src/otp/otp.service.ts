@@ -5,7 +5,7 @@ import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class OtpService {
-  constructor(private readonly otpRepository: OtpRepository) {}
+  constructor(private readonly otpRepository: OtpRepository) { }
 
   /**
    * Create and save an OTP object to the database.
@@ -26,12 +26,23 @@ export class OtpService {
     return this.otpRepository.create(otp);
   }
 
+  /**
+   * Retrieve the OTP based on the parameter values.
+   * @param {string} otpCode - The OTP code which is to be retrieved.
+   * @param {User} user - The user whose OTP is to be retrieved.
+   * @param {OtpType} operation - Type of the OTP.
+   * @returns  The OTP object.
+   */
   getOne(otpCode: string, user: User, operation: OtpType): Promise<Otp | null> {
     return this.otpRepository.findOne({
       where: { code: otpCode, user: { id: user.id }, operation },
     });
   }
-
+  /**
+     * Udpate and save an OTP object to the database.
+     * @param {Otp} otp - The  OTP which should be updated.
+     * @returns  The boolean value if the update is successfull.
+     */
   async update(otp: Otp): Promise<boolean> {
     await this.otpRepository.save(otp);
     return true;
