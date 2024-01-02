@@ -38,7 +38,6 @@
 // }
 
 import { Injectable, ExecutionContext } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { AuthGuard } from '@nestjs/passport';
 

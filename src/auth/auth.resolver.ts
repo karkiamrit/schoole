@@ -8,7 +8,7 @@ import { OtpType } from '../otp/entities/otp.entity';
 import { User } from '../user/entities/user.entity';
 import { CurrentUser } from 'src/modules/decorators/user.decorator';
 import { GraphqlPassportAuthGuard } from 'src/modules/guards/graphql-passport-auth.guard';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 
 @Resolver()
 export class AuthResolver {
