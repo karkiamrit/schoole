@@ -19,6 +19,7 @@ export class Student {
   id: number;
 
   @OneToOne(() => User, { cascade: false })
+  @Field(() => User)
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: User;
 
