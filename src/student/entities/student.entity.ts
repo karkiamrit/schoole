@@ -8,7 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Gender } from '../inputs/enums/student.enum';
+import { Gender, Level } from '../inputs/enums/student.enum';
 import { User } from 'src/user/entities/user.entity';
 
 @ObjectType()
@@ -51,8 +51,16 @@ export class Student {
   date_of_birth: Date;
 
   @Field(() => Gender)
-  @Column({ type: 'enum', enum: Gender, nullable: false })
+  @Column({ type: 'enum', enum: Gender })
   gender: Gender;
+
+  @Field(() => [String], { nullable: true })
+  @Column('simple-array', { nullable: true })
+  interests?: string[];
+
+  @Field(() => Level)
+  @Column({ type: 'enum', enum: Level })
+  level: Level;
 
   @Field(() => Date)
   @CreateDateColumn({

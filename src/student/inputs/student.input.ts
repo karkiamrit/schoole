@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsOptional } from 'class-validator';
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { Gender } from './enums/student.enum';
+import { Gender, Level } from './enums/student.enum';
 import { User } from 'src/user/entities/user.entity';
 
 @InputType()
@@ -25,18 +25,50 @@ export class CreateStudentInput {
   @IsOptional()
   bio?: string;
 
-  @Field(() => String, { nullable: false })
+  @Field(() => String)
   @IsNotEmpty()
   gender: Gender;
 
-  @Field(() => Int, { nullable: false })
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  interests?: string[];
+
+  @Field(() => Level)
   @IsNotEmpty()
-  user: User;
+  level: Level;
 }
 
 @InputType()
 export class UpdateStudentInput {
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @IsOptional()
-  first_name: string;
+  first_name?: string;
+
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  interests?: string[];
+
+  @Field(() => Level, { nullable: true })
+  @IsOptional()
+  level?: Level;
+
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  middle_name?: string;
+
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  last_name?: string;
+
+  @Field(() => Date, { nullable: true })
+  @IsOptional()
+  date_of_birth?: Date;
+
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  bio?: string;
+
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  gender?: Gender;
 }

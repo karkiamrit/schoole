@@ -21,7 +21,7 @@ export class Institution {
 
   @OneToOne(() => User, { eager: true, onDelete: 'CASCADE' })
   @Field(() => User)
-  @JoinColumn({ name: 'user_id' })
+  @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: User;
 }
 
