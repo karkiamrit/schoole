@@ -5,6 +5,7 @@ import { Student } from './entities/student.entity';
 import { CreateStudentInput, UpdateStudentInput } from './inputs/student.input';
 
 import { FindOneOptions } from 'typeorm';
+import { User } from 'src/user/entities/user.entity';
 @Injectable()
 export class StudentService {
   constructor(private readonly studentRepository: StudentRepository) {}
@@ -21,9 +22,10 @@ export class StudentService {
     }
   }
 
-  create(input: CreateStudentInput): Promise<Student> {
+  create(input: CreateStudentInput, user: User): Promise<Student> {
     const student = new Student();
     Object.assign(student, input);
+    student.user = user;
     return this.studentRepository.save(student);
   }
 

@@ -6,6 +6,8 @@ import { GetManyInput, GetOneInput } from 'src/declare/inputs/custom.input';
 import { CurrentQuery } from 'src/modules/decorators/query.decorator';
 import { GetStudentType, Student } from './entities/student.entity';
 import { CreateStudentInput, UpdateStudentInput } from './inputs/student.input';
+import { CurrentUser } from 'src/modules/decorators/user.decorator';
+import { User } from 'src/user/entities/user.entity';
 @Resolver()
 export class StudentResolver {
   constructor(private readonly studentService: StudentService) {}
@@ -31,9 +33,12 @@ export class StudentResolver {
   }
 
   @Mutation(() => Student)
-  // @UseGuards(new GraphqlPassportAuthGuard('user'))
-  createStudent(@Args('input') input: CreateStudentInput) {
-    return this.studentService.create(input);
+  @UseGuards(new GraphqlPassportAuthGuard('user'))
+  createStudent(
+    @Args('input') input: CreateStudentInput,
+    @CurrentUser() user: User,
+  ) {
+    return this.studentService.create(input, user);
   }
 
   @Mutation(() => [Student])
