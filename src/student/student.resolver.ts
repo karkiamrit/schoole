@@ -22,6 +22,13 @@ export class StudentResolver {
     return this.studentService.getMany(qs, query);
   }
 
+  /**
+   * Get a single student by ID.
+   *
+   * @param {GetOneInput<Student>} qs - Input containing the ID of the student to retrieve.
+   * @param {string} query - Current query parameter (replace with the actual type if not string).
+   * @returns {Student} - The retrieved student.
+   */
   @Query(() => Student)
   @UseGuards(new GraphqlPassportAuthGuard('admin'))
   getOneStudent(

@@ -15,7 +15,7 @@ import { OtpType } from 'src/otp/entities/otp.entity';
 import { TokenService } from 'src/token/token.service';
 import { ApolloError } from 'apollo-server-core';
 import { Http } from 'src/util/http';
-const crypto = require('crypto'); //if issue with this change to require('crypto')
+import * as crypto from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -81,8 +81,8 @@ export class AuthService {
     const user = await this.userService.getOne({
       where: { email: input.email },
     });
-    user.last_login=new Date(); //update last login to current timestamp
-    await this.userService.update(user.id,user); //update user with updated last login
+    user.last_login = new Date(); //update last login to current timestamp
+    await this.userService.update(user.id, user); //update user with updated last login
     if (!user) {
       throw new ApolloError("User doesn't exist", 'USER_NOT_FOUND', {
         statusCode: 404, // Not Found

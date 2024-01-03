@@ -26,7 +26,7 @@ export class User extends BaseEntity {
   email: string;
 
   @Field(() => String)
-  @Column()
+  @Column({ nullable: true })
   profile_picture: string;
 
   @Field(() => Date, { nullable: true })

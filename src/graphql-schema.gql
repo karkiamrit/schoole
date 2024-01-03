@@ -2,6 +2,14 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Address {
+  city: String!
+  district: String!
+  id: ID!
+  state: String!
+  ward: Float!
+}
+
 input CreateInstitutionInput {
   name: String!
   type: type!
@@ -152,13 +160,6 @@ type Query {
 enum Role {
   admin
   user
-}
-
-type School {
-  created_at: DateTime!
-  id: ID!
-  name: String!
-  updated_at: DateTime!
 }
 
 input SignInInput {

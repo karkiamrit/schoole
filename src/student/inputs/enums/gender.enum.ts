@@ -6,8 +6,6 @@ export enum Gender {
   not_specified = 'NotSpecified',
 }
 
-
-
 registerEnumType(Gender, {
   name: 'Gender', // this one is mandatory
   description: 'The gender of the students or users', // this one is optional
