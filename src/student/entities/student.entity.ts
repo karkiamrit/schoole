@@ -8,7 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Gender, Level } from '../inputs/enums/student.enum';
+import { Gender, Level } from '../inputs/enums/index';
 import { User } from 'src/user/entities/user.entity';
 
 @ObjectType()

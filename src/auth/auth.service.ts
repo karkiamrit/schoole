@@ -81,6 +81,8 @@ export class AuthService {
     const user = await this.userService.getOne({
       where: { email: input.email },
     });
+    user.last_login=new Date(); //update last login to current timestamp
+    await this.userService.update(user.id,user); //update user with updated last login
     if (!user) {
       throw new ApolloError("User doesn't exist", 'USER_NOT_FOUND', {
         statusCode: 404, // Not Found

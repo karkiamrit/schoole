@@ -32,9 +32,9 @@ export class CreateUserInput {
   @IsEmail()
   email: string;
 
-  @Field(() => Number)
+  @Field(() => String)
   @IsNotEmpty()
-  avatar: number;
+  profile_picture: string;
 }
 
 @InputType()
@@ -55,9 +55,9 @@ export class UpdateUserInput {
   @IsOptional()
   email?: string;
 
-  @Field(() => Number, { nullable: true })
-  @IsOptional()
-  avatar?: number;
+  @Field(() => String, { nullable: true })
+  @IsNotEmpty()
+  profile_picture?: string;
 }
 
 @InputType()

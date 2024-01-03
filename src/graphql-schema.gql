@@ -6,6 +6,10 @@ input CreateInstitutionInput {
   full_name: String!
 }
 
+input CreateSchoolInput {
+  name: String!
+}
+
 input CreateStudentInput {
   bio: String!
   date_of_birth: DateTime!
@@ -57,6 +61,11 @@ input GetManyInput {
 
 input GetOneInput {
   where: JSON!
+}
+
+type GetSchoolType {
+  count: Float
+  data: [School!]
 }
 
 type GetStudentType {
@@ -117,11 +126,14 @@ type Mutation {
   SignUp(input: SignUpInput!): User!
   createInstitution(input: CreateInstitutionInput!): Institution!
   createManyInstitution(input: [CreateInstitutionInput!]!): [Institution!]!
+  createManySchool(input: [CreateSchoolInput!]!): [School!]!
   createManyStudent(input: [CreateStudentInput!]!): [Student!]!
   createManyUsers(input: [CreateUserInput!]!): [User!]!
+  createSchool(input: CreateSchoolInput!): School!
   createStudent(input: CreateStudentInput!): Student!
   createUser(input: CreateUserInput!): User!
   deleteInstitution(id: Float!): Institution!
+  deleteSchool(id: Float!): School!
   deleteStudent(id: Float!): Student!
   deleteUser(id: Float!): JSON!
   forgotPassword(email: String!): Boolean!
@@ -131,6 +143,7 @@ type Mutation {
   signIn(input: SignInInput!): JwtWithUser!
   updateInstitution(id: Float!, input: UpdateInstitutionInput!): Institution!
   updateMe(input: UpdateUserInput!): User!
+  updateSchool(id: Float!, input: UpdateSchoolInput!): School!
   updateStudent(id: Float!, input: UpdateStudentInput!): Student!
   updateUser(id: Float!, input: UpdateUserInput!): User!
   verifyEmail(email: String!, otpCode: String!): Boolean!
@@ -138,10 +151,12 @@ type Mutation {
 
 type Query {
   getManyInstitutions(input: GetManyInput): GetInstitutionType!
+  getManySchools(input: GetManyInput): GetSchoolType!
   getManyStudents(input: GetManyInput): GetStudentType!
   getManyUsers(input: GetManyInput): GetUserType!
   getMe: User!
   getOneInstitution(input: GetOneInput!): Institution!
+  getOneSchool(input: GetOneInput!): School!
   getOneStudent(input: GetOneInput!): Student!
   getOneUser(input: GetOneInput!): User!
 }
@@ -150,6 +165,13 @@ type Query {
 enum Role {
   admin
   user
+}
+
+type School {
+  created_at: DateTime!
+  id: ID!
+  name: String!
+  updated_at: DateTime!
 }
 
 input SignInInput {
@@ -182,6 +204,10 @@ type Student {
 
 input UpdateInstitutionInput {
   full_name: String!
+}
+
+input UpdateSchoolInput {
+  name: String!
 }
 
 input UpdateStudentInput {

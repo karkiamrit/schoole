@@ -1,11 +1,11 @@
 import { IsNotEmpty, IsOptional } from 'class-validator';
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { Gender, Level } from './enums/student.enum';
+import { Gender, Level } from './enums/index';
 import { User } from 'src/user/entities/user.entity';
 
 @InputType()
 export class CreateStudentInput {
-  //we dont need to explicitly define the user or other association field as input 
+  //we dont need to explicitly define the user or other association field as input
 
   @Field(() => String)
   @IsNotEmpty()

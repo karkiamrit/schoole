@@ -37,7 +37,10 @@ export class InstitutionResolver {
 
   @Mutation(() => Institution)
   @UseGuards(new GraphqlPassportAuthGuard('admin'))
-  createInstitution(@Args('input') input: CreateInstitutionInput, @CurrentUser() user: User) {
+  createInstitution(
+    @Args('input') input: CreateInstitutionInput,
+    @CurrentUser() user: User,
+  ) {
     return this.institutionService.create(input, user);
   }
 
