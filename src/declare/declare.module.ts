@@ -1,19 +1,9 @@
-import { BadRequestException, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { isEmpty } from 'lodash';
 import { processWhere } from './utils/processWhere';
-import { FindManyOptions, FindOneOptions, FindOptionsOrder } from 'typeorm';
+import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { Repository } from 'typeorm/repository/Repository';
-import { isObject } from 'src/util/isObject';
-import {
-  checkObject,
-  directionObj,
-  IDriection,
-  IGetData,
-  ISort,
-  OneRepoQuery,
-  RepoQuery,
-  valueObj,
-} from './types';
+import { IGetData, OneRepoQuery, RepoQuery } from './types';
 import { getInfoFromQuery } from './utils/getConditionFromQuery';
 
 declare module 'typeorm/repository/Repository' {
@@ -30,37 +20,37 @@ declare module 'typeorm/repository/Repository' {
     ): Promise<Entity>;
   }
 }
-
-function filterOrder<T>(order: FindOptionsOrder<T>) {
-  Object.entries(order).forEach(([key, value]: [string, ISort]) => {
-    if (!(key in this.metadata.propertiesMap)) {
-      throw new BadRequestException(
-        `Order key ${key} is not in ${this.metadata.name}`,
-      );
-    }
-
-    if (isObject(value)) {
-      Object.entries(value).forEach(([_key, _value]) => {
-        if (!directionObj[_key]) {
-          throw new BadRequestException(
-            `Order must be ${Object.keys(directionObj).join(' or ')}`,
-          );
-        }
-        if (!checkObject[_key].includes(_value as unknown)) {
-          throw new BadRequestException(
-            `Order ${_key} must be ${checkObject[_key].join(' or ')}`,
-          );
-        }
-      });
-    } else {
-      if (!valueObj[value as IDriection]) {
-        throw new BadRequestException(
-          `Order must be ${Object.keys(valueObj).join(' or ')}`,
-        );
-      }
-    }
-  });
-}
+//
+// function filterOrder<T>(order: FindOptionsOrder<T>) {
+//   Object.entries(order).forEach(([key, value]: [string, ISort]) => {
+//     if (!(key in this.metadata.propertiesMap)) {
+//       throw new BadRequestException(
+//         `Order key ${key} is not in ${this.metadata.name}`,
+//       );
+//     }
+//
+//     if (isObject(value)) {
+//       Object.entries(value).forEach(([_key, _value]) => {
+//         if (!directionObj[_key]) {
+//           throw new BadRequestException(
+//             `Order must be ${Object.keys(directionObj).join(' or ')}`,
+//           );
+//         }
+//         if (!checkObject[_key].includes(_value as unknown)) {
+//           throw new BadRequestException(
+//             `Order ${_key} must be ${checkObject[_key].join(' or ')}`,
+//           );
+//         }
+//       });
+//     } else {
+//       if (!valueObj[value as IDriection]) {
+//         throw new BadRequestException(
+//           `Order must be ${Object.keys(valueObj).join(' or ')}`,
+//         );
+//       }
+//     }
+//   });
+// }
 
 @Module({})
 export class DeclareModule {

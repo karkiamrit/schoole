@@ -10,9 +10,21 @@ type Address {
   ward: Float!
 }
 
+input CreateCertificateInput {
+  certificate_name: String!
+}
+
 input CreateInstitutionInput {
   name: String!
   type: type!
+}
+
+input CreateKycInput {
+  established_on: String!
+}
+
+input CreateOrganizerInput {
+  full_name: String!
 }
 
 input CreateStudentInput {
@@ -34,6 +46,10 @@ input CreateUserInput {
   username: String!
 }
 
+input CreateVolunteerInput {
+  full_name: String!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -47,9 +63,19 @@ enum Gender {
   other
 }
 
+type GetCertificateType {
+  count: Float
+  data: [certificates!]
+}
+
 type GetInstitutionType {
   count: Float
   data: [Institution!]
+}
+
+type GetKycType {
+  count: Float
+  data: [kycs!]
 }
 
 input GetManyInput {
@@ -68,6 +94,11 @@ input GetOneInput {
   where: JSON!
 }
 
+type GetOrganizerType {
+  count: Float
+  data: [Organizer!]
+}
+
 type GetStudentType {
   count: Float
   data: [Student!]
@@ -76,6 +107,11 @@ type GetStudentType {
 type GetUserType {
   count: Float
   data: [User!]
+}
+
+type GetVolunteerType {
+  count: Float
+  data: [volunteers!]
 }
 
 input IPagination {
@@ -125,35 +161,73 @@ type Mail {
 
 type Mutation {
   SignUp(input: SignUpInput!): User!
+  createCertificate(input: CreateCertificateInput!): certificates!
   createInstitution(input: CreateInstitutionInput!): Institution!
+  createKyc(input: CreateKycInput!): kycs!
+  createManyCertificate(input: [CreateCertificateInput!]!): [certificates!]!
   createManyInstitution(input: [CreateInstitutionInput!]!): [Institution!]!
+  createManyKyc(input: [CreateKycInput!]!): [kycs!]!
+  createManyOrganizer(input: [CreateOrganizerInput!]!): [Organizer!]!
   createManyStudent(input: [CreateStudentInput!]!): [Student!]!
   createManyUsers(input: [CreateUserInput!]!): [User!]!
+  createManyVolunteer(input: [CreateVolunteerInput!]!): [volunteers!]!
+  createOrganizer(input: CreateOrganizerInput!): Organizer!
   createStudent(input: CreateStudentInput!): Student!
   createUser(input: CreateUserInput!): User!
+  createVolunteer(input: CreateVolunteerInput!): volunteers!
+  deleteCertificate(id: Float!): certificates!
   deleteInstitution(id: Float!): Institution!
+  deleteKyc(id: Float!): kycs!
+  deleteOrganizer(id: Float!): Organizer!
   deleteStudent(id: Float!): Student!
   deleteUser(id: Float!): JSON!
+  deleteVolunteer(id: Float!): volunteers!
   forgotPassword(email: String!): Boolean!
   logout(accessToken: String!): Boolean!
   requestOtpVerify(email: String!, otpType: String!): Boolean!
   resetPassword(newPassword: String!, token: String!): Boolean!
   signIn(input: SignInInput!): JwtWithUser!
+  updateCertificate(id: Float!, input: UpdateCertificateInput!): certificates!
   updateInstitution(id: Float!, input: UpdateInstitutionInput!): Institution!
+  updateKyc(id: Float!, input: UpdateKycInput!): kycs!
   updateMe(input: UpdateUserInput!): User!
+  updateOrganizer(id: Float!, input: UpdateOrganizerInput!): Organizer!
   updateStudent(id: Float!, input: UpdateStudentInput!): Student!
   updateUser(id: Float!, input: UpdateUserInput!): User!
+  updateVolunteer(id: Float!, input: UpdateVolunteerInput!): volunteers!
   verifyEmail(email: String!, otpCode: String!): Boolean!
 }
 
+type Organizer {
+  created_at: DateTime!
+  full_name: String!
+  id: ID!
+  organizer_type: OrganizerType!
+  updated_at: DateTime!
+  user: User!
+}
+
+"""The basic organizer type of organizer user"""
+enum OrganizerType {
+  club
+}
+
 type Query {
+  getManyCertificates(input: GetManyInput): GetCertificateType!
   getManyInstitutions(input: GetManyInput): GetInstitutionType!
+  getManyKycs(input: GetManyInput): GetKycType!
+  getManyOrganizers(input: GetManyInput): GetOrganizerType!
   getManyStudents(input: GetManyInput): GetStudentType!
   getManyUsers(input: GetManyInput): GetUserType!
+  getManyVolunteers(input: GetManyInput): GetVolunteerType!
   getMe: User!
+  getOneCertificate(input: GetOneInput!): certificates!
   getOneInstitution(input: GetOneInput!): Institution!
+  getOneKyc(input: GetOneInput!): kycs!
+  getOneOrganizer(input: GetOneInput!): Organizer!
   getOneStudent(input: GetOneInput!): Student!
   getOneUser(input: GetOneInput!): User!
+  getOneVolunteer(input: GetOneInput!): volunteers!
 }
 
 """The basic roles of users"""
@@ -189,9 +263,21 @@ type Student {
   user: User!
 }
 
+input UpdateCertificateInput {
+  certificate_name: String!
+}
+
 input UpdateInstitutionInput {
   name: String
   type: type
+}
+
+input UpdateKycInput {
+  established_on: String!
+}
+
+input UpdateOrganizerInput {
+  full_name: String!
 }
 
 input UpdateStudentInput {
@@ -213,6 +299,10 @@ input UpdateUserInput {
   username: String
 }
 
+input UpdateVolunteerInput {
+  full_name: String!
+}
+
 type User {
   created_at: DateTime!
   email: String!
@@ -227,8 +317,34 @@ type User {
   username: String!
 }
 
+type Volunteers {
+  full_name: String!
+  id: ID!
+}
+
+type certificates {
+  certificate_name: String!
+  id: ID!
+  student: Student!
+}
+
+type kycs {
+  established_on: DateTime!
+  id: ID!
+}
+
 enum type {
   college
   school
   university
+}
+
+type volunteers {
+  created_at: DateTime!
+  event_date: DateTime!
+  full_name: String!
+  id: ID!
+  starting_date: DateTime!
+  updated_at: DateTime!
+  user: User!
 }
