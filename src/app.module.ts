@@ -1,4 +1,3 @@
-import { SchoolModule } from './school/school.module';
 import { InstitutionModule } from './institution/institution.module';
 import { StudentModule } from './student/student.module';
 import { TokenModule } from './token/token.module';
@@ -50,7 +49,6 @@ import { Module } from '@nestjs/common';
     HealthModule,
     StudentModule,
     InstitutionModule,
-    SchoolModule,
     OtpModule,
     MailModule,
     TokenModule,

@@ -3,11 +3,8 @@
 # ------------------------------------------------------
 
 input CreateInstitutionInput {
-  full_name: String!
-}
-
-input CreateSchoolInput {
   name: String!
+  type: type!
 }
 
 input CreateStudentInput {
@@ -22,10 +19,10 @@ input CreateStudentInput {
 }
 
 input CreateUserInput {
-  avatar: Float!
   email: String!
   password: String!
   phone: String!
+  profile_picture: String!
   username: String!
 }
 
@@ -63,11 +60,6 @@ input GetOneInput {
   where: JSON!
 }
 
-type GetSchoolType {
-  count: Float
-  data: [School!]
-}
-
 type GetStudentType {
   count: Float
   data: [Student!]
@@ -87,8 +79,9 @@ input IPagination {
 }
 
 type Institution {
-  full_name: String!
   id: ID!
+  name: String!
+  type: type!
   user: User!
 }
 
@@ -126,14 +119,11 @@ type Mutation {
   SignUp(input: SignUpInput!): User!
   createInstitution(input: CreateInstitutionInput!): Institution!
   createManyInstitution(input: [CreateInstitutionInput!]!): [Institution!]!
-  createManySchool(input: [CreateSchoolInput!]!): [School!]!
   createManyStudent(input: [CreateStudentInput!]!): [Student!]!
   createManyUsers(input: [CreateUserInput!]!): [User!]!
-  createSchool(input: CreateSchoolInput!): School!
   createStudent(input: CreateStudentInput!): Student!
   createUser(input: CreateUserInput!): User!
   deleteInstitution(id: Float!): Institution!
-  deleteSchool(id: Float!): School!
   deleteStudent(id: Float!): Student!
   deleteUser(id: Float!): JSON!
   forgotPassword(email: String!): Boolean!
@@ -143,7 +133,6 @@ type Mutation {
   signIn(input: SignInInput!): JwtWithUser!
   updateInstitution(id: Float!, input: UpdateInstitutionInput!): Institution!
   updateMe(input: UpdateUserInput!): User!
-  updateSchool(id: Float!, input: UpdateSchoolInput!): School!
   updateStudent(id: Float!, input: UpdateStudentInput!): Student!
   updateUser(id: Float!, input: UpdateUserInput!): User!
   verifyEmail(email: String!, otpCode: String!): Boolean!
@@ -151,12 +140,10 @@ type Mutation {
 
 type Query {
   getManyInstitutions(input: GetManyInput): GetInstitutionType!
-  getManySchools(input: GetManyInput): GetSchoolType!
   getManyStudents(input: GetManyInput): GetStudentType!
   getManyUsers(input: GetManyInput): GetUserType!
   getMe: User!
   getOneInstitution(input: GetOneInput!): Institution!
-  getOneSchool(input: GetOneInput!): School!
   getOneStudent(input: GetOneInput!): Student!
   getOneUser(input: GetOneInput!): User!
 }
@@ -180,7 +167,6 @@ input SignInInput {
 }
 
 input SignUpInput {
-  avatar: Float
   email: String!
   password: String!
   phone: String
@@ -203,11 +189,8 @@ type Student {
 }
 
 input UpdateInstitutionInput {
-  full_name: String!
-}
-
-input UpdateSchoolInput {
-  name: String!
+  name: String
+  type: type
 }
 
 input UpdateStudentInput {
@@ -222,10 +205,10 @@ input UpdateStudentInput {
 }
 
 input UpdateUserInput {
-  avatar: Float
   email: String
   password: String
   phone: String
+  profile_picture: String
   username: String
 }
 
@@ -234,8 +217,17 @@ type User {
   email: String!
   email_verified: Boolean!
   id: ID!
+  last_login: DateTime
+  password: String!
   phone: String!
+  profile_picture: String!
   role: Role!
   updated_at: DateTime!
   username: String!
+}
+
+enum type {
+  college
+  school
+  university
 }
