@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -10,6 +11,7 @@ import {
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Gender, Level } from '../inputs/enums/index';
 import { User } from 'src/user/entities/user.entity';
+import { Certificate } from '@/certificate/entities/certificate.entity';
 
 @ObjectType()
 @Entity('students')
@@ -74,6 +76,11 @@ export class Student {
     type: 'timestamp with time zone',
   })
   updated_at: Date;
+
+  //reverse relation fields
+
+  @OneToMany(() => Certificate, (certificate) => certificate.student)
+  certificates: Certificate[];
 }
 
 @ObjectType()
