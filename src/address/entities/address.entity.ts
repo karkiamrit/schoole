@@ -46,7 +46,15 @@ export class Address {
 
   @Field(() => String)
   @Column({ nullable: true })
+  district: string;
+
+  @Field(() => String)
+  @Column({ nullable: true })
   municipality: string;
+
+  @Field(() => String)
+  @Column({ nullable: true })
+  town: string;
 
   @Field(() => String)
   @Column({ nullable: true })
