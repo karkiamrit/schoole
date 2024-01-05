@@ -2,6 +2,30 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Address {
+  address_type: String!
+  country: String!
+  display_name: String!
+  id: ID!
+  latitude: String!
+  longitude: String!
+  municipality: String!
+  postal_code: String!
+  state: String!
+  user: User!
+}
+
+type Certificate {
+  certificate_title: String!
+  id: ID!
+  photo: String!
+  student: Student!
+}
+
+input CreateAddressInput {
+  latitude: String!
+}
+
 input CreateCertificateInput {
   certificate_title: String!
   photo: String
@@ -56,9 +80,14 @@ enum Gender {
   other
 }
 
+type GetAddressType {
+  count: Float
+  data: [Address!]
+}
+
 type GetCertificateType {
   count: Float
-  data: [certificates!]
+  data: [Certificate!]
 }
 
 type GetInstitutionType {
@@ -154,10 +183,12 @@ type Mail {
 
 type Mutation {
   SignUp(input: SignUpInput!): User!
-  createCertificate(input: CreateCertificateInput!, transactionId: String!): certificates!
+  createAddress(input: CreateAddressInput!): Address!
+  createCertificate(input: CreateCertificateInput!, transactionId: String!): Certificate!
   createInstitution(input: CreateInstitutionInput!): Institution!
   createKyc(input: CreateKycInput!): kycs!
-  createManyCertificate(input: [CreateCertificateInput!]!): [certificates!]!
+  createManyAddress(input: [CreateAddressInput!]!): [Address!]!
+  createManyCertificate(input: [CreateCertificateInput!]!): [Certificate!]!
   createManyInstitution(input: [CreateInstitutionInput!]!): [Institution!]!
   createManyKyc(input: [CreateKycInput!]!): [kycs!]!
   createManyOrganizer(input: [CreateOrganizerInput!]!): [Organizer!]!
@@ -168,7 +199,8 @@ type Mutation {
   createStudent(input: CreateStudentInput!): Student!
   createUser(input: CreateUserInput!): User!
   createVolunteer(input: CreateVolunteerInput!): volunteers!
-  deleteCertificate(id: Float!): certificates!
+  deleteAddress(id: Float!): Address!
+  deleteCertificate(id: Float!): Certificate!
   deleteInstitution(id: Float!): Institution!
   deleteKyc(id: Float!): kycs!
   deleteOrganizer(id: Float!): Organizer!
@@ -180,7 +212,8 @@ type Mutation {
   requestOtpVerify(email: String!, otpType: String!): Boolean!
   resetPassword(newPassword: String!, token: String!): Boolean!
   signIn(input: SignInInput!): JwtWithUser!
-  updateCertificate(id: Float!, input: UpdateCertificateInput!): certificates!
+  updateAddress(id: Float!, input: UpdateAddressInput!): Address!
+  updateCertificate(id: Float!, input: UpdateCertificateInput!): Certificate!
   updateInstitution(id: Float!, input: UpdateInstitutionInput!): Institution!
   updateKyc(id: Float!, input: UpdateKycInput!): kycs!
   updateMe(input: UpdateUserInput!): User!
@@ -206,6 +239,7 @@ enum OrganizerType {
 }
 
 type Query {
+  getManyAddresss(input: GetManyInput): GetAddressType!
   getManyCertificates(input: GetManyInput): GetCertificateType!
   getManyInstitutions(input: GetManyInput): GetInstitutionType!
   getManyKycs(input: GetManyInput): GetKycType!
@@ -214,7 +248,8 @@ type Query {
   getManyUsers(input: GetManyInput): GetUserType!
   getManyVolunteers(input: GetManyInput): GetVolunteerType!
   getMe: User!
-  getOneCertificate(input: GetOneInput!): certificates!
+  getOneAddress(input: GetOneInput!): Address!
+  getOneCertificate(input: GetOneInput!): Certificate!
   getOneInstitution(input: GetOneInput!): Institution!
   getOneKyc(input: GetOneInput!): kycs!
   getOneOrganizer(input: GetOneInput!): Organizer!
@@ -227,13 +262,6 @@ type Query {
 enum Role {
   admin
   user
-}
-
-type School {
-  created_at: DateTime!
-  id: ID!
-  name: String!
-  updated_at: DateTime!
 }
 
 input SignInInput {
@@ -261,6 +289,10 @@ type Student {
   middle_name: String
   updated_at: DateTime!
   user: User!
+}
+
+input UpdateAddressInput {
+  latitude: String!
 }
 
 input UpdateCertificateInput {
@@ -318,11 +350,9 @@ type User {
   username: String!
 }
 
-type certificates {
-  certificate_title: String!
+type Volunteers {
+  full_name: String!
   id: ID!
-  photo: String!
-  student: Student!
 }
 
 type kycs {

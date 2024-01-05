@@ -15,7 +15,7 @@ import { User } from 'src/user/entities/user.entity';
 @Entity('students')
 export class Student {
   @Field(() => ID)
-  @PrimaryGeneratedColumn('increment')
+  @PrimaryGeneratedColumn('increment', { type: 'bigint' })
   id: number;
 
   @OneToOne(() => User, { cascade: false })

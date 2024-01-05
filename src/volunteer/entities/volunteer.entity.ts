@@ -14,7 +14,7 @@ import { User } from '../../user/entities/user.entity';
 @Entity()
 export class Volunteer {
   @Field(() => ID)
-  @PrimaryGeneratedColumn('increment')
+  @PrimaryGeneratedColumn('increment', { type: 'bigint' })
   id: number;
 
   @Field(() => String)

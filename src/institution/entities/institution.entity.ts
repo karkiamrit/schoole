@@ -13,7 +13,7 @@ import { Type } from '../inputs/enum/type.enum';
 @Entity('institutions')
 export class Institution {
   @Field(() => ID)
-  @PrimaryGeneratedColumn('increment')
+  @PrimaryGeneratedColumn('increment', { type: 'bigint' })
   id: number;
 
   @Field(() => String)

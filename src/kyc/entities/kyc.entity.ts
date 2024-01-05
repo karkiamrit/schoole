@@ -5,7 +5,7 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 @Entity()
 export class Kyc {
   @Field(() => ID)
-  @PrimaryGeneratedColumn('increment')
+  @PrimaryGeneratedColumn('increment', { type: 'bigint' })
   id: number;
 
   @Field(() => Date)

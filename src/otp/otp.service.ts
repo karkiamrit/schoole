@@ -5,7 +5,7 @@ import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class OtpService {
-  constructor(private readonly otpRepository: OtpRepository) { }
+  constructor(private readonly otpRepository: OtpRepository) {}
 
   /**
    * Create and save an OTP object to the database.
@@ -39,10 +39,10 @@ export class OtpService {
     });
   }
   /**
-     * Udpate and save an OTP object to the database.
-     * @param {Otp} otp - The  OTP which should be updated.
-     * @returns  The boolean value if the update is successfull.
-     */
+   * Udpate and save an OTP object to the database.
+   * @param {Otp} otp - The  OTP which should be updated.
+   * @returns  The boolean value if the update is successfull.
+   */
   async update(otp: Otp): Promise<boolean> {
     await this.otpRepository.save(otp);
     return true;
