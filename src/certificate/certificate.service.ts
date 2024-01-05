@@ -11,6 +11,7 @@ import { FileUploadService } from '@/modules/upload/file-upload.service';
 import { randomBytes } from 'crypto';
 import { FindOneOptions } from 'typeorm';
 import { TempStorageService } from '@/modules/temp-storage/temp-storage.service';
+import { unlink } from 'fs';
 
 @Injectable()
 export class CertificateService {
@@ -59,9 +60,23 @@ export class CertificateService {
     if (!filePath) {
       throw new Error('Invalid transaction ID');
     }
-    const certificate = await this.create({ ...input, photo: filePath });
-    this.tempStorageService.remove(transactionId); // Implement this service
-    return certificate;
+    try {
+      const certificate = await this.create({ ...input, photo: filePath });
+      this.tempStorageService.remove(transactionId);
+      return certificate;
+    } catch (error) {
+      // Delete the file locally
+      unlink(filePath, (err) => {
+        if (err) throw err;
+        console.log(`${filePath}was deleted`);
+      });
+
+      // Remove the file path from the temporary storage
+      this.tempStorageService.remove(transactionId);
+
+      // Rethrow the error
+      throw error;
+    }
   }
 
   createMany(input: CreateCertificateInput[]): Promise<Certificate[]> {
