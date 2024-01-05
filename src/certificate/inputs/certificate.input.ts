@@ -5,12 +5,20 @@ import { Field, InputType } from '@nestjs/graphql';
 export class CreateCertificateInput {
   @Field(() => String)
   @IsNotEmpty()
-  certificate_name: string;
+  certificate_title?: string;
+
+  @Field(() => String, { nullable: true }) // Assuming the file path will be a string
+  @IsOptional() // Depending on your requirements, this field might not be required
+  photo: string;
 }
 
 @InputType()
 export class UpdateCertificateInput {
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @IsOptional()
-  certificate_name: string;
+  certificate_title?: string;
+
+  @Field(() => String, { nullable: true }) // Assuming the file path will be a string
+  @IsOptional() // Depending on your requirements, this field might not be required
+  photo?: string;
 }

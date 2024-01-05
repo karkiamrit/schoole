@@ -28,6 +28,7 @@ async function bootstrap() {
     origin: '*',
     credentials: true,
   });
+
   const configService = app.select(AppModule).get(ConfigService);
 
   await app.listen(configService.get('PORT'));

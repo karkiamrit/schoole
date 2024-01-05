@@ -17,7 +17,11 @@ export class Certificate {
 
   @Field(() => String)
   @Column()
-  certificate_name: string;
+  certificate_title: string;
+
+  @Field(() => String)
+  @Column({ nullable: true })
+  photo: string;
 
   @ManyToOne(() => Student)
   @Field(() => Student)

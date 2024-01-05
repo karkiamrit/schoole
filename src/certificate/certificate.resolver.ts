@@ -33,10 +33,22 @@ export class CertificateResolver {
     return this.certificateService.getOne(qs, query);
   }
 
+  // @Mutation(() => Certificate)
+  // @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  // async createCertificate(@Args('input') input: CreateCertificateInput) {
+  //   return this.certificateService.create(input);
+  // }
+
   @Mutation(() => Certificate)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
-  createCertificate(@Args('input') input: CreateCertificateInput) {
-    return this.certificateService.create(input);
+  @UseGuards(new GraphqlPassportAuthGuard('user'))
+  async createCertificate(
+    @Args('input') input: CreateCertificateInput,
+    @Args('transactionId') transactionId: string,
+  ) {
+    return this.certificateService.createCertificateWithTransaction(
+      input,
+      transactionId,
+    );
   }
 
   @Mutation(() => [Certificate])

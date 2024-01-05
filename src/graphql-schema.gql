@@ -2,16 +2,9 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Address {
-  city: String!
-  district: String!
-  id: ID!
-  state: String!
-  ward: Float!
-}
-
 input CreateCertificateInput {
-  certificate_name: String!
+  certificate_title: String!
+  photo: String
 }
 
 input CreateInstitutionInput {
@@ -161,7 +154,7 @@ type Mail {
 
 type Mutation {
   SignUp(input: SignUpInput!): User!
-  createCertificate(input: CreateCertificateInput!): certificates!
+  createCertificate(input: CreateCertificateInput!, transactionId: String!): certificates!
   createInstitution(input: CreateInstitutionInput!): Institution!
   createKyc(input: CreateKycInput!): kycs!
   createManyCertificate(input: [CreateCertificateInput!]!): [certificates!]!
@@ -236,6 +229,13 @@ enum Role {
   user
 }
 
+type School {
+  created_at: DateTime!
+  id: ID!
+  name: String!
+  updated_at: DateTime!
+}
+
 input SignInInput {
   email: String!
   password: String!
@@ -264,7 +264,8 @@ type Student {
 }
 
 input UpdateCertificateInput {
-  certificate_name: String!
+  certificate_title: String
+  photo: String
 }
 
 input UpdateInstitutionInput {
@@ -317,14 +318,10 @@ type User {
   username: String!
 }
 
-type Volunteers {
-  full_name: String!
-  id: ID!
-}
-
 type certificates {
-  certificate_name: String!
+  certificate_title: String!
   id: ID!
+  photo: String!
   student: Student!
 }
 
