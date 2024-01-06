@@ -5,12 +5,15 @@ import {
   CreateDateColumn,
   Entity,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Role } from '../inputs/enums/role.enum';
 import { Address } from '@/address/entities/address.entity';
+import { Student } from '@/student/entities/student.entity';
+import { Institution } from '@/institution/entities/institution.entity';
 
 @ObjectType()
 @Entity('users')
@@ -62,6 +65,13 @@ export class User extends BaseEntity {
   @Field()
   @Column({ default: false })
   email_verified: boolean;
+
+  // reverse relationship fields
+  @OneToOne(() => Student, (student) => student.user)
+  student: Student;
+
+  @OneToOne(() => Institution, (institution) => institution.user)
+  institution: Institution;
 
   @OneToMany(() => Address, (address) => address.user)
   addresses: Address[];

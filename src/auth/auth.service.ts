@@ -20,15 +20,14 @@ import * as crypto from 'crypto';
 @Injectable()
 export class AuthService {
   constructor(
-
-   /** 
-    *Create authentication and user-related functionalities.
-    *UserService: Manages user-related operations.
-    *OtpService: Handles OTP generation and verification.
-    *MailService: Sends emails for OTP, password reset, and email verification.
-    *TokenService: Deals with token-related operations.
-    *Http: Utility for making HTTP requests.
-    *JwtService: Manages JWT (JSON Web Token) creation and verification.*/
+    /**
+     *Create authentication and user-related functionalities.
+     *UserService: Manages user-related operations.
+     *OtpService: Handles OTP generation and verification.
+     *MailService: Sends emails for OTP, password reset, and email verification.
+     *TokenService: Deals with token-related operations.
+     *Http: Utility for making HTTP requests.
+     *JwtService: Manages JWT (JSON Web Token) creation and verification.*/
 
     private readonly userService: UserService,
     private readonly otpService: OtpService,
@@ -39,9 +38,8 @@ export class AuthService {
   ) {}
 
   /** Generates a unique identifier using the crypto module.
-      * @returns {string}-  A hexadecimal string representing the unique identifier.
- */
-
+   * @returns {string}-  A hexadecimal string representing the unique identifier.
+   */
 
   private generateUniqueIdentifier(): string {
     const uniqueIdentifier = crypto.randomBytes(16).toString('hex');
@@ -52,8 +50,7 @@ export class AuthService {
    * Responsible for creating and signing a JSON Web Token (JWT) for user authentication
    * @param   {User} user  - An object representing the user for whom the JWT is being created.
    * @returns {string} - A signed JWT string containing user-related claims.
- */ 
-
+   */
 
   private signJWT(user: User) {
     // You need to create a function to generate a unique identifier
@@ -67,11 +64,11 @@ export class AuthService {
     return this.jwtService.sign(payload);
   }
 
-/**
- * Generates a JWT intended for the reset password functionality. 
- * @param   {User} user  - An object representing the user for whom the password reset token is being generated. 
- * @returns {string} - A signed JWT string containing user-related claims for the password reset process.
- */
+  /**
+   * Generates a JWT intended for the reset password functionality.
+   * @param   {User} user  - An object representing the user for whom the password reset token is being generated.
+   * @returns {string} - A signed JWT string containing user-related claims for the password reset process.
+   */
 
   private generateResetPasswordToken(user: User): string {
     const uniqueIdentifier = this.generateUniqueIdentifier();
@@ -88,12 +85,11 @@ export class AuthService {
 
     return token;
   }
-/**
- * Registers the new user with provided Information and checks if the user already exists or not.
- * @param  {SignUpInput}  input- An object containing user registration information, including email and password.
- * @returns Returns a newly created user.
- */
-
+  /**
+   * Registers the new user with provided Information and checks if the user already exists or not.
+   * @param  {SignUpInput}  input- An object containing user registration information, including email and password.
+   * @returns Returns a newly created user.
+   */
 
   async signUp(input: SignUpInput): Promise<User> {
     const { email } = input;
@@ -112,7 +108,7 @@ export class AuthService {
   }
 
   /**
-   * Authenticates a user based on the provided email address. 
+   * Authenticates a user based on the provided email address.
    * @param  {SignInInput} input -An object containing the user's email and password for authentication.
    * @returns Returns an object containing the authenticated user details and a signed JWT.
    */
@@ -214,7 +210,7 @@ export class AuthService {
   /**
    * Initiates the process of sending a One-Time Password (OTP) to the user's email for verification.
    * @param {string}email -Email address of the user for whom the OTP is requested.
-   * @param {OtpType}otpType- An enumeration specifying the type of OTP (e.g., "EMAIL", "PHONE"). 
+   * @param {OtpType}otpType- An enumeration specifying the type of OTP (e.g., "EMAIL", "PHONE").
    * @returns  boolean if the operation is successful.
    */
   async requestOtpVerify(email: string, otpType: OtpType): Promise<boolean> {
@@ -235,12 +231,12 @@ export class AuthService {
       throw new BadRequestException(error.message);
     }
   }
-/**
- * Verifies the user's email by checking the validity of the provided OTP code.
- * @param {string} email -Email address of the user for whom email verification is requested. 
- * @param {string}otpCode-The OTP code provided by the user for verification.
- * @returns Boolean if the email verification is successful.
- */
+  /**
+   * Verifies the user's email by checking the validity of the provided OTP code.
+   * @param {string} email -Email address of the user for whom email verification is requested.
+   * @param {string}otpCode-The OTP code provided by the user for verification.
+   * @returns Boolean if the email verification is successful.
+   */
 
   async verifyEmail(email: string, otpCode: string): Promise<boolean> {
     try {
@@ -279,12 +275,12 @@ export class AuthService {
     }
   }
 
-/**
- * Logs out the user by blacklisting the provided access token
- * @param {User}user -The user object representing the logged-in user.
- * @param {string}accessToken -The access token to be invalidated.
- * @returns Boolean  if the logout  was succesful.
- */
+  /**
+   * Logs out the user by blacklisting the provided access token
+   * @param {User}user -The user object representing the logged-in user.
+   * @param {string}accessToken -The access token to be invalidated.
+   * @returns Boolean  if the logout  was succesful.
+   */
 
   async logout(user: User, accessToken: string): Promise<boolean> {
     // Get the token identifier (JTI) from the provided access token
@@ -309,7 +305,7 @@ export class AuthService {
   }
 
   /**
-   * Validates a user during the sign-in process. 
+   * Validates a user during the sign-in process.
    * @param {SignInInput}input -An object containing user sign-in details, such as email and password.
    * @returns Either the user object if validation is successful or null if validation fails.
    */

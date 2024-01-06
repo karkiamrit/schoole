@@ -3,12 +3,14 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { User } from '../../user/entities/user.entity';
+import { Kyc } from '@/kyc/entities/kyc.entity';
 
 @ObjectType('volunteers')
 @Entity()
@@ -51,6 +53,10 @@ export class Volunteer {
     type: 'timestamp with time zone',
   })
   updated_at: Date;
+
+  //reverse relationship field
+  @OneToMany(() => Kyc, (kyc) => kyc.institution)
+  kycs: Kyc[];
 }
 
 @ObjectType()
