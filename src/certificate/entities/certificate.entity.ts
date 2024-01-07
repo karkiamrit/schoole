@@ -8,11 +8,11 @@ import {
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Student } from '@/student/entities/student.entity';
 
-@ObjectType('certificates')
-@Entity()
+@ObjectType()
+@Entity('certificates')
 export class Certificate {
   @Field(() => ID)
-  @PrimaryGeneratedColumn('increment')
+  @PrimaryGeneratedColumn('increment', { type: 'bigint' })
   id: number;
 
   @Field(() => String)

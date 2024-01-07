@@ -1,3 +1,4 @@
+import { AddressModule } from './address/address.module';
 import { CertificateModule } from './certificate/certificate.module';
 import { KycModule } from './kyc/kyc.module';
 import { VolunteerModule } from './volunteer/volunteer.module';
@@ -62,6 +63,7 @@ import { join } from 'path';
     VolunteerModule,
     KycModule,
     CertificateModule,
+    AddressModule,
     OtpModule,
     MailModule,
     TokenModule,

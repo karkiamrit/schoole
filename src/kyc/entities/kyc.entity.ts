@@ -1,18 +1,52 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Institution } from '@/institution/entities/institution.entity';
+import { Volunteer } from '@/volunteer/entities/volunteer.entity';
 
 @ObjectType('kycs')
 @Entity()
 export class Kyc {
   @Field(() => ID)
-  @PrimaryGeneratedColumn('increment')
-  id: number;
+  @PrimaryGeneratedColumn('increment', { type: 'bigint' })
+  id?: number;
+
+  @ManyToOne(() => Institution)
+  @Field(() => Institution, { nullable: true })
+  @JoinColumn({ name: 'institution_id', referencedColumnName: 'id' })
+  institution: Institution;
+
+  @ManyToOne(() => Volunteer)
+  @Field(() => Volunteer, { nullable: true })
+  @JoinColumn({ name: 'volunteer_id', referencedColumnName: 'id' })
+  volunteer: Volunteer;
+
+  @Field(() => String)
+  @Column()
+  kyc_type: string;
+
+  @Field(() => String)
+  @Column()
+  kyc_document: string;
 
   @Field(() => Date)
-  @Column({
-    type: 'date',
+  @CreateDateColumn({
+    type: 'timestamp with time zone',
   })
-  established_on: Date;
+  created_at: Date;
+
+  @Field(() => Date)
+  @UpdateDateColumn({
+    type: 'timestamp with time zone',
+  })
+  updated_at: Date;
 }
 
 @ObjectType()
