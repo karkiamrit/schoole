@@ -12,7 +12,7 @@ import { Student } from '@/student/entities/student.entity';
 @Entity('certificates')
 export class Certificate {
   @Field(() => ID)
-  @PrimaryGeneratedColumn('increment', { type: 'bigint' })
+  @PrimaryGeneratedColumn('increment')
   id: number;
 
   @Field(() => String)
@@ -23,7 +23,7 @@ export class Certificate {
   @Column({ nullable: true })
   photo: string;
 
-  @ManyToOne(() => Student, { eager: true, onDelete: 'CASCADE' })
+  @ManyToOne(() => Student, (student)=>student.certificates,{ eager: true, onDelete: 'CASCADE' })
   @Field(() => Student)
   @JoinColumn({ name: 'student_id', referencedColumnName: 'id' })
   student: Student;

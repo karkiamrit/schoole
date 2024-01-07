@@ -17,7 +17,7 @@ import { Kyc } from '@/kyc/entities/kyc.entity';
 @Entity('institutions')
 export class Institution {
   @Field(() => ID)
-  @PrimaryGeneratedColumn('increment', { type: 'bigint' })
+  @PrimaryGeneratedColumn('increment')
   id: number;
 
   @Field(() => String)
@@ -46,10 +46,6 @@ export class Institution {
     type: 'timestamp with time zone',
   })
   updated_at: Date;
-
-  //reverse relationship fields
-  @OneToMany(() => Kyc, (kyc) => kyc.institution)
-  kycs: Kyc[];
 }
 
 @ObjectType()

@@ -17,7 +17,7 @@ import { Certificate } from '@/certificate/entities/certificate.entity';
 @Entity('students')
 export class Student {
   @Field(() => ID)
-  @PrimaryGeneratedColumn('increment', { type: 'bigint' })
+  @PrimaryGeneratedColumn('increment')
   id: number;
 
   @OneToOne(() => User, { onDelete: 'CASCADE',eager:true })

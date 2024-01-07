@@ -53,10 +53,6 @@ export class Volunteer {
     type: 'timestamp with time zone',
   })
   updated_at: Date;
-
-  //reverse relationship field
-  @OneToMany(() => Kyc, (kyc) => kyc.institution)
-  kycs: Kyc[];
 }
 
 @ObjectType()

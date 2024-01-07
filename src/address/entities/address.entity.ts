@@ -12,10 +12,10 @@ import { User } from '@/user/entities/user.entity';
 @Entity('addresses')
 export class Address {
   @Field(() => ID)
-  @PrimaryGeneratedColumn('increment', { type: 'bigint' })
+  @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, (user) => user.addresses, { onDelete: 'CASCADE' })
   @Field(() => User)
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: User;

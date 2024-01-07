@@ -58,10 +58,6 @@ input CreateStudentInput {
   middle_name: String
 }
 
-input CreateTestInput {
-  test: String!
-}
-
 input CreateUserInput {
   email: String!
   password: String!
@@ -133,11 +129,6 @@ type GetStudentType {
   data: [Student!]
 }
 
-type GetTestType {
-  count: Float
-  data: [Test!]
-}
-
 type GetUserType {
   count: Float
   data: [User!]
@@ -207,12 +198,10 @@ type Mutation {
   createManyKyc(input: [CreateKycInput!]!): [kycs!]!
   createManyOrganizer(input: [CreateOrganizerInput!]!): [Organizer!]!
   createManyStudent(input: [CreateStudentInput!]!): [Student!]!
-  createManyTest(input: [CreateTestInput!]!): [Test!]!
   createManyUsers(input: [CreateUserInput!]!): [User!]!
   createManyVolunteer(input: [CreateVolunteerInput!]!): [volunteers!]!
   createOrganizer(input: CreateOrganizerInput!): Organizer!
   createStudent(input: CreateStudentInput!): Student!
-  createTest(input: CreateTestInput!): Test!
   createUser(input: CreateUserInput!): User!
   createVolunteer(input: CreateVolunteerInput!): volunteers!
   deleteAddress(id: Float!): Address!
@@ -221,7 +210,6 @@ type Mutation {
   deleteKyc(id: Float!): kycs!
   deleteOrganizer(id: Float!): Organizer!
   deleteStudent(id: Float!): Student!
-  deleteTest(id: Float!): Test!
   deleteUser(id: Float!): JSON!
   deleteVolunteer(id: Float!): volunteers!
   forgotPassword(email: String!): Boolean!
@@ -236,7 +224,6 @@ type Mutation {
   updateMe(input: UpdateUserInput!): User!
   updateOrganizer(id: Float!, input: UpdateOrganizerInput!): Organizer!
   updateStudent(id: Float!, input: UpdateStudentInput!): Student!
-  updateTest(id: Float!, input: UpdateTestInput!): Test!
   updateUser(id: Float!, input: UpdateUserInput!): User!
   updateVolunteer(id: Float!, input: UpdateVolunteerInput!): volunteers!
   verifyEmail(email: String!, otpCode: String!): Boolean!
@@ -263,7 +250,6 @@ type Query {
   getManyKycs(input: GetManyInput): GetKycType!
   getManyOrganizers(input: GetManyInput): GetOrganizerType!
   getManyStudents(input: GetManyInput): GetStudentType!
-  getManyTests(input: GetManyInput): GetTestType!
   getManyUsers(input: GetManyInput): GetUserType!
   getManyVolunteers(input: GetManyInput): GetVolunteerType!
   getMe: User!
@@ -273,7 +259,6 @@ type Query {
   getOneKyc(input: GetOneInput!): kycs!
   getOneOrganizer(input: GetOneInput!): Organizer!
   getOneStudent(input: GetOneInput!): Student!
-  getOneTest(input: GetOneInput!): Test!
   getOneUser(input: GetOneInput!): User!
   getOneVolunteer(input: GetOneInput!): volunteers!
 }
@@ -282,6 +267,13 @@ type Query {
 enum Role {
   admin
   user
+}
+
+type School {
+  created_at: DateTime!
+  id: ID!
+  name: String!
+  updated_at: DateTime!
 }
 
 input SignInInput {
@@ -309,11 +301,6 @@ type Student {
   middle_name: String
   updated_at: DateTime!
   user: User!
-}
-
-type Test {
-  id: ID!
-  test: String!
 }
 
 input UpdateAddressInput {
@@ -349,10 +336,6 @@ input UpdateStudentInput {
   middle_name: String
 }
 
-input UpdateTestInput {
-  test: String!
-}
-
 input UpdateUserInput {
   email: String
   password: String
@@ -377,11 +360,6 @@ type User {
   role: Role!
   updated_at: DateTime!
   username: String!
-}
-
-type Volunteers {
-  full_name: String!
-  id: ID!
 }
 
 type kycs {
