@@ -23,7 +23,7 @@ export class Certificate {
   @Column({ nullable: true })
   photo: string;
 
-  @ManyToOne(() => Student)
+  @ManyToOne(() => Student, { eager: true, onDelete: 'CASCADE' })
   @Field(() => Student)
   @JoinColumn({ name: 'student_id', referencedColumnName: 'id' })
   student: Student;
