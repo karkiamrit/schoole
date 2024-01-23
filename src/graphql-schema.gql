@@ -63,6 +63,7 @@ input CreateUserInput {
   password: String!
   phone: String!
   profile_picture: String!
+  user_type: String!
   username: String!
 }
 
@@ -269,13 +270,6 @@ enum Role {
   user
 }
 
-type School {
-  created_at: DateTime!
-  id: ID!
-  name: String!
-  updated_at: DateTime!
-}
-
 input SignInInput {
   email: String!
   password: String!
@@ -301,6 +295,11 @@ type Student {
   middle_name: String
   updated_at: DateTime!
   user: User!
+}
+
+type Test {
+  id: ID!
+  test: String!
 }
 
 input UpdateAddressInput {
@@ -359,7 +358,19 @@ type User {
   profile_picture: String!
   role: Role!
   updated_at: DateTime!
+  user_type: UserType!
   username: String!
+}
+
+"""Types of user currently we have """
+enum UserType {
+  institution
+  student
+}
+
+type Volunteers {
+  full_name: String!
+  id: ID!
 }
 
 type kycs {

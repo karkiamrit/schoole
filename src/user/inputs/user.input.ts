@@ -6,6 +6,7 @@ import {
   MinLength,
 } from 'class-validator';
 import { Field, InputType } from '@nestjs/graphql';
+import { UserType } from '@/user/inputs/enums/usertype.enum';
 
 @InputType()
 export class CreateUserInput {
@@ -33,8 +34,12 @@ export class CreateUserInput {
   email: string;
 
   @Field(() => String)
+  @IsOptional()
+  profile_picture?: string;
+
+  @Field(() => String)
   @IsNotEmpty()
-  profile_picture: string;
+  user_type: UserType;
 }
 
 @InputType()
@@ -56,7 +61,7 @@ export class UpdateUserInput {
   email?: string;
 
   @Field(() => String, { nullable: true })
-  @IsNotEmpty()
+  @IsOptional()
   profile_picture?: string;
 }
 

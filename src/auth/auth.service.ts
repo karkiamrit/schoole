@@ -52,7 +52,7 @@ export class AuthService {
    * @returns {string} - A signed JWT string containing user-related claims.
    */
 
-  private signJWT(user: User) {
+  private signJWT(user: User): string {
     // You need to create a function to generate a unique identifier
     const uniqueIdentifier = this.generateUniqueIdentifier();
     const payload = {
@@ -79,16 +79,14 @@ export class AuthService {
     };
 
     // Sign a JWT token with a short expiration time
-    const token = this.jwtService.sign(payload, {
+    return this.jwtService.sign(payload, {
       expiresIn: '1h', // Set the expiration time as needed
     });
-
-    return token;
   }
   /**
    * Registers the new user with provided Information and checks if the user already exists or not.
-   * @param  {SignUpInput}  input- An object containing user registration information, including email and password.
    * @returns Returns a newly created user.
+   * @param input
    */
 
   async signUp(input: SignUpInput): Promise<User> {
@@ -130,7 +128,7 @@ export class AuthService {
 
   /**
    * Initiates the password reset process.
-   * @param  {string} email-The email address of the user for whom the password reset is requested.
+   * @param  {string} email -The email address of the user for whom the password reset is requested.
    * @returns  Boolean if the operation is successful.
    */
 

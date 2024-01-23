@@ -1,4 +1,4 @@
-import { GraphqlPassportAuthGuard } from '../modules/guards/graphql-passport-auth.guard';
+import { GraphqlPassportAuthGuard } from '@/modules/guards/graphql-passport-auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserService } from './user.service';
@@ -6,15 +6,15 @@ import GraphQLJSON from 'graphql-type-json';
 import { GetManyInput, GetOneInput } from 'src/declare/inputs/custom.input';
 import { GetUserType, User } from './entities/user.entity';
 import { CreateUserInput, UpdateUserInput } from './inputs/user.input';
-import { CurrentQuery } from '../modules/decorators/query.decorator';
-import { CurrentUser } from '../modules/decorators/user.decorator';
+import { CurrentQuery } from '@/modules/decorators/query.decorator';
+import { CurrentUser } from '@/modules/decorators/user.decorator';
 
 @Resolver()
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
   @Query(() => GetUserType)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   getManyUsers(
     @Args({ name: 'input', nullable: true })
     qs: GetManyInput<User>,
@@ -24,7 +24,7 @@ export class UserResolver {
   }
 
   @Query(() => User || null)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   getOneUser(
     @Args({ name: 'input' })
     qs: GetOneInput<User>,
@@ -34,13 +34,13 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   createUser(@Args('input') input: CreateUserInput) {
     return this.userService.create(input);
   }
 
   @Mutation(() => [User])
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   createManyUsers(
     @Args({ name: 'input', type: () => [CreateUserInput] })
     input: CreateUserInput[],
@@ -49,13 +49,13 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   updateUser(@Args('id') id: number, @Args('input') input: UpdateUserInput) {
     return this.userService.update(id, input);
   }
 
   @Mutation(() => User)
-  @UseGuards(new GraphqlPassportAuthGuard('user'))
+  @UseGuards(new GraphqlPassportAuthGuard('User'))
   async updateMe(
     @CurrentUser() user: User,
     @Args('input') input: UpdateUserInput,
@@ -65,19 +65,17 @@ export class UserResolver {
   }
 
   @Mutation(() => GraphQLJSON)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   deleteUser(@Args('id') id: number) {
     return this.userService.delete(id);
   }
 
   @Query(() => User)
-  @UseGuards(new GraphqlPassportAuthGuard('user'))
+  @UseGuards(new GraphqlPassportAuthGuard('User'))
   getMe(@CurrentUser() user: User) {
     if (!user) {
       return null;
     }
-    return this.userService.getOne({
-      where: { id: user.id },
-    });
+    return user;
   }
 }

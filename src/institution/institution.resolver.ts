@@ -16,7 +16,7 @@ export class InstitutionResolver {
   constructor(private readonly institutionService: InstitutionService) {}
 
   @Query(() => GetInstitutionType)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   getManyInstitutions(
     @Args({ name: 'input', nullable: true })
     qs: GetManyInput<Institution>,
@@ -26,7 +26,7 @@ export class InstitutionResolver {
   }
 
   @Query(() => Institution)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   getOneInstitution(
     @Args({ name: 'input' })
     qs: GetOneInput<Institution>,
@@ -36,7 +36,7 @@ export class InstitutionResolver {
   }
 
   @Mutation(() => Institution)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   createInstitution(
     @Args('input') input: CreateInstitutionInput,
     @CurrentUser() user: User,
@@ -45,7 +45,7 @@ export class InstitutionResolver {
   }
 
   @Mutation(() => [Institution])
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   createManyInstitution(
     @Args({ name: 'input', type: () => [CreateInstitutionInput] })
     input: CreateInstitutionInput[],
@@ -54,7 +54,7 @@ export class InstitutionResolver {
   }
 
   @Mutation(() => Institution)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   updateInstitution(
     @Args('id') id: number,
     @Args('input') input: UpdateInstitutionInput,
@@ -63,7 +63,7 @@ export class InstitutionResolver {
   }
 
   @Mutation(() => Institution)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   deleteInstitution(@Args('id') id: number) {
     return this.institutionService.delete(id);
   }
