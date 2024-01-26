@@ -11,7 +11,7 @@
 //   constructor(private readonly mailService: MailService) {}
 
 //   @Mutation(() => Mail)
-//   @UseGuards(new GraphqlPassportAuthGuard('admin'))
+//   @UseGuards(new GraphqlPassportAuthGuard('Admin'))
 //   createMail(@Args('input') input: CreateMailInput) {
 //     return this.mailService.create(input);
 //   }
@@ -23,7 +23,7 @@
 //   }
 
 //   @Mutation(() => Mail)
-//   @UseGuards(new GraphqlPassportAuthGuard('admin'))
+//   @UseGuards(new GraphqlPassportAuthGuard('Admin'))
 //   deleteMail(@Args('id') id: number) {
 //     return this.mailService.delete(id);
 //   }

@@ -3,14 +3,12 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { User } from '../../user/entities/user.entity';
-import { Kyc } from '@/kyc/entities/kyc.entity';
+import { User } from '@/user/entities/user.entity';
 
 @ObjectType('volunteers')
 @Entity()

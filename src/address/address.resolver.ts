@@ -11,7 +11,7 @@ export class AddressResolver {
   constructor(private readonly addressService: AddressService) {}
 
   @Query(() => GetAddressType)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   getManyAddresss(
     @Args({ name: 'input', nullable: true })
     qs: GetManyInput<Address>,
@@ -21,7 +21,7 @@ export class AddressResolver {
   }
 
   @Query(() => Address)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   getOneAddress(
     @Args({ name: 'input' })
     qs: GetOneInput<Address>,
@@ -31,13 +31,13 @@ export class AddressResolver {
   }
 
   @Mutation(() => Address)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   createAddress(@Args('input') input: CreateAddressInput) {
     return this.addressService.create(input);
   }
 
   @Mutation(() => [Address])
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   createManyAddress(
     @Args({ name: 'input', type: () => [CreateAddressInput] })
     input: CreateAddressInput[],
@@ -46,7 +46,7 @@ export class AddressResolver {
   }
 
   @Mutation(() => Address)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   updateAddress(
     @Args('id') id: number,
     @Args('input') input: UpdateAddressInput,
@@ -55,7 +55,7 @@ export class AddressResolver {
   }
 
   @Mutation(() => Address)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   deleteAddress(@Args('id') id: number) {
     return this.addressService.delete(id);
   }

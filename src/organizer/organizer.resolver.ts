@@ -14,7 +14,7 @@ export class OrganizerResolver {
   constructor(private readonly organizerService: OrganizerService) {}
 
   @Query(() => GetOrganizerType)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   getManyOrganizers(
     @Args({ name: 'input', nullable: true })
     qs: GetManyInput<Organizer>,
@@ -24,7 +24,7 @@ export class OrganizerResolver {
   }
 
   @Query(() => Organizer)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   getOneOrganizer(
     @Args({ name: 'input' })
     qs: GetOneInput<Organizer>,
@@ -34,13 +34,13 @@ export class OrganizerResolver {
   }
 
   @Mutation(() => Organizer)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   createOrganizer(@Args('input') input: CreateOrganizerInput) {
     return this.organizerService.create(input);
   }
 
   @Mutation(() => [Organizer])
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   createManyOrganizer(
     @Args({ name: 'input', type: () => [CreateOrganizerInput] })
     input: CreateOrganizerInput[],
@@ -49,7 +49,7 @@ export class OrganizerResolver {
   }
 
   @Mutation(() => Organizer)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   updateOrganizer(
     @Args('id') id: number,
     @Args('input') input: UpdateOrganizerInput,
@@ -58,7 +58,7 @@ export class OrganizerResolver {
   }
 
   @Mutation(() => Organizer)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   deleteOrganizer(@Args('id') id: number) {
     return this.organizerService.delete(id);
   }

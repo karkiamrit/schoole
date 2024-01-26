@@ -3,7 +3,6 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -11,7 +10,6 @@ import {
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { User } from 'src/user/entities/user.entity';
 import { Type } from '../inputs/enum/type.enum';
-import { Kyc } from '@/kyc/entities/kyc.entity';
 
 @ObjectType()
 @Entity('institutions')

@@ -11,6 +11,9 @@ import {
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Role } from '../inputs/enums/role.enum';
 import { Address } from '@/address/entities/address.entity';
+import { UserType } from '@/user/inputs/enums/usertype.enum';
+import { Student } from '@/student/entities/student.entity';
+import { Institution } from '@/institution/entities/institution.entity';
 
 @ObjectType()
 @Entity('users')
@@ -47,6 +50,10 @@ export class User extends BaseEntity {
   @Column({ type: 'enum', enum: Role, default: Role.user })
   role: Role;
 
+  @Field(() => UserType)
+  @Column({ type: 'enum', enum: UserType, default: UserType.student })
+  user_type: UserType;
+
   @Field(() => Date)
   @CreateDateColumn({
     type: 'timestamp with time zone',
@@ -81,4 +88,13 @@ export class GetUserType {
 
   @Field(() => Number, { nullable: true })
   count?: number;
+}
+
+@ObjectType()
+export class CurrentUserType extends User {
+  @Field(() => [Student], { nullable: true })
+  student_details?: Student;
+
+  @Field(() => [Institution], { nullable: true })
+  institution_details?: Institution;
 }

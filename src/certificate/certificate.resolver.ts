@@ -14,7 +14,7 @@ export class CertificateResolver {
   constructor(private readonly certificateService: CertificateService) {}
 
   @Query(() => GetCertificateType)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   getManyCertificates(
     @Args({ name: 'input', nullable: true })
     qs: GetManyInput<Certificate>,
@@ -24,7 +24,7 @@ export class CertificateResolver {
   }
 
   @Query(() => Certificate)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   getOneCertificate(
     @Args({ name: 'input' })
     qs: GetOneInput<Certificate>,
@@ -40,7 +40,7 @@ export class CertificateResolver {
   // }
 
   @Mutation(() => Certificate)
-  @UseGuards(new GraphqlPassportAuthGuard('user'))
+  @UseGuards(new GraphqlPassportAuthGuard('User'))
   async createCertificate(
     @Args('input') input: CreateCertificateInput,
     @Args('transactionId') transactionId: string,
@@ -52,7 +52,7 @@ export class CertificateResolver {
   }
 
   @Mutation(() => [Certificate])
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   createManyCertificate(
     @Args({ name: 'input', type: () => [CreateCertificateInput] })
     input: CreateCertificateInput[],
@@ -61,7 +61,7 @@ export class CertificateResolver {
   }
 
   @Mutation(() => Certificate)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   updateCertificate(
     @Args('id') id: number,
     @Args('input') input: UpdateCertificateInput,
@@ -70,7 +70,7 @@ export class CertificateResolver {
   }
 
   @Mutation(() => Certificate)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   deleteCertificate(@Args('id') id: number) {
     return this.certificateService.delete(id);
   }

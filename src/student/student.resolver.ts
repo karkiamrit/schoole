@@ -40,7 +40,7 @@ export class StudentResolver {
   }
 
   @Mutation(() => Student)
-  @UseGuards(new GraphqlPassportAuthGuard('user'))
+  @UseGuards(new GraphqlPassportAuthGuard('User'))
   createStudent(
     @Args('input') input: CreateStudentInput,
     @CurrentUser() user: User,
