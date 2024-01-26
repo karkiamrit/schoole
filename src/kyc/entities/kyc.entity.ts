@@ -11,8 +11,8 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Institution } from '@/institution/entities/institution.entity';
 import { Volunteer } from '@/volunteer/entities/volunteer.entity';
 
-@ObjectType('kycs')
-@Entity()
+@ObjectType()
+@Entity('kycs')
 export class Kyc {
   @Field(() => ID)
   @PrimaryGeneratedColumn('increment')

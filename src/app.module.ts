@@ -1,3 +1,5 @@
+import { CompetitionModule } from './competition/competition.module';
+import { EventModule } from './event/event.module';
 import { AddressModule } from './address/address.module';
 import { CertificateModule } from './certificate/certificate.module';
 import { KycModule } from './kyc/kyc.module';
@@ -64,6 +66,8 @@ import { join } from 'path';
     KycModule,
     CertificateModule,
     AddressModule,
+    EventModule,
+    CompetitionModule,
     OtpModule,
     MailModule,
     TokenModule,

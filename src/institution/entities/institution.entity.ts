@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  ManyToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -10,6 +11,7 @@ import {
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { User } from 'src/user/entities/user.entity';
 import { Type } from '../inputs/enum/type.enum';
+import { Event } from '@/event/entities/event.entity';
 
 @ObjectType()
 @Entity('institutions')
@@ -32,6 +34,10 @@ export class Institution {
   @Field(() => User)
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: User;
+
+  @ManyToMany(() => Event, (event) => event.institutions)
+  @Field(() => [Event])
+  events: Event[];
 
   @Field(() => Date)
   @CreateDateColumn({

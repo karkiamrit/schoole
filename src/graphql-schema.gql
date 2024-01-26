@@ -22,6 +22,13 @@ type Certificate {
   student: Student!
 }
 
+type Competition {
+  created_at: DateTime!
+  id: ID!
+  name: String!
+  updated_at: DateTime!
+}
+
 input CreateAddressInput {
   latitude: String!
 }
@@ -29,6 +36,16 @@ input CreateAddressInput {
 input CreateCertificateInput {
   certificate_title: String!
   photo: String
+}
+
+input CreateCompetitionInput {
+  name: String!
+}
+
+input CreateEventInput {
+  end_date: DateTime!
+  name: String!
+  start_date: DateTime!
 }
 
 input CreateInstitutionInput {
@@ -76,6 +93,17 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Event {
+  address: Address!
+  created_at: DateTime!
+  end_date: DateTime!
+  id: ID!
+  institutions: [Institution!]!
+  name: String!
+  start_date: DateTime!
+  updated_at: DateTime!
+}
+
 """The gender of the students or users"""
 enum Gender {
   female
@@ -94,6 +122,16 @@ type GetCertificateType {
   data: [Certificate!]
 }
 
+type GetCompetitionType {
+  count: Float
+  data: [Competition!]
+}
+
+type GetEventType {
+  count: Float
+  data: [Event!]
+}
+
 type GetInstitutionType {
   count: Float
   data: [Institution!]
@@ -101,7 +139,7 @@ type GetInstitutionType {
 
 type GetKycType {
   count: Float
-  data: [kycs!]
+  data: [Kyc!]
 }
 
 input GetManyInput {
@@ -150,6 +188,7 @@ input IPagination {
 
 type Institution {
   created_at: DateTime!
+  events: [Event!]!
   id: ID!
   name: String!
   type: type!
@@ -165,6 +204,16 @@ scalar JSON
 type JwtWithUser {
   jwt: String!
   user: User!
+}
+
+type Kyc {
+  created_at: DateTime!
+  id: ID!
+  institution: Institution
+  kyc_document: String!
+  kyc_type: String!
+  updated_at: DateTime!
+  volunteer: volunteers
 }
 
 """The level of education of students"""
@@ -191,12 +240,17 @@ type Mutation {
   SignUp(input: SignUpInput!): User!
   createAddress(input: CreateAddressInput!): Address!
   createCertificate(input: CreateCertificateInput!, transactionId: String!): Certificate!
+  createCompetition(input: CreateCompetitionInput!): Competition!
+  createEvent(input: CreateEventInput!): Event!
+  createEventByInstitution(input: CreateEventInput!): Event!
   createInstitution(input: CreateInstitutionInput!): Institution!
-  createKyc(input: CreateKycInput!): kycs!
+  createKyc(input: CreateKycInput!): Kyc!
   createManyAddress(input: [CreateAddressInput!]!): [Address!]!
   createManyCertificate(input: [CreateCertificateInput!]!): [Certificate!]!
+  createManyCompetition(input: [CreateCompetitionInput!]!): [Competition!]!
+  createManyEvent(input: [CreateEventInput!]!): [Event!]!
   createManyInstitution(input: [CreateInstitutionInput!]!): [Institution!]!
-  createManyKyc(input: [CreateKycInput!]!): [kycs!]!
+  createManyKyc(input: [CreateKycInput!]!): [Kyc!]!
   createManyOrganizer(input: [CreateOrganizerInput!]!): [Organizer!]!
   createManyStudent(input: [CreateStudentInput!]!): [Student!]!
   createManyUsers(input: [CreateUserInput!]!): [User!]!
@@ -207,8 +261,10 @@ type Mutation {
   createVolunteer(input: CreateVolunteerInput!): volunteers!
   deleteAddress(id: Float!): Address!
   deleteCertificate(id: Float!): Certificate!
+  deleteCompetition(id: Float!): Competition!
+  deleteEvent(id: Float!): Event!
   deleteInstitution(id: Float!): Institution!
-  deleteKyc(id: Float!): kycs!
+  deleteKyc(id: Float!): Kyc!
   deleteOrganizer(id: Float!): Organizer!
   deleteStudent(id: Float!): Student!
   deleteUser(id: Float!): JSON!
@@ -220,8 +276,10 @@ type Mutation {
   signIn(input: SignInInput!): JwtWithUser!
   updateAddress(id: Float!, input: UpdateAddressInput!): Address!
   updateCertificate(id: Float!, input: UpdateCertificateInput!): Certificate!
+  updateCompetition(id: Float!, input: UpdateCompetitionInput!): Competition!
+  updateEvent(id: Float!, input: UpdateEventInput!): Event!
   updateInstitution(id: Float!, input: UpdateInstitutionInput!): Institution!
-  updateKyc(id: Float!, input: UpdateKycInput!): kycs!
+  updateKyc(id: Float!, input: UpdateKycInput!): Kyc!
   updateMe(input: UpdateUserInput!): User!
   updateOrganizer(id: Float!, input: UpdateOrganizerInput!): Organizer!
   updateStudent(id: Float!, input: UpdateStudentInput!): Student!
@@ -247,6 +305,8 @@ enum OrganizerType {
 type Query {
   getManyAddresss(input: GetManyInput): GetAddressType!
   getManyCertificates(input: GetManyInput): GetCertificateType!
+  getManyCompetitions(input: GetManyInput): GetCompetitionType!
+  getManyEvents(input: GetManyInput): GetEventType!
   getManyInstitutions(input: GetManyInput): GetInstitutionType!
   getManyKycs(input: GetManyInput): GetKycType!
   getManyOrganizers(input: GetManyInput): GetOrganizerType!
@@ -256,8 +316,10 @@ type Query {
   getMe: User!
   getOneAddress(input: GetOneInput!): Address!
   getOneCertificate(input: GetOneInput!): Certificate!
+  getOneCompetition(input: GetOneInput!): Competition!
+  getOneEvent(input: GetOneInput!): Event!
   getOneInstitution(input: GetOneInput!): Institution!
-  getOneKyc(input: GetOneInput!): kycs!
+  getOneKyc(input: GetOneInput!): Kyc!
   getOneOrganizer(input: GetOneInput!): Organizer!
   getOneStudent(input: GetOneInput!): Student!
   getOneUser(input: GetOneInput!): User!
@@ -311,6 +373,16 @@ input UpdateAddressInput {
 input UpdateCertificateInput {
   certificate_title: String
   photo: String
+}
+
+input UpdateCompetitionInput {
+  name: String!
+}
+
+input UpdateEventInput {
+  end_date: DateTime!
+  name: String!
+  start_date: DateTime!
 }
 
 input UpdateInstitutionInput {
@@ -368,16 +440,6 @@ type User {
 enum UserType {
   institution
   student
-}
-
-type kycs {
-  created_at: DateTime!
-  id: ID!
-  institution: Institution
-  kyc_document: String!
-  kyc_type: String!
-  updated_at: DateTime!
-  volunteer: volunteers
 }
 
 enum type {
