@@ -5,7 +5,6 @@ import {
   CreateDateColumn,
   Entity,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -17,7 +16,7 @@ import { Address } from '@/address/entities/address.entity';
 @Entity('users')
 export class User extends BaseEntity {
   @Field(() => ID)
-  @PrimaryGeneratedColumn('increment')
+  @PrimaryGeneratedColumn('increment') // change to bigInt in Production
   id: number;
 
   @Field(() => String)

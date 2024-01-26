@@ -20,7 +20,7 @@ export class Student {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @OneToOne(() => User, { onDelete: 'CASCADE',eager:true })
+  @OneToOne(() => User, { onDelete: 'CASCADE', eager: true })
   @Field(() => User)
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: User;

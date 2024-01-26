@@ -3,7 +3,6 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -11,7 +10,6 @@ import {
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Institution } from '@/institution/entities/institution.entity';
 import { Volunteer } from '@/volunteer/entities/volunteer.entity';
-import { User } from '@/user/entities/user.entity';
 
 @ObjectType('kycs')
 @Entity()
