@@ -69,7 +69,7 @@ export class UpdateUserInput {
 export class UpdateUserInputAdmin extends UpdateUserInput {
   @Field(() => String, { nullable: true })
   @IsOptional()
-  role?: 'admin' | 'user';
+  role?: 'Admin' | 'user';
 }
 
 @InputType()

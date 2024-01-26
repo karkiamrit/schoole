@@ -14,7 +14,7 @@ export class VolunteerResolver {
   constructor(private readonly volunteerService: VolunteerService) {}
 
   @Query(() => GetVolunteerType)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   getManyVolunteers(
     @Args({ name: 'input', nullable: true })
     qs: GetManyInput<Volunteer>,
@@ -24,7 +24,7 @@ export class VolunteerResolver {
   }
 
   @Query(() => Volunteer)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   getOneVolunteer(
     @Args({ name: 'input' })
     qs: GetOneInput<Volunteer>,
@@ -34,13 +34,13 @@ export class VolunteerResolver {
   }
 
   @Mutation(() => Volunteer)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   createVolunteer(@Args('input') input: CreateVolunteerInput) {
     return this.volunteerService.create(input);
   }
 
   @Mutation(() => [Volunteer])
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   createManyVolunteer(
     @Args({ name: 'input', type: () => [CreateVolunteerInput] })
     input: CreateVolunteerInput[],
@@ -49,7 +49,7 @@ export class VolunteerResolver {
   }
 
   @Mutation(() => Volunteer)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   updateVolunteer(
     @Args('id') id: number,
     @Args('input') input: UpdateVolunteerInput,
@@ -58,7 +58,7 @@ export class VolunteerResolver {
   }
 
   @Mutation(() => Volunteer)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   deleteVolunteer(@Args('id') id: number) {
     return this.volunteerService.delete(id);
   }

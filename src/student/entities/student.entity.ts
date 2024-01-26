@@ -12,6 +12,7 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Gender, Level } from '../inputs/enums/index';
 import { User } from 'src/user/entities/user.entity';
 import { Certificate } from '@/certificate/entities/certificate.entity';
+import { Participant } from '@/participant/entities/participant.entity';
 
 @ObjectType()
 @Entity('students')
@@ -20,7 +21,7 @@ export class Student {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @OneToOne(() => User, { onDelete: 'CASCADE', eager: true })
+  @OneToOne(() => User, { onDelete: 'CASCADE' })
   @Field(() => User)
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: User;
@@ -78,9 +79,12 @@ export class Student {
   updated_at: Date;
 
   //reverse relation fields
-
   @OneToMany(() => Certificate, (certificate) => certificate.student)
   certificates: Certificate[];
+
+  @OneToMany(() => Participant, (participant) => participant.student)
+  @Field(() => [Participant])
+  participations: Participant[];
 }
 
 @ObjectType()

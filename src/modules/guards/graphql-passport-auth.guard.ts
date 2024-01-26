@@ -19,7 +19,7 @@
 
 //     const role = req.user.role;
 
-//     if (role === 'admin') {
+//     if (role === 'Admin') {
 //       return true;
 //     }
 
@@ -58,7 +58,7 @@ export class GraphqlPassportAuthGuard extends AuthGuard('jwt') {
     const req = ctx.getContext().req;
     const { role } = req.user;
 
-    if (role === 'admin') {
+    if (role === 'Admin') {
       return true;
     }
 

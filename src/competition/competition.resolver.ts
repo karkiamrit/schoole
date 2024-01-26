@@ -14,7 +14,7 @@ export class CompetitionResolver {
   constructor(private readonly competitionService: CompetitionService) {}
 
   @Query(() => GetCompetitionType)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   getManyCompetitions(
     @Args({ name: 'input', nullable: true })
     qs: GetManyInput<Competition>,
@@ -24,7 +24,7 @@ export class CompetitionResolver {
   }
 
   @Query(() => Competition)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   getOneCompetition(
     @Args({ name: 'input' })
     qs: GetOneInput<Competition>,
@@ -34,13 +34,13 @@ export class CompetitionResolver {
   }
 
   @Mutation(() => Competition)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   createCompetition(@Args('input') input: CreateCompetitionInput) {
     return this.competitionService.create(input);
   }
 
   @Mutation(() => [Competition])
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   createManyCompetition(
     @Args({ name: 'input', type: () => [CreateCompetitionInput] })
     input: CreateCompetitionInput[],
@@ -49,7 +49,7 @@ export class CompetitionResolver {
   }
 
   @Mutation(() => Competition)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   updateCompetition(
     @Args('id') id: number,
     @Args('input') input: UpdateCompetitionInput,
@@ -58,7 +58,7 @@ export class CompetitionResolver {
   }
 
   @Mutation(() => Competition)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   deleteCompetition(@Args('id') id: number) {
     return this.competitionService.delete(id);
   }

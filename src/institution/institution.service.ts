@@ -14,16 +14,23 @@ export class InstitutionService {
   constructor(private readonly institutionRepository: InstitutionRepository) {}
 
   getMany(qs?: RepoQuery<Institution>, query?: string) {
-    return this.institutionRepository.getMany(qs || {}, query);
+    return this.institutionRepository.getMany(
+      {
+        ...qs,
+        relations: ['user'],
+      } || {},
+      query,
+    );
   }
 
   getOne(qs: OneRepoQuery<Institution>, query?: string) {
     if (query) {
-      return this.institutionRepository.getOne(qs, query);
+      return this.institutionRepository.getOne({ ...qs , relations:['user']}, query);
     } else {
-      return this.institutionRepository.findOne(
-        qs as FindOneOptions<Institution>,
-      );
+      return this.institutionRepository.findOne({
+        ...qs,
+        relations: ['user'],
+      } as FindOneOptions<Institution>);
     }
   }
 

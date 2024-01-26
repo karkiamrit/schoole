@@ -5,6 +5,7 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -12,6 +13,7 @@ import {
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Address } from '@/address/entities/address.entity';
 import { Institution } from '@/institution/entities/institution.entity';
+import { Competition } from '@/competition/entities/competition.entity';
 
 @ObjectType()
 @Entity('events')
@@ -31,6 +33,10 @@ export class Event {
   @Field(() => Address)
   @JoinColumn({ name: 'address_id', referencedColumnName: 'id' })
   address: Address;
+
+  @OneToMany(() => Competition, (competition) => competition.event)
+  @Field(() => [Competition])
+  competitions: Competition[];
 
   @ManyToMany(() => Institution, (institution) => institution.events, {
     eager: true,

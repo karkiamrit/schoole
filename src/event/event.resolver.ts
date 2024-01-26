@@ -13,7 +13,7 @@ export class EventResolver {
   constructor(private readonly eventService: EventService) {}
 
   @Query(() => GetEventType)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   getManyEvents(
     @Args({ name: 'input', nullable: true })
     qs: GetManyInput<Event>,
@@ -23,7 +23,7 @@ export class EventResolver {
   }
 
   @Query(() => Event)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   getOneEvent(
     @Args({ name: 'input' })
     qs: GetOneInput<Event>,
@@ -33,13 +33,13 @@ export class EventResolver {
   }
 
   @Mutation(() => Event)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   createEvent(@Args('input') input: CreateEventInput) {
     return this.eventService.create(input, null);
   }
 
   @Mutation(() => Event)
-  @UseGuards(new GraphqlPassportAuthGuard('user'))
+  @UseGuards(new GraphqlPassportAuthGuard('User'))
   createEventByInstitution(
     @Args('input') input: CreateEventInput,
     @CurrentUser() user: User,
@@ -48,7 +48,7 @@ export class EventResolver {
   }
 
   @Mutation(() => [Event])
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   createManyEvent(
     @Args({ name: 'input', type: () => [CreateEventInput] })
     input: CreateEventInput[],
@@ -57,13 +57,13 @@ export class EventResolver {
   }
 
   @Mutation(() => Event)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   updateEvent(@Args('id') id: number, @Args('input') input: UpdateEventInput) {
     return this.eventService.update(id, input);
   }
 
   @Mutation(() => Event)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   deleteEvent(@Args('id') id: number) {
     return this.eventService.delete(id);
   }

@@ -11,7 +11,7 @@ export class KycResolver {
   constructor(private readonly kycService: KycService) {}
 
   @Query(() => GetKycType)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   getManyKycs(
     @Args({ name: 'input', nullable: true })
     qs: GetManyInput<Kyc>,
@@ -21,7 +21,7 @@ export class KycResolver {
   }
 
   @Query(() => Kyc)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   getOneKyc(
     @Args({ name: 'input' })
     qs: GetOneInput<Kyc>,
@@ -31,13 +31,13 @@ export class KycResolver {
   }
 
   @Mutation(() => Kyc)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   createKyc(@Args('input') input: CreateKycInput) {
     return this.kycService.create(input);
   }
 
   @Mutation(() => [Kyc])
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   createManyKyc(
     @Args({ name: 'input', type: () => [CreateKycInput] })
     input: CreateKycInput[],
@@ -46,13 +46,13 @@ export class KycResolver {
   }
 
   @Mutation(() => Kyc)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   updateKyc(@Args('id') id: number, @Args('input') input: UpdateKycInput) {
     return this.kycService.update(id, input);
   }
 
   @Mutation(() => Kyc)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   deleteKyc(@Args('id') id: number) {
     return this.kycService.delete(id);
   }

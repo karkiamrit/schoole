@@ -13,7 +13,7 @@ export class StudentResolver {
   constructor(private readonly studentService: StudentService) {}
 
   @Query(() => GetStudentType)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   getManyStudents(
     @Args({ name: 'input', nullable: true })
     qs: GetManyInput<Student>,
@@ -30,7 +30,7 @@ export class StudentResolver {
    * @returns {Student} - The retrieved student.
    */
   @Query(() => Student)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('User'))
   getOneStudent(
     @Args({ name: 'input' })
     qs: GetOneInput<Student>,
@@ -49,7 +49,7 @@ export class StudentResolver {
   }
 
   @Mutation(() => [Student])
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   createManyStudent(
     @Args({ name: 'input', type: () => [CreateStudentInput] })
     input: CreateStudentInput[],
@@ -58,7 +58,7 @@ export class StudentResolver {
   }
 
   @Mutation(() => Student)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   updateStudent(
     @Args('id') id: number,
     @Args('input') input: UpdateStudentInput,
@@ -67,7 +67,7 @@ export class StudentResolver {
   }
 
   @Mutation(() => Student)
-  @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   deleteStudent(@Args('id') id: number) {
     return this.studentService.delete(id);
   }

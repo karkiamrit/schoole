@@ -47,6 +47,7 @@ export interface RepoQuery<T> {
   where?: IWhere<T>;
   order?: FindOptionsOrder<T>;
   dataType?: IDataType;
+  relations?: string[];
 }
 
-export type OneRepoQuery<T> = Pick<Required<RepoQuery<T>>, 'where'>;
+export type OneRepoQuery<T> = Required<Pick<RepoQuery<T>, 'where'>> & Partial<Pick<RepoQuery<T>, 'relations'>>;

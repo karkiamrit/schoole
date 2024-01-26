@@ -17,7 +17,7 @@
 //   }
 
 //   @Mutation(() => Mail)
-//   // @UseGuards(new GraphqlPassportAuthGuard('admin'))
+//   // @UseGuards(new GraphqlPassportAuthGuard('Admin'))
 //   updateMail(@Args('id') id: number, @Args('input') input: UpdateMailInput) {
 //     return this.mailService.update(id, input);
 //   }

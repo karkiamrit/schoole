@@ -1,3 +1,4 @@
+import { ParticipantModule } from './participant/participant.module';
 import { CompetitionModule } from './competition/competition.module';
 import { EventModule } from './event/event.module';
 import { AddressModule } from './address/address.module';
@@ -68,6 +69,7 @@ import { join } from 'path';
     AddressModule,
     EventModule,
     CompetitionModule,
+    ParticipantModule,
     OtpModule,
     MailModule,
     TokenModule,

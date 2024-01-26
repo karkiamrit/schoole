@@ -145,7 +145,7 @@ const createResolverModuleText = (name, typeOfId) => {
     )}Service) {}`,
     ``,
     `@Query(() => Get${capitalize(name)}Type)`,
-    `@UseGuards(new GraphqlPassportAuthGuard('admin'))`,
+    `@UseGuards(new GraphqlPassportAuthGuard('Admin'))`,
     `getMany${capitalize(name)}s(`,
     `  @Args({ name: 'input', nullable: true })`,
     `  qs: GetManyInput<${capitalize(name)}>,`,
@@ -155,7 +155,7 @@ const createResolverModuleText = (name, typeOfId) => {
     `}`,
     ``,
     `@Query(() => ${capitalize(name)})`,
-    `@UseGuards(new GraphqlPassportAuthGuard('admin'))`,
+    `@UseGuards(new GraphqlPassportAuthGuard('Admin'))`,
     `getOne${capitalize(name)}(`,
     `  @Args({ name: 'input' })`,
     `  qs: GetOneInput<${capitalize(name)}>,`,
@@ -165,7 +165,7 @@ const createResolverModuleText = (name, typeOfId) => {
     `}`,
     ``,
     `@Mutation(() => ${capitalize(name)})`,
-    `@UseGuards(new GraphqlPassportAuthGuard('admin'))`,
+    `@UseGuards(new GraphqlPassportAuthGuard('Admin'))`,
     `create${capitalize(name)}(@Args('input') input: Create${capitalize(
       name,
     )}Input) {`,
@@ -173,7 +173,7 @@ const createResolverModuleText = (name, typeOfId) => {
     `}`,
     ``,
     `@Mutation(()=> [${capitalize(name)}])`,
-    `@UseGuards(new GraphqlPassportAuthGuard('admin'))`,
+    `@UseGuards(new GraphqlPassportAuthGuard('Admin'))`,
     `createMany${capitalize(name)}(`,
     `  @Args({ name: 'input', type: () => [Create${capitalize(name)}Input] })`,
     `  input: Create${capitalize(name)}Input[],`,
@@ -182,7 +182,7 @@ const createResolverModuleText = (name, typeOfId) => {
     `}`,
     ``,
     `@Mutation(() => ${capitalize(name)})`,
-    `@UseGuards(new GraphqlPassportAuthGuard('admin'))`,
+    `@UseGuards(new GraphqlPassportAuthGuard('Admin'))`,
     `update${capitalize(name)}(@Args('id') id: ${
       typeOfId === 'increment' ? 'number' : 'string'
     }, @Args('input') input: Update${capitalize(name)}Input) {`,
@@ -190,7 +190,7 @@ const createResolverModuleText = (name, typeOfId) => {
     `}`,
     ``,
     `@Mutation(() => ${capitalize(name)})`,
-    `@UseGuards(new GraphqlPassportAuthGuard('admin'))`,
+    `@UseGuards(new GraphqlPassportAuthGuard('Admin'))`,
     `delete${capitalize(name)}(@Args('id') id: ${
       typeOfId === 'increment' ? 'number' : 'string'
     }) {`,

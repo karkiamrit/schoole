@@ -30,7 +30,7 @@ export class Institution {
 
   // eager true means that when we fetch an institution, we also fetch the user
   // ondelete cascade means that when we delete an user, we also delete the institution (composition)
-  @OneToOne(() => User, { eager: true, onDelete: 'CASCADE' })
+  @OneToOne(() => User, { onDelete: 'CASCADE' })
   @Field(() => User)
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: User;

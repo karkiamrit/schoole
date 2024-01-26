@@ -34,7 +34,7 @@ export class CertificateResolver {
   }
 
   // @Mutation(() => Certificate)
-  // @UseGuards(new GraphqlPassportAuthGuard('admin'))
+  // @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   // async createCertificate(@Args('input') input: CreateCertificateInput) {
   //   return this.certificateService.create(input);
   // }

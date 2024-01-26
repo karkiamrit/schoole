@@ -4,7 +4,9 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -60,6 +62,20 @@ export class User extends BaseEntity {
   })
   created_at: Date;
 
+  @OneToOne(() => Student, (student) => student.user, {
+    nullable: true,
+    eager: true,
+  })
+  @Field(() => Student, { nullable: true })
+  student: Student;
+
+  @OneToOne(() => Institution, (institution) => institution.user, {
+    nullable: true,
+    eager: true,
+  })
+  @Field(() => Institution, { nullable: true })
+  institution: Institution;
+
   @Field(() => Date)
   @UpdateDateColumn({
     type: 'timestamp with time zone',
@@ -88,13 +104,4 @@ export class GetUserType {
 
   @Field(() => Number, { nullable: true })
   count?: number;
-}
-
-@ObjectType()
-export class CurrentUserType extends User {
-  @Field(() => [Student], { nullable: true })
-  student_details?: Student;
-
-  @Field(() => [Institution], { nullable: true })
-  institution_details?: Institution;
 }

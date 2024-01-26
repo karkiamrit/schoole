@@ -23,10 +23,17 @@ type Certificate {
 }
 
 type Competition {
-  created_at: DateTime!
+  category: String!
+  createdAt: DateTime!
+  description: String!
+  end_date: DateTime!
+  event: Event!
   id: ID!
   name: String!
-  updated_at: DateTime!
+  participants: [Participant!]!
+  rules: [String!]!
+  start_date: DateTime!
+  updatedAt: DateTime!
 }
 
 input CreateAddressInput {
@@ -39,7 +46,12 @@ input CreateCertificateInput {
 }
 
 input CreateCompetitionInput {
+  category: String!
+  description: String!
+  end_date: DateTime!
   name: String!
+  rules: [String!]
+  start_date: DateTime!
 }
 
 input CreateEventInput {
@@ -95,6 +107,7 @@ scalar DateTime
 
 type Event {
   address: Address!
+  competitions: [Competition!]!
   created_at: DateTime!
   end_date: DateTime!
   id: ID!
@@ -302,6 +315,12 @@ enum OrganizerType {
   club
 }
 
+type Participant {
+  competitions: [Competition!]!
+  id: ID!
+  student: Student!
+}
+
 type Query {
   getManyAddresss(input: GetManyInput): GetAddressType!
   getManyCertificates(input: GetManyInput): GetCertificateType!
@@ -328,7 +347,7 @@ type Query {
 
 """The basic roles of users"""
 enum Role {
-  admin
+  Admin
   user
 }
 
@@ -362,6 +381,7 @@ type Student {
   last_name: String!
   level: Level!
   middle_name: String
+  participations: [Participant!]!
   updated_at: DateTime!
   user: User!
 }
@@ -376,7 +396,12 @@ input UpdateCertificateInput {
 }
 
 input UpdateCompetitionInput {
-  name: String!
+  category: String
+  description: String
+  end_date: DateTime
+  name: String
+  rules: [String!]
+  start_date: DateTime
 }
 
 input UpdateEventInput {
@@ -426,11 +451,13 @@ type User {
   email: String!
   email_verified: Boolean!
   id: ID!
+  institution: Institution
   last_login: DateTime
   password: String!
   phone: String!
   profile_picture: String!
   role: Role!
+  student: Student
   updated_at: DateTime!
   user_type: UserType!
   username: String!
