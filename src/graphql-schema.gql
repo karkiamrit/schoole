@@ -270,6 +270,13 @@ enum Role {
   user
 }
 
+type School {
+  created_at: DateTime!
+  id: ID!
+  name: String!
+  updated_at: DateTime!
+}
+
 input SignInInput {
   email: String!
   password: String!
@@ -295,11 +302,6 @@ type Student {
   middle_name: String
   updated_at: DateTime!
   user: User!
-}
-
-type Test {
-  id: ID!
-  test: String!
 }
 
 input UpdateAddressInput {
@@ -366,11 +368,6 @@ type User {
 enum UserType {
   institution
   student
-}
-
-type Volunteers {
-  full_name: String!
-  id: ID!
 }
 
 type kycs {
