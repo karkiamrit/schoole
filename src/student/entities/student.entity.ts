@@ -82,7 +82,9 @@ export class Student {
   @OneToMany(() => Certificate, (certificate) => certificate.student)
   certificates: Certificate[];
 
-  @OneToMany(() => Participant, (participant) => participant.student)
+  @OneToMany(() => Participant, (participant) => participant.student, {
+    eager: true,
+  })
   @Field(() => [Participant])
   participations: Participant[];
 }

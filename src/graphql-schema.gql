@@ -253,7 +253,7 @@ type Mutation {
   SignUp(input: SignUpInput!): User!
   createAddress(input: CreateAddressInput!): Address!
   createCertificate(input: CreateCertificateInput!, transactionId: String!): Certificate!
-  createCompetition(input: CreateCompetitionInput!): Competition!
+  createCompetition(eventID: Float!, input: CreateCompetitionInput!): Competition!
   createEvent(input: CreateEventInput!): Event!
   createEventByInstitution(input: CreateEventInput!): Event!
   createInstitution(input: CreateInstitutionInput!): Institution!
@@ -284,6 +284,7 @@ type Mutation {
   deleteVolunteer(id: Float!): volunteers!
   forgotPassword(email: String!): Boolean!
   logout(accessToken: String!): Boolean!
+  participateInCompetition(competitionID: Float!): JSON!
   requestOtpVerify(email: String!, otpType: String!): Boolean!
   resetPassword(newPassword: String!, token: String!): Boolean!
   signIn(input: SignInInput!): JwtWithUser!

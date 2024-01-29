@@ -50,4 +50,5 @@ export interface RepoQuery<T> {
   relations?: string[];
 }
 
-export type OneRepoQuery<T> = Required<Pick<RepoQuery<T>, 'where'>> & Partial<Pick<RepoQuery<T>, 'relations'>>;
+export type OneRepoQuery<T> = Required<Pick<RepoQuery<T>, 'where'>> &
+  Partial<Pick<RepoQuery<T>, 'relations'>>;

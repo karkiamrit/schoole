@@ -17,9 +17,7 @@ export class Participant {
   @PrimaryGeneratedColumn('increment', { type: 'bigint' })
   id: number;
 
-  @ManyToOne(() => Student, (student) => student.participations, {
-    eager: true,
-  })
+  @ManyToOne(() => Student, (student) => student.participations)
   @JoinColumn()
   @Field(() => Student)
   student: Student;

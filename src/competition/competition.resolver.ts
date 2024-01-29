@@ -9,6 +9,9 @@ import {
   CreateCompetitionInput,
   UpdateCompetitionInput,
 } from './inputs/competition.input';
+import GraphQLJSON from 'graphql-type-json';
+import { User } from '@/user/entities/user.entity';
+import { CurrentUser } from '@/modules/decorators/user.decorator';
 @Resolver()
 export class CompetitionResolver {
   constructor(private readonly competitionService: CompetitionService) {}
@@ -35,8 +38,11 @@ export class CompetitionResolver {
 
   @Mutation(() => Competition)
   @UseGuards(new GraphqlPassportAuthGuard('Admin'))
-  createCompetition(@Args('input') input: CreateCompetitionInput) {
-    return this.competitionService.create(input);
+  createCompetition(
+    @Args('input') input: CreateCompetitionInput,
+    @Args('eventID') eventID: number,
+  ) {
+    return this.competitionService.create(input, eventID);
   }
 
   @Mutation(() => [Competition])
@@ -55,6 +61,15 @@ export class CompetitionResolver {
     @Args('input') input: UpdateCompetitionInput,
   ) {
     return this.competitionService.update(id, input);
+  }
+
+  @Mutation(() => GraphQLJSON)
+  @UseGuards(new GraphqlPassportAuthGuard('User'))
+  participateInCompetition(
+    @Args('competitionID') id: number,
+    @CurrentUser() user: User,
+  ) {
+    return this.competitionService.participate(id, user);
   }
 
   @Mutation(() => Competition)

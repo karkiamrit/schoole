@@ -25,7 +25,10 @@ export class InstitutionService {
 
   getOne(qs: OneRepoQuery<Institution>, query?: string) {
     if (query) {
-      return this.institutionRepository.getOne({ ...qs , relations:['user']}, query);
+      return this.institutionRepository.getOne(
+        { ...qs, relations: ['user'] },
+        query,
+      );
     } else {
       return this.institutionRepository.findOne({
         ...qs,
