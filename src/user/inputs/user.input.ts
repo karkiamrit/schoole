@@ -76,7 +76,7 @@ export class UpdateUserInputAdmin extends UpdateUserInput {
 export class UpdateVerificationInput {
   @Field(() => Boolean, { nullable: true })
   @IsOptional()
-  email_verified?: boolean;
+  phone_verified?: boolean;
 }
 
 @InputType()

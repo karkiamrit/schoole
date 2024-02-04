@@ -1,7 +1,7 @@
 import { Args, Mutation, Resolver, Context } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { SignInInput, SignUpInput } from './inputs/auth.input';
-import { JwtWithUser } from '../auth/entities/auth._entity';
+import { JwtWithUser } from '../auth/inputs/auth.response';
 import { UseGuards } from '@nestjs/common';
 import { SignInGuard } from '../modules/guards/graphql-signin-guard';
 import { OtpType } from '../otp/entities/otp.entity';
@@ -26,7 +26,7 @@ export class AuthResolver {
     @Context() { res }: { res: Response },
   ): Promise<JwtWithUser> {
     const result = await this.authService.signIn(input);
-    res.cookie('jwt', result.jwt, { httpOnly: true }); // Set the cookie
+    res.cookie('jwt', result.refreshToken, { httpOnly: true }); // Set the cookie
     return result;
   }
 
@@ -38,10 +38,15 @@ export class AuthResolver {
 
   @Mutation(() => Boolean)
   async resetPassword(
-    @Args('token') token: string,
+    @Args('otpcode') otp: string,
+    @Args('otpcode') email: string,
     @Args('newPassword') newPassword: string,
   ): Promise<boolean> {
-    const result = await this.authService.resetPassword(token, newPassword);
+    const result = await this.authService.resetPassword(
+      email,
+      otp,
+      newPassword,
+    );
     return result;
   }
 
@@ -54,12 +59,11 @@ export class AuthResolver {
   }
 
   @Mutation(() => Boolean)
-  async verifyEmail(
-    @Args('email') email: string,
+  async verifyPhone(
+    @Args('phone') phone: string,
     @Args('otpCode') otpCode: string,
   ): Promise<boolean> {
-    const result = await this.authService.verifyEmail(email, otpCode);
-    return result;
+    return (await this.authService.verifyPhone(phone, otpCode)) as boolean;
   }
 
   @Mutation(() => Boolean)

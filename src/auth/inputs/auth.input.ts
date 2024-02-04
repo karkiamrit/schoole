@@ -9,26 +9,27 @@ import {
 
 @InputType()
 export class SignInInput {
-  @Field()
-  @IsNotEmpty()
+  @Field({ nullable: true })
+  @IsOptional()
   @IsEmail()
-  email: string;
+  email?: string;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @MinLength(10, { message: 'Phone should be atleast 10 digits long' })
+  phone?: string;
 
   @Field()
   @IsNotEmpty()
-  @MinLength(10, { message: 'Password shout be atleast 10 digits long' })
+  @MinLength(10, { message: 'Password should be atleast 10 digits long' })
   password: string;
 }
 
 @InputType()
-export class SignUpInput extends SignInInput {
-  @Field()
-  @IsNotEmpty()
-  username: string;
-
+export class SignUpInput {
   @Field({ nullable: true })
-  @IsOptional()
+  @IsNotEmpty()
   @MinLength(10, { message: 'Phone number should be atleast 10 digits long' })
   @MaxLength(10, { message: 'Phone number should be atmost 10 digits long' })
-  phone?: string;
+  phone: string;
 }

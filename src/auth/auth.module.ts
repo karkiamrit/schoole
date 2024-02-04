@@ -23,21 +23,21 @@ import { OtpRepository } from 'src/otp/otp.repository';
     MailModule,
     TokenModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        privateKey: configService.get('JWT_PRIVATE_KEY'),
-        publicKey: configService.get('JWT_PUBLIC_KEY'),
-        signOptions: {
-          // algorithm: 'RS256',
-          expiresIn: '1d',
-        },
-        // verifyOptions: {
-        //   algorithms: ['RS256'],
-        // },
-      }),
-    }),
+    // JwtModule.registerAsync({
+    //   imports: [ConfigModule],
+    //   inject: [ConfigService],
+    //   useFactory: (configService: ConfigService) => ({
+    //     privateKey: configService.get('JWT_PRIVATE_KEY'),
+    //     publicKey: configService.get('JWT_PUBLIC_KEY'),
+    //     signOptions: {
+    //       // algorithm: 'RS256',
+    //       expiresIn: '1d',
+    //     },
+    //     // verifyOptions: {
+    //     //   algorithms: ['RS256'],
+    //     // },
+    //   }),
+    // }),
   ],
   providers: [
     AuthResolver,

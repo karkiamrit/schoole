@@ -83,7 +83,7 @@ export class User extends BaseEntity {
 
   @Field()
   @Column({ default: false })
-  email_verified: boolean;
+  phone_verified: boolean;
 
   @OneToMany(() => Address, (address) => address.user, { eager: true })
   addresses: Address[];

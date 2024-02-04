@@ -1,12 +1,32 @@
-import { ObjectType } from '@nestjs/graphql';
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
+import { User } from '@/user/entities/user.entity';
+import { Field, ObjectType } from '@nestjs/graphql';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  BaseEntity,
+  Index,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 
 @ObjectType()
 @Entity('tokens')
-export class TokenBlacklist extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
+export class Token extends BaseEntity {
+  @PrimaryGeneratedColumn()
   id: number;
 
+  @Field()
+  @Index()
+  @ManyToOne(() => User, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'user_id' })
+  user: User;
+
+  @Field()
   @Column()
-  tokenIdentifier: string;
+  expires_in: Date;
+
+  @Field()
+  @Column({ default: false })
+  is_revoked: boolean;
 }

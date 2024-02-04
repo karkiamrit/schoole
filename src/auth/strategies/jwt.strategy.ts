@@ -28,11 +28,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   async validate(payload: any, done: VerifiedCallback) {
-    const tokenIdentifier: string = payload.jti;
-    if (await this.tokenService.isTokenBlacklisted(tokenIdentifier)) {
-      throw new UnauthorizedException('You are trying to use revoked token');
-    }
-
+    // const tokenIdentifier: string = payload.jti;
     try {
       const userData = await this.userService.getOne({
         where: { id: payload.sub },

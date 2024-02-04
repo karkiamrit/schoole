@@ -1,10 +1,14 @@
 import { Module } from '@nestjs/common';
 import { TokenService } from './token.service';
-import { RedisModule } from 'src/modules/redis/redis.module';
+import { TokenRepository } from './token.repository';
+import { TypeOrmExModule } from '@/modules/decorators/typeorm.module';
+import { UserRepository } from '@/user/user.repository';
 
 @Module({
-  imports: [RedisModule],
-  providers: [TokenService],
+  imports: [
+    TypeOrmExModule.forCustomRepository([TokenRepository, UserRepository]),
+  ],
+  providers: [TokenService, TokenRepository],
   exports: [TokenService],
 })
 export class TokenModule {}

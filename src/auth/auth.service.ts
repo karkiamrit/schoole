@@ -3,19 +3,17 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { SignInInput, SignUpInput } from 'src/auth/inputs/auth.input';
 import * as bcrypt from 'bcrypt';
 import * as _ from 'lodash';
-import { JwtService } from '@nestjs/jwt';
-// import { pick } from 'lodash';
 import { User } from '../user/entities/user.entity';
-import { JwtWithUser } from './entities/auth._entity';
+import { JwtWithUser } from './inputs/auth.response';
 import { OtpService } from '../otp/otp.service';
 import { MailService } from '../mail/mail.service';
 import { FULL_WEB_URL } from 'src/util/config/config';
 import { OtpType } from 'src/otp/entities/otp.entity';
-// import { ApolloError } from 'apollo-server-core';
 import { TokenService } from 'src/token/token.service';
 import { ApolloError } from 'apollo-server-core';
 import { Http } from 'src/util/http';
 import * as crypto from 'crypto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
@@ -27,14 +25,14 @@ export class AuthService {
      *MailService: Sends emails for OTP, password reset, and email verification.
      *TokenService: Deals with token-related operations.
      *Http: Utility for making HTTP requests.
-     *JwtService: Manages JWT (JSON Web Token) creation and verification.*/
+     */
 
     private readonly userService: UserService,
     private readonly otpService: OtpService,
     private readonly mailService: MailService,
     private readonly tokenService: TokenService,
     private readonly http: Http,
-    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
 
   /** Generates a unique identifier using the crypto module.
@@ -47,42 +45,11 @@ export class AuthService {
   }
 
   /**
-   * Responsible for creating and signing a JSON Web Token (JWT) for user authentication
-   * @param   {User} user  - An object representing the user for whom the JWT is being created.
-   * @returns {string} - A signed JWT string containing user-related claims.
-   */
-
-  private signJWT(user: User): string {
-    // You need to create a function to generate a unique identifier
-    const uniqueIdentifier = this.generateUniqueIdentifier();
-    const payload = {
-      sub: user.id,
-      jti: uniqueIdentifier, // Include the unique identifier for the token
-      role: user.role,
-      // Include other claims as needed
-    };
-    return this.jwtService.sign(payload);
-  }
-
-  /**
    * Generates a JWT intended for the reset password functionality.
    * @param   {User} user  - An object representing the user for whom the password reset token is being generated.
    * @returns {string} - A signed JWT string containing user-related claims for the password reset process.
    */
 
-  private generateResetPasswordToken(user: User): string {
-    const uniqueIdentifier = this.generateUniqueIdentifier();
-    const payload = {
-      sub: user.id,
-      email: user.email,
-      jti: uniqueIdentifier, // Include the user's phone number in the token
-    };
-
-    // Sign a JWT token with a short expiration time
-    return this.jwtService.sign(payload, {
-      expiresIn: '1h', // Set the expiration time as needed
-    });
-  }
   /**
    * Registers the new user with provided Information and checks if the user already exists or not.
    * @returns Returns a newly created user.
@@ -90,19 +57,77 @@ export class AuthService {
    */
 
   async signUp(input: SignUpInput): Promise<User> {
-    const { email } = input;
-
-    const user = await this.userService.getOne({ where: { email } });
+    const { phone } = input;
+    const user = await this.userService.getOne({ where: { phone } });
     if (user) {
       throw new ApolloError('User already exist', 'USER_ALREADY_EXISTS', {
         statusCode: 409, // Conflict status code for a resource conflict
       });
     }
-
+    const passwordUnhashed = this.generateUniqueIdentifier();
     // hash password using bcryptjs
-    const password = await bcrypt.hash(input.password, 12);
+    const password = await bcrypt.hash(passwordUnhashed, 12);
 
-    return await this.userService.create(_.merge(input, { email, password }));
+    return await this.userService.create(_.merge(input, { phone, password }));
+  }
+
+  /**
+   * Initiates the process of sending a One-Time Password (OTP) to the user's email for verification.
+   * @param {string}email -Email address of the user for whom the OTP is requested.
+   * @param {OtpType}otpType- An enumeration specifying the type of OTP (e.g., "EMAIL", "PHONE").
+   * @returns  boolean if the operation is successful.
+   */
+  async requestOtpVerify(phone: string, otpType: OtpType): Promise<boolean> {
+    const user = await this.userService.getOne({
+      where: {
+        phone: phone,
+      },
+    });
+    if (!user) throw new ApolloError('Invalid phone number!');
+
+    const otp = await this.otpService.create(user, otpType);
+
+    const message = `Your OTP for ${otpType.toLowerCase()} is ${otp.code}`;
+    await this.http.sendSms(phone, message);
+
+    return true;
+  }
+
+  /**
+   * It finds USER by phone number and OTP by (otp code, user & operation type), It then
+   * throws error if OTP is invalid, expired or already used. If data is valid then update
+   * phone number as verified
+   * @param {string} phone - The phone number which we are verifying
+   * @param {string} otpCode - The OTP code which was sent to user for phone number verification
+   * @returns A boolean value
+   */
+  async verifyPhone(phone: string, otpCode: string): Promise<Boolean> {
+    const user = await this.userService.getOne({
+      where: {
+        phone: phone,
+      },
+    });
+    if (!user) throw new ApolloError('Invalid phone number!');
+
+    // TODO: for testing, remove when done
+    if (otpCode === '123456') {
+      return !!(await this.userService.updateVerification(user.id, {
+        phone_verified: true,
+      }));
+    }
+
+    const otp = await this.otpService.getOne(
+      otpCode,
+      user,
+      OtpType.PHONE_VERIFY,
+    );
+
+    return !!(await this.otpService.update(
+      _.merge(otp, {
+        is_used: true,
+        user: _.assign(user, { phone_verified: true, phone }),
+      }),
+    ));
   }
 
   /**
@@ -111,19 +136,43 @@ export class AuthService {
    * @returns Returns an object containing the authenticated user details and a signed JWT.
    */
   async signIn(input: SignInInput): Promise<JwtWithUser> {
-    const user = await this.userService.getOne({
-      where: { email: input.email },
-    });
-    user.last_login = new Date(); //update last login to current timestamp
-    await this.userService.update(user.id, user); //update user with updated last login
+    const user = await this.checkInputParameters(input);
     if (!user) {
       throw new ApolloError("User doesn't exist", 'USER_NOT_FOUND', {
         statusCode: 404, // Not Found
       });
     }
+    user.last_login = new Date(); //update last login to current timestamp
+    await this.userService.update(user.id, user); //update user with updated last login
+    const refreshToken = await this.tokenService.createRefreshToken(
+      user,
+      Number(this.configService.get('REFRESH_TOKEN_EXPIRY')),
+    );
+    const accessToken = await this.tokenService.createAccessToken(
+      user,
+      Number(this.configService.get('ACCESS_TOKEN_EXPIRY')),
+    );
+    return { user, refreshToken, accessToken };
+  }
 
-    const jwt = this.signJWT(user);
-    return { user, jwt };
+  /**
+   * Initiates the password reset process.
+   * @returns  user if email or phone is provided and correct
+   */
+  private async checkInputParameters(input: SignInInput) {
+    let user: User;
+    if (input.email) {
+      user = await this.userService.getOne({
+        where: { email: input.email },
+      });
+    } else if (input.phone) {
+      user = await this.userService.getOne({
+        where: { phone: input.phone },
+      });
+    } else {
+      throw new BadRequestException('Email or phone is required');
+    }
+    return user;
   }
 
   /**
@@ -139,139 +188,89 @@ export class AuthService {
         statusCode: 404, // Not Found
       });
     }
+    const otp = await this.otpService.create(user, OtpType.EMAIL_VERIFY);
 
-    // Generate a reset password token
-    const resetPasswordToken = this.generateResetPasswordToken(user);
-
-    // Create a reset password URL with the token
-    const resetPasswordUrl = `${FULL_WEB_URL}/reset-password/${resetPasswordToken}`;
-
-    // Send the reset password link to the user's email
-    await this.mailService.sendResetPasswordLink(user.email, resetPasswordUrl);
-
-    return true;
+    return !!(await this.mailService.sendResetPasswordLink(email, otp.code));
   }
 
   /**
-   * Resets the password for a user using a reset password token
-   * @param {string} token - Reset password token received by the user.
-   * @param {string} password - New password to set for the user.
-   * @returns   boolean if the operation is successful.
+   * It finds the user by email from database and update the hashed password
+   * @param {string} email - The email which we are verifying and sending OTP
+   * @param {string} otpCode - The OTP code that was sent to the user email
+   * @param {string} password - The new password from an user
+   * @returns A boolean value
    */
+  async resetPassword(
+    email: string,
+    otpCode: string,
+    password: string,
+  ): Promise<boolean> {
+    const user = await this.userService.getOne({
+      where: {
+        email: email,
+      },
+    });
+    if (!user) throw new ApolloError("Phone number doesn't exist!");
 
-  async resetPassword(token: string, password: string): Promise<boolean> {
-    try {
-      // Verify and decode the token to get user information
-      const payload = this.jwtService.verify(token);
-      const userId = payload.sub; // Assuming 'sub' contains the user's ID
+    let otp = await this.otpService.getOne(
+      otpCode,
+      user,
+      OtpType.RESET_PASSWORD,
+    );
 
-      // Find the user based on the decoded user ID
-      const user = await this.userService.getOne({ where: { id: userId } });
-      if (!user) {
-        throw new ApolloError('User not found', 'USER_NOT_FOUND', {
-          statusCode: 404, // Not Found
-        });
-      }
+    const hashPassword = await bcrypt.hash(password, 12);
 
-      // Hash the new password
-      const hashedPassword = await bcrypt.hash(password, 12);
-
-      // Update the user's password with the new hashed password
-      const updatedUser = await this.userService.update(user.id, {
-        password: hashedPassword,
-      });
-
-      if (!updatedUser) {
-        throw new ApolloError(
-          'Failed to update password',
-          'PASSWORD_UPDATE_FAILED',
-          {
-            statusCode: 500, // Internal Server Error
-          },
-        );
-      }
-
-      return true;
-    } catch (error) {
-      // Handle any unexpected errors here
-      throw new ApolloError(
-        'An error occurred while resetting the password',
-        'INTERNAL_ERROR',
-        {
-          statusCode: 500, // Internal Server Error
-          errorDetails: error.message, // Include more details about the error if needed
-        },
-      );
-    }
+    return !!(await this.otpService.update(
+      _.assign(otp, {
+        is_used: true,
+        user: _.assign(user, { password: hashPassword }),
+      }),
+    ));
   }
 
-  /**
-   * Initiates the process of sending a One-Time Password (OTP) to the user's email for verification.
-   * @param {string}email -Email address of the user for whom the OTP is requested.
-   * @param {OtpType}otpType- An enumeration specifying the type of OTP (e.g., "EMAIL", "PHONE").
-   * @returns  boolean if the operation is successful.
-   */
-  async requestOtpVerify(email: string, otpType: OtpType): Promise<boolean> {
-    try {
-      const user = await this.userService.getOne({ where: { email } });
-      if (!user) {
-        throw new BadRequestException('User not found');
-      }
+  // /**
+  //  * Verifies the user's email by checking the validity of the provided OTP code.
+  //  * @param {string} email -Email address of the user for whom email verification is requested.
+  //  * @param {string} otpCode-The OTP code provided by the user for verification.
+  //  * @returns Boolean if the email verification is successful.
+  //  */
 
-      const otp = await this.otpService.create(user, otpType);
+  // async verifyPhone(phone: string, otpCode: string): Promise<boolean> {
+  //   try {
+  //     const user = await this.userService.getOne({ where: { phone } });
+  //     if (!user) {
+  //       throw new BadRequestException('User not found');
+  //     }
 
-      const message = `Your OTP for ${otpType.toLowerCase()} is ${otp.code}`;
-      await this.mailService.sendOtpEmail(email, message);
-      console.log(otp);
-      return true;
-    } catch (error) {
-      // Handle any unexpected errors here
-      throw new BadRequestException(error.message);
-    }
-  }
-  /**
-   * Verifies the user's email by checking the validity of the provided OTP code.
-   * @param {string} email -Email address of the user for whom email verification is requested.
-   * @param {string}otpCode-The OTP code provided by the user for verification.
-   * @returns Boolean if the email verification is successful.
-   */
+  //     // Send the reset password link to the user's phone
+  //     if (user.phone_verified) {
+  //       throw new BadRequestException('Phone already verified');
+  //     }
 
-  async verifyEmail(email: string, otpCode: string): Promise<boolean> {
-    try {
-      const user = await this.userService.getOne({ where: { email } });
-      if (!user) {
-        throw new BadRequestException('User not found');
-      }
+  //     // Verify the OTP code with the user's OTP
+  //     const otp = await this.otpService.getOne(
+  //       otpCode,
+  //       user,
+  //       OtpType.PHONE_VERIFY,
+  //     );
 
-      // Send the reset password link to the user's email
-      if (user.email_verified) {
-        throw new BadRequestException('Email already verified');
-      }
+  //     if (!otp) {
+  //       throw new BadRequestException('Invalid OTP');
+  //     }
+  //     // Implement OTP verification logic here
+  //     // Retrieve the OTP associated with the user and check if it matches otpCode
 
-      // Verify the OTP code with the user's OTP
-      const otp = await this.otpService.getOne(
-        otpCode,
-        user,
-        OtpType.EMAIL_VERIFY,
-      );
+  //     // If the OTP is valid, set user.phone_verified to true and update the user
+  //     await this.userService.updateVerification(user.id, {
+  //       phone_verified: true,
+  //     });
 
-      if (!otp) {
-        throw new BadRequestException('Invalid OTP');
-      }
-      // Implement OTP verification logic here
-      // Retrieve the OTP associated with the user and check if it matches otpCode
-
-      // If the OTP is valid, set user.phone_verified to true and update the user
-      await this.userService.updateVerification(user.id, {
-        email_verified: true,
-      });
-
-      return true;
-    } catch (error) {
-      // Handle any unexpected errors here
-      throw new BadRequestException(error.message);
-    }
-  }
+  //     return true;
+  //   } catch (error) {
+  //     // Handle any unexpected errors here
+  //     throw new BadRequestException(error.message);
+  //   }
+  // }
 
   /**
    * Logs out the user by blacklisting the provided access token
@@ -280,26 +279,25 @@ export class AuthService {
    * @returns Boolean  if the logout  was succesful.
    */
 
-  async logout(user: User, accessToken: string): Promise<boolean> {
-    // Get the token identifier (JTI) from the provided access token
-    const expirationInSeconds = 24 * 60 * 60; // 1 day in seconds
+  /**
+   * It decodes the refresh token, then delete the refresh token from database
+   * @param {User} user - The user object that we want to logout for
+   * @param {string} refreshToken - A refresh token that was sent to the client
+   * @returns - A boolean value
+   */
+  async logout(user: User, refreshToken: string): Promise<boolean> {
+    const payload = await this.tokenService.decodeRefreshToken(refreshToken);
 
-    const tokenPayload: any = this.jwtService.decode(accessToken);
-    console.log(accessToken);
-    const tokenIdentifier: string = tokenPayload.jti;
+    return await this.tokenService.deleteRefreshToken(user, payload);
+  }
 
-    // // Check if the token is in the blacklist
-    // if (await this.tokenService.isTokenBlacklisted(tokenIdentifier)) {
-    //   // Token is already invalidated, return false
-    //   return false;
-    // }
-
-    await this.tokenService.blacklistToken(
-      tokenIdentifier,
-      expirationInSeconds,
-    );
-
-    return true;
+  /**
+   * It deletes all the refresh tokens from the database
+   * @param {User} user - The user object that we want to delete tokens for
+   * @returns - A boolean value
+   */
+  async logoutFromAll(user: User): Promise<boolean> {
+    return await this.tokenService.deleteRefreshTokensForUser(user);
   }
 
   /**
@@ -314,7 +312,7 @@ export class AuthService {
     if (!user) {
       return null;
     }
-    if (!user.email_verified) {
+    if (!user.phone_verified) {
       throw new BadRequestException('Email not verified');
     }
     const isValid: boolean = await bcrypt.compare(password, user.password);

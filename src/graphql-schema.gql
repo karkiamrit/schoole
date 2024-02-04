@@ -215,7 +215,8 @@ The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://
 scalar JSON
 
 type JwtWithUser {
-  jwt: String!
+  accessToken: String!
+  refreshToken: String!
   user: User!
 }
 
@@ -286,7 +287,7 @@ type Mutation {
   logout(accessToken: String!): Boolean!
   participateInCompetition(competitionID: Float!): JSON!
   requestOtpVerify(email: String!, otpType: String!): Boolean!
-  resetPassword(newPassword: String!, token: String!): Boolean!
+  resetPassword(newPassword: String!, otpcode: String!): Boolean!
   signIn(input: SignInInput!): JwtWithUser!
   updateAddress(id: Float!, input: UpdateAddressInput!): Address!
   updateCertificate(id: Float!, input: UpdateCertificateInput!): Certificate!
@@ -299,7 +300,7 @@ type Mutation {
   updateStudent(id: Float!, input: UpdateStudentInput!): Student!
   updateUser(id: Float!, input: UpdateUserInput!): User!
   updateVolunteer(id: Float!, input: UpdateVolunteerInput!): volunteers!
-  verifyEmail(email: String!, otpCode: String!): Boolean!
+  verifyPhone(otpCode: String!, phone: String!): Boolean!
 }
 
 type Organizer {
@@ -360,15 +361,13 @@ type School {
 }
 
 input SignInInput {
-  email: String!
+  email: String
   password: String!
+  phone: String
 }
 
 input SignUpInput {
-  email: String!
-  password: String!
   phone: String
-  username: String!
 }
 
 type Student {
@@ -450,12 +449,12 @@ input UpdateVolunteerInput {
 type User {
   created_at: DateTime!
   email: String!
-  email_verified: Boolean!
   id: ID!
   institution: Institution
   last_login: DateTime
   password: String!
   phone: String!
+  phone_verified: Boolean!
   profile_picture: String!
   role: Role!
   student: Student

@@ -10,7 +10,9 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { User } from 'src/user/entities/user.entity';
 
 export enum OtpType {
+  PHONE_VERIFY = 'PHONE_VERIFY',
   EMAIL_VERIFY = 'EMAIL_VERIFY',
+  RESET_PASSWORD = 'RESET_PASSWORD',
 }
 
 @ObjectType()
@@ -34,7 +36,7 @@ export class Otp extends BaseEntity {
   operation: OtpType;
 
   @Field()
-  @Column()
+  @Column({nullable:true})
   expires_in: Date;
 
   @Field()
