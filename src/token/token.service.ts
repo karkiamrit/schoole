@@ -1,25 +1,39 @@
+// src/auth/token/TokenService.ts
 import { Injectable } from '@nestjs/common';
-// import { ConfigService } from '@nestjs/config';
-import { RedisService } from 'src/modules/redis/redis.service';
+import { JwtService } from '@nestjs/jwt';
+import { User } from '../user/entities/user.entity';
 
 @Injectable()
 export class TokenService {
-  constructor(
-    // private readonly configService: ConfigService,
-    private readonly redisService: RedisService,
-  ) {}
+  constructor(private readonly jwtService: JwtService) {}
 
-  async blacklistToken(
-    tokenIdentifier: string,
-    expirationInSeconds: number,
-  ): Promise<void> {
-    const client = this.redisService.getClient();
-    await client.set(tokenIdentifier, 'blacklisted', 'EX', expirationInSeconds);
+  generateAccessToken(user: User): string {
+    const accessTokenPayload = {
+      sub: user.id,
+      role: user.role,
+    };
+
+    const accessToken = this.jwtService.sign(accessTokenPayload);
+
+    return accessToken;
   }
 
-  async isTokenBlacklisted(tokenIdentifier: string): Promise<boolean> {
-    const client = this.redisService.getClient();
-    const result = await client.get(tokenIdentifier);
-    return result === 'blacklisted';
+  generateRefreshToken(user: User): string {
+    const refreshTokenPayload = {
+      sub: user.id,
+    };
+
+    const refreshToken = this.jwtService.sign(refreshTokenPayload, {
+      expiresIn: '7d', // Set the expiration time for refresh tokens as needed
+    });
+
+    user.refresh_token = refreshToken;
+    user.save();
+
+    return refreshToken;
+  }
+
+  verifyToken(token: string): any {
+    return this.jwtService.verify(token);
   }
 }

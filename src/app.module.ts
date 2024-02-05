@@ -1,3 +1,4 @@
+import { TokenModule } from './token/token.module';
 import { ParticipantModule } from './participant/participant.module';
 import { CompetitionModule } from './competition/competition.module';
 import { EventModule } from './event/event.module';
@@ -8,7 +9,6 @@ import { VolunteerModule } from './volunteer/volunteer.module';
 import { OrganizerModule } from './organizer/organizer.module';
 import { InstitutionModule } from './institution/institution.module';
 import { StudentModule } from './student/student.module';
-import { TokenModule } from './token/token.module';
 import { MailModule } from './mail/mail.module';
 import { OtpModule } from './otp/otp.module';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
@@ -69,10 +69,10 @@ import { join } from 'path';
     AddressModule,
     EventModule,
     CompetitionModule,
+    TokenModule,
     ParticipantModule,
     OtpModule,
     MailModule,
-    TokenModule,
   ],
 })
 export class AppModule {}

@@ -26,7 +26,8 @@ export class AuthResolver {
     @Context() { res }: { res: Response },
   ): Promise<JwtWithUser> {
     const result = await this.authService.signIn(input);
-    res.cookie('jwt', result.jwt, { httpOnly: true }); // Set the cookie
+    res.cookie('access_token', result.accessToken, { httpOnly: true }); // Set the cookie
+    res.cookie('refresh_token', result.refreshToken, { httpOnly: true });
     return result;
   }
 

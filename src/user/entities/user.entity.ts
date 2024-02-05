@@ -55,6 +55,9 @@ export class User extends BaseEntity {
   @Column({ type: 'enum', enum: UserType, default: UserType.student })
   user_type: UserType;
 
+  @Column({ default: '' })
+  refresh_token: string;
+
   @Field(() => Date)
   @CreateDateColumn({
     type: 'timestamp with time zone',
