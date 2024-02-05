@@ -67,9 +67,14 @@ export class AuthResolver {
   @UseGuards(new GraphqlPassportAuthGuard('User'))
   async logout(
     @CurrentUser() user: User,
-    @Args('accessToken') accessToken: string,
+    @Context() { res }: { res: Response },
   ): Promise<boolean> {
-    const success = await this.authService.logout(user, accessToken);
+    const success = await this.authService.logout(user);
+    if (success) {
+      res.clearCookie('access_token');
+      res.clearCookie('refresh_token');
+      console.log(res.get('access_token'));
+    }
     return success;
   }
 }

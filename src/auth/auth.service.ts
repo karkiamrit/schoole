@@ -238,7 +238,7 @@ export class AuthService {
    * @returns Boolean  if the logout  was succesful.
    */
 
-  async logout(user: User, refreshToken: string): Promise<boolean> {
+  async logout(user: User): Promise<boolean> {
     // You can perform any necessary logout logic here
 
     // For example, you might want to invalidate the refresh token on the server side
