@@ -82,6 +82,11 @@ export class AuthService {
         statusCode: 404,
       });
     }
+    if (user.phone_verified === false) {
+      throw new ApolloError('Phone not verified', 'PHONE_NOT_VERIFIED', {
+        statusCode: 403,
+      });
+    }
 
     const accessToken = this.tokenService.generateAccessToken(user);
     const refreshToken = this.tokenService.generateRefreshToken(user);
