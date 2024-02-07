@@ -191,7 +191,6 @@ export class AuthService {
         throw new BadRequestException('User not found');
       }
       const otp = await this.otpService.create(user, otpType);
-
       const message = `Your OTP for ${otpType.toLowerCase()} is ${otp.code}`;
       await this.mailService.sendOtpEmail(email, message);
       console.log(otp);

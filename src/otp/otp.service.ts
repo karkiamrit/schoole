@@ -23,7 +23,7 @@ export class OtpService {
     otp.operation = otpType;
     otp.user = user;
     otp.expires_in = expiresIn;
-    return this.otpRepository.create(otp);
+    return this.otpRepository.save(otp);
   }
 
   /**
