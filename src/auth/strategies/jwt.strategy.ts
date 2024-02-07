@@ -38,9 +38,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       if (!userData) {
         throw new UnauthorizedException('User not found');
       }
-      if (userData.phone_verified === false) {
-        throw new UnauthorizedException('Phone not verified');
-      }
       done(null, userData);
     } catch (err) {
       throw new UnauthorizedException('Error', err.message);

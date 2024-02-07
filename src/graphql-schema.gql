@@ -88,12 +88,12 @@ input CreateStudentInput {
 }
 
 input CreateUserInput {
-  email: String!
+  email: String
   password: String!
   phone: String!
   profile_picture: String!
   user_type: String!
-  username: String!
+  username: String
 }
 
 input CreateVolunteerInput {
@@ -445,7 +445,7 @@ input UpdateVolunteerInput {
 
 type User {
   created_at: DateTime!
-  email: String!
+  email: String
   email_verified: Boolean!
   id: ID!
   institution: Institution

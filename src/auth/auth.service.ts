@@ -64,13 +64,13 @@ export class AuthService {
     }
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    const savedUser = this.userService.create({
+    const savedUser = await this.userService.create({
       ...input,
       phone,
       password: hashedPassword,
     });
 
-    await this.requestOtpVerifyEmail(phone, OtpType.PHONE_VERIFY);
+    await this.requestOtpVerifyPhone(phone, OtpType.PHONE_VERIFY);
 
     return savedUser;
   }
@@ -258,7 +258,7 @@ export class AuthService {
 
       const message = `Your OTP for ${otpType.toLowerCase()} is ${otp.code}`;
       // Send the OTP to the user's phone number
-      await this.http.sendSms(phone, message);
+      // await this.http.sendSms(user.phone, message);
 
       return true;
     } catch (error) {
@@ -327,11 +327,10 @@ export class AuthService {
     if (!user) {
       return null;
     }
-    if (!user.email_verified) {
-      throw new BadRequestException('Email not verified');
+    if (user.phone_verified === false) {
+      throw new BadRequestException('Phone not verified');
     }
     const isValid: boolean = await bcrypt.compare(password, user.password);
-
     if (!isValid) {
       return null;
     }

@@ -2,6 +2,7 @@ import {
   IsEmail,
   IsNotEmpty,
   IsOptional,
+  IsStrongPassword,
   MaxLength,
   MinLength,
 } from 'class-validator';
@@ -11,27 +12,28 @@ import { UserType } from '@/user/inputs/enums/usertype.enum';
 @InputType()
 export class CreateUserInput {
   @Field(() => String)
-  @IsOptional()
+  @IsNotEmpty()
   @MinLength(10, { message: 'Phone number should be atleast 10 digits long' })
   @MaxLength(10, { message: 'Phone number cannot be more than 10 digits long' })
-  phone?: string;
+  phone: string;
 
   @Field(() => String)
   @IsNotEmpty()
+  @IsStrongPassword()
   @MinLength(10, { message: 'Password should be atleast 10 digits long' })
   password: string;
 
-  @Field(() => String)
-  @IsNotEmpty()
+  @Field(() => String, { nullable: true })
+  @IsOptional()
   @MaxLength(255, {
     message: 'Username number should be atmost 255 characters long',
   })
-  username: string;
+  username?: string;
 
-  @Field(() => String)
-  @IsNotEmpty()
+  @Field(() => String, { nullable: true })
+  @IsOptional()
   @IsEmail()
-  email: string;
+  email?: string;
 
   @Field(() => String)
   @IsOptional()
