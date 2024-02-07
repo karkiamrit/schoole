@@ -25,27 +25,27 @@ export class User extends BaseEntity {
 
   @Field(() => String)
   @Column({ nullable: true, unique: true })
-  phone?: string;
+  phone: string;
 
   @Field(() => String)
   @Column({ unique: true })
-  email: string;
+  email?: string;
 
   @Field(() => String)
   @Column({ nullable: true })
-  profile_picture: string;
+  profile_picture?: string;
 
   @Field(() => Date, { nullable: true })
   @Column({ nullable: true })
-  last_login: Date;
+  last_login?: Date;
 
   @Field(() => String)
   @Column()
   password: string;
 
   @Field(() => String)
-  @Column({ unique: true })
-  username: string;
+  @Column({ unique: true, nullable: true })
+  username?: string;
 
   @Field(() => Role)
   @Column({ type: 'enum', enum: Role, default: Role.user })
@@ -55,7 +55,7 @@ export class User extends BaseEntity {
   @Column({ type: 'enum', enum: UserType, default: UserType.student })
   user_type: UserType;
 
-  @Field(()=>String)
+  @Field(() => String)
   @Column({ nullable: true })
   refresh_token?: string;
 
@@ -88,6 +88,10 @@ export class User extends BaseEntity {
   @Field()
   @Column({ default: false })
   email_verified: boolean;
+
+  @Field()
+  @Column({ default: false })
+  phone_verified: boolean;
 
   @OneToMany(() => Address, (address) => address.user, { eager: true })
   addresses: Address[];

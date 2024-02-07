@@ -80,6 +80,10 @@ export class UpdateVerificationInput {
   @Field(() => Boolean, { nullable: true })
   @IsOptional()
   email_verified?: boolean;
+
+  @Field(() => Boolean, { nullable: true })
+  @IsOptional()
+  phone_verified?: boolean;
 }
 
 @InputType()

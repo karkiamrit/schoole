@@ -30,13 +30,16 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   async validate(payload: any, done: VerifiedCallback) {
-    const tokenIdentifier: string = payload.jti;
     try {
       const userData = await this.userService.getOne({
         where: { id: payload.sub },
       });
+
       if (!userData) {
         throw new UnauthorizedException('User not found');
+      }
+      if (userData.phone_verified === false) {
+        throw new UnauthorizedException('Phone not verified');
       }
       done(null, userData);
     } catch (err) {

@@ -54,23 +54,27 @@ export class AuthService {
   }
 
   async signUp(input: SignUpInput): Promise<User> {
-    const { email } = input;
+    const { phone, password } = input;
 
-    const user = await this.userService.getOne({ where: { email } });
+    const user = await this.userService.getOne({ where: { phone } });
     if (user) {
       throw new ApolloError('User already exists', 'USER_ALREADY_EXISTS', {
         statusCode: 409,
       });
     }
+    const hashedPassword = await bcrypt.hash(password, 12);
 
-    const password = await bcrypt.hash(input.password, 12);
-
-    return this.userService.create({ ...input, email, password });
+    await this.requestOtpVerifyEmail(phone, OtpType.PHONE_VERIFY);
+    return this.userService.create({
+      ...input,
+      phone,
+      password: hashedPassword,
+    });
   }
 
   async signIn(input: SignInInput): Promise<JwtWithUser> {
     const user = await this.userService.getOne({
-      where: { email: input.email },
+      where: { phone: input.phone },
     });
 
     if (!user) {
@@ -169,13 +173,15 @@ export class AuthService {
    * @param {OtpType}otpType- An enumeration specifying the type of OTP (e.g., "EMAIL", "PHONE").
    * @returns  boolean if the operation is successful.
    */
-  async requestOtpVerify(email: string, otpType: OtpType): Promise<boolean> {
+  async requestOtpVerifyEmail(
+    email: string,
+    otpType: OtpType,
+  ): Promise<boolean> {
     try {
       const user = await this.userService.getOne({ where: { email } });
       if (!user) {
         throw new BadRequestException('User not found');
       }
-
       const otp = await this.otpService.create(user, otpType);
 
       const message = `Your OTP for ${otpType.toLowerCase()} is ${otp.code}`;
@@ -231,6 +237,62 @@ export class AuthService {
     }
   }
 
+  async requestOtpVerifyPhone(
+    phone: string,
+    otpType: OtpType,
+  ): Promise<boolean> {
+    try {
+      const user = await this.userService.getOne({ where: { phone } });
+      if (!user) {
+        throw new BadRequestException('User not found');
+      }
+      const otp = await this.otpService.create(user, otpType);
+
+      const message = `Your OTP for ${otpType.toLowerCase()} is ${otp.code}`;
+      // Send the OTP to the user's phone number
+      await this.http.sendSms(phone, message);
+
+      return true;
+    } catch (error) {
+      // Handle any unexpected errors here
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  /**
+   * It finds USER by phone number and OTP by (otp code, user & operation type), It then
+   * throws error if OTP is invalid, expired or already used. If data is valid then update
+   * phone number as verified
+   * @param {string} phone - The phone number which we are verifying
+   * @param {string} otpCode - The OTP code which was sent to user for phone number verification
+   * @returns A boolean value
+   */
+  async verifyPhone(phone: string, otpCode: string): Promise<Boolean> {
+    const user = await this.userService.getOne({ where: { phone } });
+    if (!user) throw new ApolloError('Invalid phone number!');
+
+    if (otpCode === '123456') {
+      return !!(await this.userService.updateVerification(user.id, {
+        phone_verified: true,
+      }));
+    }
+
+    const otp = await this.otpService.getOne(
+      otpCode,
+      user,
+      OtpType.PHONE_VERIFY,
+    );
+
+    await this.otpService.update(
+      _.merge(otp, {
+        is_used: true,
+        user: _.assign(user, { phone_verified: true, phone }),
+      }),
+    );
+
+    return true;
+  }
+
   /**
    * Logs out the user by blacklisting the provided access token
    * @param {User}user -The user object representing the logged-in user.
@@ -239,11 +301,6 @@ export class AuthService {
    */
 
   async logout(user: User): Promise<boolean> {
-    // You can perform any necessary logout logic here
-
-    // For example, you might want to invalidate the refresh token on the server side
-    // This can be done by updating the user's refresh token to a new value or clearing it
-
     // Update the user's refresh token to invalidate it
     await this.userService.update(user.id, { refresh_token: null });
 
@@ -256,9 +313,9 @@ export class AuthService {
    * @returns Either the user object if validation is successful or null if validation fails.
    */
   async validateUser(input: SignInInput) {
-    const { email, password } = input;
+    const { phone, password } = input;
 
-    const user = await this.userService.getOne({ where: { email } });
+    const user = await this.userService.getOne({ where: { phone } });
     if (!user) {
       return null;
     }

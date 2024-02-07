@@ -47,11 +47,19 @@ export class AuthResolver {
   }
 
   @Mutation(() => Boolean)
-  async requestOtpVerify(
+  async requestOtpVerifyEmail(
     @Args('email') email: string,
     @Args('otpType') otpType: OtpType,
   ): Promise<boolean> {
-    return await this.authService.requestOtpVerify(email, otpType);
+    return await this.authService.requestOtpVerifyEmail(email, otpType);
+  }
+
+  @Mutation(() => Boolean)
+  async requestOtpVerifyPhone(
+    @Args('phone') phone: string,
+    @Args('otpType') otpType: OtpType,
+  ): Promise<boolean> {
+    return await this.authService.requestOtpVerifyPhone(phone, otpType);
   }
 
   @Mutation(() => Boolean)
@@ -61,6 +69,15 @@ export class AuthResolver {
   ): Promise<boolean> {
     const result = await this.authService.verifyEmail(email, otpCode);
     return result;
+  }
+
+  @Mutation(() => Boolean)
+  async verifyPhone(
+    @Args('phone') phone: string,
+    @Args('otpCode') otpCode: string,
+  ): Promise<boolean> {
+    const result = await this.authService.verifyPhone(phone, otpCode);
+    return result as boolean;
   }
 
   @Mutation(() => Boolean)

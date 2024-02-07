@@ -11,6 +11,7 @@ import { User } from 'src/user/entities/user.entity';
 
 export enum OtpType {
   EMAIL_VERIFY = 'EMAIL_VERIFY',
+  PHONE_VERIFY = 'PHONE_VERIFY',
 }
 
 @ObjectType()

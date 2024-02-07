@@ -287,7 +287,8 @@ type Mutation {
   logout: Boolean!
   participateInCompetition(competitionID: Float!): JSON!
   refreshToken(refreshToken: String!): String!
-  requestOtpVerify(email: String!, otpType: String!): Boolean!
+  requestOtpVerifyEmail(email: String!, otpType: String!): Boolean!
+  requestOtpVerifyPhone(otpType: String!, phone: String!): Boolean!
   resetPassword(newPassword: String!, token: String!): Boolean!
   signIn(input: SignInInput!): JwtWithUser!
   updateAddress(id: Float!, input: UpdateAddressInput!): Address!
@@ -302,6 +303,7 @@ type Mutation {
   updateUser(id: Float!, input: UpdateUserInput!): User!
   updateVolunteer(id: Float!, input: UpdateVolunteerInput!): volunteers!
   verifyEmail(email: String!, otpCode: String!): Boolean!
+  verifyPhone(otpCode: String!, phone: String!): Boolean!
 }
 
 type Organizer {
@@ -355,15 +357,13 @@ enum Role {
 }
 
 input SignInInput {
-  email: String!
   password: String!
+  phone: String!
 }
 
 input SignUpInput {
-  email: String!
   password: String!
-  phone: String
-  username: String!
+  phone: String!
 }
 
 type Student {
@@ -452,6 +452,7 @@ type User {
   last_login: DateTime
   password: String!
   phone: String!
+  phone_verified: Boolean!
   profile_picture: String!
   refresh_token: String!
   role: Role!
