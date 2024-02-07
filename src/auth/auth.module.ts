@@ -10,10 +10,10 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { OtpModule } from 'src/otp/otp.module';
 import { UserRepository } from 'src/user/user.repository';
 import { MailModule } from 'src/mail/mail.module';
-import { TokenModule } from 'src/token/token.module';
 import { Http } from 'src/util/http';
 import { MailRepository } from 'src/mail/mail.repository';
 import { OtpRepository } from 'src/otp/otp.repository';
+import { TokenService } from '@/token/token.service';
 
 @Module({
   imports: [
@@ -21,21 +21,21 @@ import { OtpRepository } from 'src/otp/otp.repository';
     UserModule,
     OtpModule,
     MailModule,
-    TokenModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        privateKey: configService.get('JWT_PRIVATE_KEY'),
-        publicKey: configService.get('JWT_PUBLIC_KEY'),
+        privateKey: configService.get('JWT_ACCESS_PRIVATE_KEY'),
+        publicKey: configService.get('JWT_ACCESS_PUBLIC_KEY'),
         signOptions: {
-          // algorithm: 'RS256',
           expiresIn: '1d',
         },
-        // verifyOptions: {
-        //   algorithms: ['RS256'],
-        // },
+        refreshPrivateKey: configService.get('JWT_REFRESH_PRIVATE_KEY'),
+        refreshPublicKey: configService.get('JWT_REFRESH_PUBLIC_KEY'),
+        refreshSignOptions: {
+          expiresIn: '7d',
+        },
       }),
     }),
   ],
@@ -45,6 +45,7 @@ import { OtpRepository } from 'src/otp/otp.repository';
     UserRepository,
     JwtStrategy,
     LocalStrategy,
+    TokenService,
     Http,
     MailRepository,
     OtpRepository,

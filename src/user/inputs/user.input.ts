@@ -63,6 +63,9 @@ export class UpdateUserInput {
   @Field(() => String, { nullable: true })
   @IsOptional()
   profile_picture?: string;
+
+  @Field(() => String, { nullable: true })
+  refresh_token?: string;
 }
 
 @InputType()

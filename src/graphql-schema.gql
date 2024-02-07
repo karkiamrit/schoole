@@ -215,7 +215,8 @@ The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://
 scalar JSON
 
 type JwtWithUser {
-  jwt: String!
+  accessToken: String!
+  refreshToken: String!
   user: User!
 }
 
@@ -283,8 +284,9 @@ type Mutation {
   deleteUser(id: Float!): JSON!
   deleteVolunteer(id: Float!): volunteers!
   forgotPassword(email: String!): Boolean!
-  logout(accessToken: String!): Boolean!
+  logout: Boolean!
   participateInCompetition(competitionID: Float!): JSON!
+  refreshToken(refreshToken: String!): String!
   requestOtpVerify(email: String!, otpType: String!): Boolean!
   resetPassword(newPassword: String!, token: String!): Boolean!
   signIn(input: SignInInput!): JwtWithUser!
@@ -433,6 +435,7 @@ input UpdateUserInput {
   password: String
   phone: String
   profile_picture: String
+  refresh_token: String
   username: String
 }
 
@@ -450,6 +453,7 @@ type User {
   password: String!
   phone: String!
   profile_picture: String!
+  refresh_token: String!
   role: Role!
   student: Student
   updated_at: DateTime!

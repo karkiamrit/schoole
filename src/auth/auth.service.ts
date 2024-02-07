@@ -4,18 +4,16 @@ import { SignInInput, SignUpInput } from 'src/auth/inputs/auth.input';
 import * as bcrypt from 'bcrypt';
 import * as _ from 'lodash';
 import { JwtService } from '@nestjs/jwt';
-// import { pick } from 'lodash';
 import { User } from '../user/entities/user.entity';
 import { JwtWithUser } from './entities/auth._entity';
 import { OtpService } from '../otp/otp.service';
 import { MailService } from '../mail/mail.service';
 import { FULL_WEB_URL } from 'src/util/config/config';
 import { OtpType } from 'src/otp/entities/otp.entity';
-// import { ApolloError } from 'apollo-server-core';
-import { TokenService } from 'src/token/token.service';
 import { ApolloError } from 'apollo-server-core';
 import { Http } from 'src/util/http';
 import * as crypto from 'crypto';
+import { TokenService } from '@/token/token.service';
 
 @Injectable()
 export class AuthService {
@@ -37,95 +35,55 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  /** Generates a unique identifier using the crypto module.
-   * @returns {string}-  A hexadecimal string representing the unique identifier.
-   */
-
   private generateUniqueIdentifier(): string {
     const uniqueIdentifier = crypto.randomBytes(16).toString('hex');
     return uniqueIdentifier;
   }
-
-  /**
-   * Responsible for creating and signing a JSON Web Token (JWT) for user authentication
-   * @param   {User} user  - An object representing the user for whom the JWT is being created.
-   * @returns {string} - A signed JWT string containing user-related claims.
-   */
-
-  private signJWT(user: User): string {
-    // You need to create a function to generate a unique identifier
-    const uniqueIdentifier = this.generateUniqueIdentifier();
-    const payload = {
-      sub: user.id,
-      jti: uniqueIdentifier, // Include the unique identifier for the token
-      role: user.role,
-      // Include other claims as needed
-    };
-    return this.jwtService.sign(payload);
-  }
-
-  /**
-   * Generates a JWT intended for the reset password functionality.
-   * @param   {User} user  - An object representing the user for whom the password reset token is being generated.
-   * @returns {string} - A signed JWT string containing user-related claims for the password reset process.
-   */
 
   private generateResetPasswordToken(user: User): string {
     const uniqueIdentifier = this.generateUniqueIdentifier();
     const payload = {
       sub: user.id,
       email: user.email,
-      jti: uniqueIdentifier, // Include the user's phone number in the token
+      jti: uniqueIdentifier,
     };
 
-    // Sign a JWT token with a short expiration time
     return this.jwtService.sign(payload, {
-      expiresIn: '1h', // Set the expiration time as needed
+      expiresIn: '1h',
     });
   }
-  /**
-   * Registers the new user with provided Information and checks if the user already exists or not.
-   * @returns Returns a newly created user.
-   * @param input
-   */
 
   async signUp(input: SignUpInput): Promise<User> {
     const { email } = input;
 
     const user = await this.userService.getOne({ where: { email } });
     if (user) {
-      throw new ApolloError('User already exist', 'USER_ALREADY_EXISTS', {
-        statusCode: 409, // Conflict status code for a resource conflict
+      throw new ApolloError('User already exists', 'USER_ALREADY_EXISTS', {
+        statusCode: 409,
       });
     }
 
-    // hash password using bcryptjs
     const password = await bcrypt.hash(input.password, 12);
 
-    return await this.userService.create(_.merge(input, { email, password }));
+    return this.userService.create({ ...input, email, password });
   }
 
-  /**
-   * Authenticates a user based on the provided email address.
-   * @param  {SignInInput} input -An object containing the user's email and password for authentication.
-   * @returns Returns an object containing the authenticated user details and a signed JWT.
-   */
   async signIn(input: SignInInput): Promise<JwtWithUser> {
     const user = await this.userService.getOne({
       where: { email: input.email },
     });
-    user.last_login = new Date(); //update last login to current timestamp
-    await this.userService.update(user.id, user); //update user with updated last login
+
     if (!user) {
       throw new ApolloError("User doesn't exist", 'USER_NOT_FOUND', {
-        statusCode: 404, // Not Found
+        statusCode: 404,
       });
     }
 
-    const jwt = this.signJWT(user);
-    return { user, jwt };
-  }
+    const accessToken = this.tokenService.generateAccessToken(user);
+    const refreshToken = this.tokenService.generateRefreshToken(user);
 
+    return { user, accessToken, refreshToken };
+  }
   /**
    * Initiates the password reset process.
    * @param  {string} email -The email address of the user for whom the password reset is requested.
@@ -280,24 +238,14 @@ export class AuthService {
    * @returns Boolean  if the logout  was succesful.
    */
 
-  async logout(user: User, accessToken: string): Promise<boolean> {
-    // Get the token identifier (JTI) from the provided access token
-    const expirationInSeconds = 24 * 60 * 60; // 1 day in seconds
+  async logout(user: User): Promise<boolean> {
+    // You can perform any necessary logout logic here
 
-    const tokenPayload: any = this.jwtService.decode(accessToken);
-    console.log(accessToken);
-    const tokenIdentifier: string = tokenPayload.jti;
+    // For example, you might want to invalidate the refresh token on the server side
+    // This can be done by updating the user's refresh token to a new value or clearing it
 
-    // // Check if the token is in the blacklist
-    // if (await this.tokenService.isTokenBlacklisted(tokenIdentifier)) {
-    //   // Token is already invalidated, return false
-    //   return false;
-    // }
-
-    await this.tokenService.blacklistToken(
-      tokenIdentifier,
-      expirationInSeconds,
-    );
+    // Update the user's refresh token to invalidate it
+    await this.userService.update(user.id, { refresh_token: null });
 
     return true;
   }
