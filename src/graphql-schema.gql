@@ -354,6 +354,14 @@ enum Role {
   user
 }
 
+type School {
+  created_at: DateTime!
+  id: ID!
+  name: String!
+  updated_at: DateTime!
+}
+
+
 input SignInInput {
   email: String!
   password: String!
