@@ -64,12 +64,15 @@ export class AuthService {
     }
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    await this.requestOtpVerifyEmail(phone, OtpType.PHONE_VERIFY);
-    return this.userService.create({
+    const savedUser = this.userService.create({
       ...input,
       phone,
       password: hashedPassword,
     });
+
+    await this.requestOtpVerifyEmail(phone, OtpType.PHONE_VERIFY);
+
+    return savedUser;
   }
 
   async signIn(input: SignInInput): Promise<JwtWithUser> {
