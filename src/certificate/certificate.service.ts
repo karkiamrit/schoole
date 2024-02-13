@@ -1,0 +1,114 @@
+import { Injectable } from '@nestjs/common';
+import { OneRepoQuery, RepoQuery } from 'src/declare/types';
+import { CertificateRepository } from './certificate.repository';
+import { Certificate } from './entities/certificate.entity';
+import {
+  CreateCertificateInput,
+  UpdateCertificateInput,
+} from './inputs/certificate.input';
+
+import { FileUploadService } from '@/modules/upload/file-upload.service';
+import { randomBytes } from 'crypto';
+import { FindOneOptions } from 'typeorm';
+import { TempStorageService } from '@/modules/temp-storage/temp-storage.service';
+import { unlink } from 'fs';
+
+@Injectable()
+export class CertificateService {
+  constructor(
+    private readonly certificateRepository: CertificateRepository,
+    private readonly fileUploadService: FileUploadService,
+    private readonly tempStorageService: TempStorageService,
+  ) {}
+
+   /**
+   * Retrieves multiple certificates based on provided query parameters.
+   * @param qs - Query parameters for the certificate repository.
+   * @param query - General query parameter.
+   * @returns A list of certificates.
+   */
+
+  getMany(qs?: RepoQuery<Certificate>, query?: string) {
+    return this.certificateRepository.getMany(qs || {}, query);
+  }
+
+    /**
+   * Retrieves a single certificate based on provided query parameters.
+   * @param qs - Query parameters for the certificate repository.
+   * @param query - General query parameter.
+   * @returns A single certificate.
+   */
+  getOne(qs: OneRepoQuery<Certificate>, query?: string) {
+    if (query) {
+      return this.certificateRepository.getOne(qs, query);
+    } else {
+      return this.certificateRepository.findOne(
+        qs as FindOneOptions<Certificate>,
+      );
+    }
+  }
+
+  create(input: CreateCertificateInput): Promise<Certificate> {
+    const certificate = new Certificate();
+    Object.assign(certificate, input);
+    return this.certificateRepository.save(certificate);
+  }
+
+  private generateUniqueTransactionId(): string {
+    return randomBytes(16).toString('hex');
+  }
+
+  async uploadFile(file: Express.Multer.File): Promise<string> {
+    const filePath = await this.fileUploadService.upload(file);
+    const transactionId = this.generateUniqueTransactionId(); // Implement this function
+    this.tempStorageService.store(transactionId, filePath); // Implement this service
+    return transactionId;
+  }
+
+  async createCertificateWithTransaction(
+    input: CreateCertificateInput,
+    transactionId: string,
+  ): Promise<Certificate> {
+    const filePath = await this.tempStorageService.retrieve(transactionId); // Implement this service
+    if (!filePath) {
+      throw new Error('Invalid transaction ID');
+    }
+    try {
+      const certificate = await this.create({ ...input, photo: filePath });
+      this.tempStorageService.remove(transactionId);
+      return certificate;
+    } catch (error) {
+      // Delete the file locally
+      unlink(filePath, (err) => {
+        if (err) throw err;
+        console.log(`${filePath} was deleted`);
+      });
+
+      // Remove the file path from the temporary storage
+      this.tempStorageService.remove(transactionId);
+
+      // Rethrow the error
+      throw error;
+    }
+  }
+
+  createMany(input: CreateCertificateInput[]): Promise<Certificate[]> {
+    return this.certificateRepository.save(input);
+  }
+
+  async update(
+    id: number,
+    input: UpdateCertificateInput,
+  ): Promise<Certificate> {
+    const certificate = await this.certificateRepository.findOne({
+      where: { id },
+    });
+    return this.certificateRepository.save({ ...certificate, ...input });
+  }
+
+  async delete(id: number) {
+    const certificate = this.certificateRepository.findOne({ where: { id } });
+    await this.certificateRepository.delete({ id });
+    return certificate;
+  }
+}
