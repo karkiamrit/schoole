@@ -1,7 +1,7 @@
 import { Args, Mutation, Resolver, Context } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { SignInInput, SignUpInput } from './inputs/auth.input';
-import { JwtWithUser } from '../auth/entities/auth._entity';
+import { JwtWithUser, OnlyJwt } from "../auth/entities/auth._entity";
 import { UseGuards } from '@nestjs/common';
 import { SignInGuard } from '../modules/guards/graphql-signin-guard';
 import { OtpType } from '../otp/entities/otp.entity';
@@ -71,16 +71,19 @@ export class AuthResolver {
     return result;
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => OnlyJwt)
   async verifyPhone(
     @Args('phone') phone: string,
     @Args('otpCode') otpCode: string,
     @Context() { res }: { res: Response },
-  ): Promise<boolean> {
-    const { accessToken, refreshToken } = await this.authService.verifyPhone(phone, otpCode);
+  ): Promise<OnlyJwt> {
+    const { accessToken, refreshToken } = await this.authService.verifyPhone(
+      phone,
+      otpCode,
+    );
     res.cookie('access_token', accessToken, { httpOnly: true }); // Set the cookie
     res.cookie('refresh_token', refreshToken, { httpOnly: true });
-    return true ;
+    return { accessToken, refreshToken };
   }
 
   @Mutation(() => Boolean)

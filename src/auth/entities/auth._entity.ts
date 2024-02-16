@@ -12,3 +12,12 @@ export class JwtWithUser {
   @Field(() => User)
   user: User;
 }
+
+@ObjectType()
+export class OnlyJwt {
+  @Field(() => String)
+  accessToken: string;
+
+  @Field(() => String)
+  refreshToken: string;
+}
