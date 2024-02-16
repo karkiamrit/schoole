@@ -12,7 +12,7 @@ import { Between, FindOneOptions } from 'typeorm';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly userRepository: UserRepository) { }
 
   async getOne(qs: OneRepoQuery<User>, query?: string) {
     if (query) {
@@ -27,7 +27,8 @@ export class UserService {
   }
 
   async create(input: CreateUserInput | SignUpInput): Promise<User> {
-    return this.userRepository.save(Object.assign(new User(), input));
+    const username = this.generateUniqueUsername()
+    return this.userRepository.save(Object.assign(new User(), { ...input, username }));
   }
 
   createMany(input: CreateUserInput[]): Promise<User[]> {
@@ -61,4 +62,15 @@ export class UserService {
     // return this.userRepository.find();
     return this.userRepository.find({ where: { id: Between(20, 20) } });
   }
+
+
+  private generateUniqueUsername(): string {
+    const allowedChars = 'abcdefghijklmnopqrstuvwxyz0123456789.';
+    const usernameLength = 8;
+    let username = Array.from(crypto.getRandomValues(new Uint32Array(usernameLength)))
+      .map((x) => allowedChars[x % allowedChars.length])
+      .join('');
+    return username;
+  }
+
 }
