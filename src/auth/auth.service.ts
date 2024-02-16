@@ -274,30 +274,36 @@ export class AuthService {
    * @param {string} otpCode - The OTP code which was sent to user for phone number verification
    * @returns A boolean value
    */
-  async verifyPhone(phone: string, otpCode: string): Promise<Boolean> {
+  async verifyPhone(phone: string, otpCode: string):  Promise<{ accessToken: string; refreshToken: string; }> {
     const user = await this.userService.getOne({ where: { phone } });
     if (!user) throw new ApolloError('Invalid phone number!');
 
     if (otpCode === '123456') {
-      return !!(await this.userService.updateVerification(user.id, {
+       !!(await this.userService.updateVerification(user.id, {
         phone_verified: true,
       }));
     }
+    else{
+      const otp = await this.otpService.getOne(
+        otpCode,
+        user,
+        OtpType.PHONE_VERIFY,
+      );
+  
+      await this.otpService.update(
+        _.merge(otp, {
+          is_used: true,
+          user: _.assign(user, { phone_verified: true, phone }),
+        }),
+      );
+    }
 
-    const otp = await this.otpService.getOne(
-      otpCode,
-      user,
-      OtpType.PHONE_VERIFY,
-    );
+    
 
-    await this.otpService.update(
-      _.merge(otp, {
-        is_used: true,
-        user: _.assign(user, { phone_verified: true, phone }),
-      }),
-    );
+    const accessToken =  this.tokenService.generateAccessToken(user);
+    const refreshToken = this.tokenService.generateRefreshToken(user);
 
-    return true;
+    return {accessToken, refreshToken};
   }
 
   /**

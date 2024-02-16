@@ -75,9 +75,12 @@ export class AuthResolver {
   async verifyPhone(
     @Args('phone') phone: string,
     @Args('otpCode') otpCode: string,
+    @Context() { res }: { res: Response },
   ): Promise<boolean> {
-    const result = await this.authService.verifyPhone(phone, otpCode);
-    return result as boolean;
+    const { accessToken, refreshToken } = await this.authService.verifyPhone(phone, otpCode);
+    res.cookie('access_token', accessToken, { httpOnly: true }); // Set the cookie
+    res.cookie('refresh_token', refreshToken, { httpOnly: true });
+    return true ;
   }
 
   @Mutation(() => Boolean)
