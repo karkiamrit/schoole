@@ -26,7 +26,7 @@ export class CreateStudentInput {
   @IsOptional()
   bio?: string;
 
-  @Field(() => String)
+  @Field(() => Gender)
   @IsNotEmpty()
   gender: Gender;
 
@@ -69,7 +69,7 @@ export class UpdateStudentInput {
   @IsOptional()
   bio?: string;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => Gender, { nullable: true })
   @IsOptional()
   gender?: Gender;
 }
