@@ -77,10 +77,10 @@ input CreateOrganizerInput {
 }
 
 input CreateStudentInput {
-  bio: String!
+  bio: String
   date_of_birth: DateTime!
   first_name: String!
-  gender: String!
+  gender: Gender!
   interests: [String!]
   last_name: String!
   level: Level!
@@ -303,7 +303,12 @@ type Mutation {
   updateUser(id: Float!, input: UpdateUserInput!): User!
   updateVolunteer(id: Float!, input: UpdateVolunteerInput!): volunteers!
   verifyEmail(email: String!, otpCode: String!): Boolean!
-  verifyPhone(otpCode: String!, phone: String!): Boolean!
+  verifyPhone(otpCode: String!, phone: String!): OnlyJwt!
+}
+
+type OnlyJwt {
+  accessToken: String!
+  refreshToken: String!
 }
 
 type Organizer {
@@ -367,7 +372,7 @@ input SignUpInput {
 }
 
 type Student {
-  bio: String!
+  bio: String
   created_at: DateTime!
   date_of_birth: String!
   first_name: String!
@@ -380,6 +385,11 @@ type Student {
   participations: [Participant!]!
   updated_at: DateTime!
   user: User!
+}
+
+type Test {
+  id: ID!
+  test: String!
 }
 
 input UpdateAddressInput {
@@ -423,7 +433,7 @@ input UpdateStudentInput {
   bio: String
   date_of_birth: DateTime
   first_name: String
-  gender: String
+  gender: Gender
   interests: [String!]
   last_name: String
   level: Level
@@ -466,6 +476,11 @@ type User {
 enum UserType {
   institution
   student
+}
+
+type Volunteers {
+  full_name: String!
+  id: ID!
 }
 
 enum type {

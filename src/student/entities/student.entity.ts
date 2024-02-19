@@ -40,7 +40,7 @@ export class Student {
   @Column()
   last_name: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({
     type: 'text',
     nullable: true,

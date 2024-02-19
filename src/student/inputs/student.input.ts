@@ -1,6 +1,7 @@
 import { IsNotEmpty, IsOptional } from 'class-validator';
 import { Field, InputType } from '@nestjs/graphql';
 import { Gender, Level } from './enums/index';
+import { isEmpty } from 'lodash';
 
 @InputType()
 export class CreateStudentInput {
