@@ -13,8 +13,7 @@ import { FindOneOptions } from 'typeorm';
 export class AddressService {
   constructor(private readonly addressRepository: AddressRepository) {}
 
-  
-    /**
+  /**
    * Retrieves multiple addresses based on optional query parameters.
    *
    * @param {RepoQuery<Address>} qs - Optional query parameters for filtering.
@@ -26,7 +25,7 @@ export class AddressService {
     return this.addressRepository.getMany(qs || {}, query);
   }
 
-    /**
+  /**
    * Retrieves a single address based on specified query parameters.
    *
    * @param {OneRepoQuery<Address>} qs - Query parameters for fetching a single address.
@@ -40,7 +39,7 @@ export class AddressService {
       return this.addressRepository.findOne(qs as FindOneOptions<Address>);
     }
   }
-/**
+  /**
    * Creates a new address using the provided input data.
    *
    * @param {CreateAddressInput} input - Input data for creating the address.
@@ -51,18 +50,17 @@ export class AddressService {
     Object.assign(address, input);
     return this.addressRepository.save(address);
   }
-    /**
+  /**
    * Creates multiple addresses using an array of input data.
    *
    * @param {CreateAddressInput[]} input - Array of input data for creating addresses.
    * @returns {Promise<Address[]>} - A promise resolving to an array of created addresses.
    */
 
-
   createMany(input: CreateAddressInput[]): Promise<Address[]> {
     return this.addressRepository.save(input);
   }
- /**
+  /**
    * Updates an existing address with the provided input data.
    *
    * @param {number} id - The ID of the address to be updated.

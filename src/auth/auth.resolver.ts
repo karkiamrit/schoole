@@ -1,7 +1,7 @@
 import { Args, Mutation, Resolver, Context } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { SignInInput, SignUpInput } from './inputs/auth.input';
-import { JwtWithUser, OnlyJwt } from "../auth/entities/auth._entity";
+import { JwtWithUser, OnlyJwt } from '@/auth/entities/auth._entity';
 import { UseGuards } from '@nestjs/common';
 import { SignInGuard } from '../modules/guards/graphql-signin-guard';
 import { OtpType } from '../otp/entities/otp.entity';

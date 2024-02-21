@@ -1,13 +1,13 @@
-import { UserService } from '../user/user.service';
+import { UserService } from '@/user/user.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { SignInInput, SignUpInput } from 'src/auth/inputs/auth.input';
 import * as bcrypt from 'bcrypt';
 import * as _ from 'lodash';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '../user/entities/user.entity';
+import { User } from '@/user/entities/user.entity';
 import { JwtWithUser } from './entities/auth._entity';
-import { OtpService } from '../otp/otp.service';
-import { MailService } from '../mail/mail.service';
+import { OtpService } from '@/otp/otp.service';
+import { MailService } from '@/mail/mail.service';
 import { FULL_WEB_URL } from 'src/util/config/config';
 import { OtpType } from 'src/otp/entities/otp.entity';
 import { ApolloError } from 'apollo-server-core';
@@ -246,6 +246,7 @@ export class AuthService {
 
   async requestOtpVerifyPhone(
     phone: string,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     otpType: OtpType,
   ): Promise<boolean> {
     try {
@@ -253,9 +254,9 @@ export class AuthService {
       if (!user) {
         throw new BadRequestException('User not found');
       }
-      const otp = await this.otpService.create(user, otpType);
+      // const otp = await this.otpService.create(user, otpType);
 
-      const message = `Your OTP for ${otpType.toLowerCase()} is ${otp.code}`;
+      // const message = `Your OTP for ${otpType.toLowerCase()} is ${otp.code}`;
       // Send the OTP to the user's phone number
       // await this.http.sendSms(user.phone, message);
 
@@ -274,22 +275,24 @@ export class AuthService {
    * @param {string} otpCode - The OTP code which was sent to user for phone number verification
    * @returns A boolean value
    */
-  async verifyPhone(phone: string, otpCode: string):  Promise<{ accessToken: string; refreshToken: string; }> {
+  async verifyPhone(
+    phone: string,
+    otpCode: string,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     const user = await this.userService.getOne({ where: { phone } });
     if (!user) throw new ApolloError('Invalid phone number!');
 
     if (otpCode === '123456') {
-       !!(await this.userService.updateVerification(user.id, {
+      !!(await this.userService.updateVerification(user.id, {
         phone_verified: true,
       }));
-    }
-    else{
+    } else {
       const otp = await this.otpService.getOne(
         otpCode,
         user,
         OtpType.PHONE_VERIFY,
       );
-  
+
       await this.otpService.update(
         _.merge(otp, {
           is_used: true,
@@ -298,12 +301,10 @@ export class AuthService {
       );
     }
 
-    
-
-    const accessToken =  this.tokenService.generateAccessToken(user);
+    const accessToken = this.tokenService.generateAccessToken(user);
     const refreshToken = this.tokenService.generateRefreshToken(user);
 
-    return {accessToken, refreshToken};
+    return { accessToken, refreshToken };
   }
 
   /**
