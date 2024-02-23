@@ -1,3 +1,4 @@
+import { MenuModule } from './menu/menu.module';
 import { TokenModule } from './token/token.module';
 import { ParticipantModule } from './participant/participant.module';
 import { CompetitionModule } from './competition/competition.module';
@@ -70,6 +71,7 @@ import { join } from 'path';
     EventModule,
     CompetitionModule,
     TokenModule,
+    MenuModule,
     ParticipantModule,
     OtpModule,
     MailModule,

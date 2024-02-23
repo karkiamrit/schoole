@@ -27,7 +27,7 @@ const createEntityFileText = (
     `import { Field, ID, ObjectType } from '@nestjs/graphql'`,
     ``,
     `@ObjectType()`,
-    `@Entity(${name}+'s')`,
+    `@Entity('${name}s')`,
     `export class ${capitalize(name)} {`,
     `  @Field(() => ID)`,
     `  @PrimaryGeneratedColumn('${typeOfId}', ${

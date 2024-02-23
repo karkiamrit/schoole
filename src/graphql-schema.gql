@@ -72,6 +72,17 @@ input CreateKycInput {
   volunteer: Float!
 }
 
+input CreateMenuInput {
+  can_edit: Boolean
+  href: String!
+  icon: String
+  is_hidden: Boolean
+  is_static_route: Boolean
+  menu_for: MenuFor!
+  menu_name: String!
+  parent_menu: String
+}
+
 input CreateOrganizerInput {
   full_name: String!
 }
@@ -199,6 +210,16 @@ input IPagination {
   size: Int!
 }
 
+type Icon {
+  class_name: String!
+  color: String!
+  fill: String!
+  height: Float!
+  id: ID!
+  size: Float!
+  type: String!
+}
+
 type Institution {
   created_at: DateTime!
   events: [Event!]!
@@ -248,6 +269,25 @@ type Mail {
   subject: String!
   text_content: String!
   updated_at: DateTime!
+}
+
+type Menu {
+  can_edit: Boolean
+  href: String!
+  icon: String
+  id: ID!
+  is_hidden: Boolean
+  is_static_route: Boolean
+  menu_for: MenuFor!
+  menu_name: String!
+  parent_menu: String
+}
+
+"""Determine for whom the menu is primarily for. """
+enum MenuFor {
+  all
+  institution
+  student
 }
 
 type Mutation {
@@ -387,6 +427,11 @@ type Student {
   user: User!
 }
 
+type Test {
+  id: ID!
+  test: String!
+}
+
 input UpdateAddressInput {
   latitude: String!
 }
@@ -471,6 +516,11 @@ type User {
 enum UserType {
   institution
   student
+}
+
+type Volunteers {
+  full_name: String!
+  id: ID!
 }
 
 enum type {

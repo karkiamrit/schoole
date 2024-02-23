@@ -8,7 +8,7 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/**/*.ts\" \"test/**/*.ts\"",
     "start": "set NODE_ENV=production && nest start",
     "dev": "set NODE_ENV=development && nest start --watch",
     "original-dev": "export NODE_ENV=development&& nest start --watch",
