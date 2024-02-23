@@ -387,11 +387,6 @@ type Student {
   user: User!
 }
 
-type Test {
-  id: ID!
-  test: String!
-}
-
 input UpdateAddressInput {
   latitude: String!
 }
@@ -476,11 +471,6 @@ type User {
 enum UserType {
   institution
   student
-}
-
-type Volunteers {
-  full_name: String!
-  id: ID!
 }
 
 enum type {

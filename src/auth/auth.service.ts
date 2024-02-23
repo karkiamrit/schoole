@@ -259,7 +259,6 @@ export class AuthService {
       // const message = `Your OTP for ${otpType.toLowerCase()} is ${otp.code}`;
       // Send the OTP to the user's phone number
       // await this.http.sendSms(user.phone, message);
-
       return true;
     } catch (error) {
       // Handle any unexpected errors here
@@ -283,9 +282,10 @@ export class AuthService {
     if (!user) throw new ApolloError('Invalid phone number!');
 
     if (otpCode === '123456') {
-      !!(await this.userService.updateVerification(user.id, {
+      await this.userService.updateVerification(user.id, {
         phone_verified: true,
-      }));
+      });
+      
     } else {
       const otp = await this.otpService.getOne(
         otpCode,

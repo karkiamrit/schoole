@@ -9,6 +9,7 @@ import {
   UpdateVerificationInput,
 } from './inputs/user.input';
 import { Between, FindOneOptions } from 'typeorm';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class UserService {
@@ -16,19 +17,19 @@ export class UserService {
 
   async getOne(qs: OneRepoQuery<User>, query?: string) {
     if (query) {
-      return this.userRepository.getOne(qs, query);
+      return await this.userRepository.getOne(qs, query);
     } else {
-      return this.userRepository.findOne(qs as FindOneOptions<User>);
+      return await this.userRepository.findOne(qs as FindOneOptions<User>);
     }
   }
 
-  getMany(qs?: RepoQuery<User>, query?: string) {
-    return this.userRepository.getMany(qs || {}, query);
+  async getMany(qs?: RepoQuery<User>, query?: string) {
+    return await this.userRepository.getMany(qs || {}, query);
   }
 
   async create(input: CreateUserInput | SignUpInput): Promise<User> {
     const username = this.generateUniqueUsername();
-    return this.userRepository.save(
+    return await this.userRepository.save(
       Object.assign(new User(), { ...input, username }),
     );
   }
@@ -38,21 +39,22 @@ export class UserService {
   }
 
   async update(id: number, input: UpdateUserInput): Promise<User> {
-    const user = await User.findOne({ where: { id } });
-    return this.userRepository.save({ ...user, ...input });
+    const user = await this.userRepository.findOne({ where: { id } });
+    return await this.userRepository.save({ ...user, ...input });
   }
 
   async updateVerification(
     id: number,
     input: UpdateVerificationInput,
   ): Promise<User> {
-    const user = await User.findOne({ where: { id } });
-    return this.userRepository.save({ ...user, ...input });
+    const user = await this.userRepository.findOne({ where: { id } });
+    const value= await this.userRepository.save({ ...user, ...input });
+    return value;
   }
 
   async updateProfile(id: number, input: UpdateUserInput): Promise<User> {
-    const user = await User.findOne({ where: { id } });
-    return this.userRepository.save({ ...user, ...input });
+    const user = await this.userRepository.findOne({ where: { id } });
+    return await this.userRepository.save({ ...user, ...input });
   }
 
   async delete(id: number) {
