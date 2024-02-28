@@ -48,7 +48,7 @@ export class UserService {
     input: UpdateVerificationInput,
   ): Promise<User> {
     const user = await this.userRepository.findOne({ where: { id } });
-    const value= await this.userRepository.save({ ...user, ...input });
+    const value = await this.userRepository.save({ ...user, ...input });
     return value;
   }
 

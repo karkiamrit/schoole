@@ -11,7 +11,7 @@ export class MenuResolver {
   constructor(private readonly menuService: MenuService) {}
 
   @Query(() => GetMenuType)
-  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('User'))
   getManyMenus(
     @Args({ name: 'input', nullable: true })
     qs: GetManyInput<Menu>,

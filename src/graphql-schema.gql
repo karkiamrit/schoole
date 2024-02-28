@@ -178,6 +178,11 @@ input GetManyInput {
   where: JSON
 }
 
+type GetMenuType {
+  count: Float
+  data: [Menu!]
+}
+
 input GetOneInput {
   where: JSON!
 }
@@ -305,10 +310,12 @@ type Mutation {
   createManyEvent(input: [CreateEventInput!]!): [Event!]!
   createManyInstitution(input: [CreateInstitutionInput!]!): [Institution!]!
   createManyKyc(input: [CreateKycInput!]!): [Kyc!]!
+  createManyMenu(input: [CreateMenuInput!]!): [Menu!]!
   createManyOrganizer(input: [CreateOrganizerInput!]!): [Organizer!]!
   createManyStudent(input: [CreateStudentInput!]!): [Student!]!
   createManyUsers(input: [CreateUserInput!]!): [User!]!
   createManyVolunteer(input: [CreateVolunteerInput!]!): [volunteers!]!
+  createMenu(input: CreateMenuInput!): Menu!
   createOrganizer(input: CreateOrganizerInput!): Organizer!
   createStudent(input: CreateStudentInput!): Student!
   createUser(input: CreateUserInput!): User!
@@ -319,6 +326,7 @@ type Mutation {
   deleteEvent(id: Float!): Event!
   deleteInstitution(id: Float!): Institution!
   deleteKyc(id: Float!): Kyc!
+  deleteMenu(id: Float!): Menu!
   deleteOrganizer(id: Float!): Organizer!
   deleteStudent(id: Float!): Student!
   deleteUser(id: Float!): JSON!
@@ -338,6 +346,7 @@ type Mutation {
   updateInstitution(id: Float!, input: UpdateInstitutionInput!): Institution!
   updateKyc(id: Float!, input: UpdateKycInput!): Kyc!
   updateMe(input: UpdateUserInput!): User!
+  updateMenu(id: Float!, input: UpdateMenuInput!): Menu!
   updateOrganizer(id: Float!, input: UpdateOrganizerInput!): Organizer!
   updateStudent(id: Float!, input: UpdateStudentInput!): Student!
   updateUser(id: Float!, input: UpdateUserInput!): User!
@@ -378,6 +387,7 @@ type Query {
   getManyEvents(input: GetManyInput): GetEventType!
   getManyInstitutions(input: GetManyInput): GetInstitutionType!
   getManyKycs(input: GetManyInput): GetKycType!
+  getManyMenus(input: GetManyInput): GetMenuType!
   getManyOrganizers(input: GetManyInput): GetOrganizerType!
   getManyStudents(input: GetManyInput): GetStudentType!
   getManyUsers(input: GetManyInput): GetUserType!
@@ -389,6 +399,7 @@ type Query {
   getOneEvent(input: GetOneInput!): Event!
   getOneInstitution(input: GetOneInput!): Institution!
   getOneKyc(input: GetOneInput!): Kyc!
+  getOneMenu(input: GetOneInput!): Menu!
   getOneOrganizer(input: GetOneInput!): Organizer!
   getOneStudent(input: GetOneInput!): Student!
   getOneUser(input: GetOneInput!): User!
@@ -463,6 +474,17 @@ input UpdateInstitutionInput {
 
 input UpdateKycInput {
   established_on: String!
+}
+
+input UpdateMenuInput {
+  can_edit: Boolean
+  href: String
+  icon: String
+  is_hidden: Boolean
+  is_static_route: Boolean
+  menu_for: MenuFor!
+  menu_name: String
+  parent_menu: String
 }
 
 input UpdateOrganizerInput {

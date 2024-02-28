@@ -285,7 +285,6 @@ export class AuthService {
       await this.userService.updateVerification(user.id, {
         phone_verified: true,
       });
-      
     } else {
       const otp = await this.otpService.getOne(
         otpCode,

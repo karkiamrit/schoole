@@ -24,7 +24,7 @@ export class UserResolver {
   }
 
   @Query(() => User || null)
-  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('User'))
   getOneUser(
     @Args({ name: 'input' })
     qs: GetOneInput<User>,
@@ -49,7 +49,7 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
-  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('User'))
   updateUser(@Args('id') id: number, @Args('input') input: UpdateUserInput) {
     return this.userService.update(id, input);
   }
