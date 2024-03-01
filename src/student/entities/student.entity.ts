@@ -49,7 +49,7 @@ export class Student {
 
   @Field(() => String)
   @Column({
-    nullable: true,
+    nullable: false,
     type: 'date',
   })
   date_of_birth: Date;
