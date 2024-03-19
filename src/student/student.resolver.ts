@@ -1,5 +1,5 @@
 import { GraphqlPassportAuthGuard } from '../modules/guards/graphql-passport-auth.guard';
-import { UnauthorizedException, UseGuards } from "@nestjs/common";
+import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { StudentService } from './student.service';
 import { GetManyInput, GetOneInput } from 'src/declare/inputs/custom.input';
@@ -8,7 +8,7 @@ import { GetStudentType, Student } from './entities/student.entity';
 import { CreateStudentInput, UpdateStudentInput } from './inputs/student.input';
 import { CurrentUser } from 'src/modules/decorators/user.decorator';
 import { User } from 'src/user/entities/user.entity';
-import { ForbiddenError } from "@nestjs/apollo";
+import { ForbiddenError } from '@nestjs/apollo';
 @Resolver()
 export class StudentResolver {
   constructor(private readonly studentService: StudentService) {}
@@ -67,7 +67,7 @@ export class StudentResolver {
   ) {
     console.log(user.id);
     console.log(id);
-    if (user.student.id === id){
+    if (user.student.id === id) {
       return this.studentService.update(id, input);
     } else {
       throw new ForbiddenError('Forbidden Request');

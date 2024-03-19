@@ -26,8 +26,7 @@ export class Otp extends BaseEntity {
   @Column()
   code: string;
 
-
-  @Field(()=> String)
+  @Field(() => String)
   @Column()
   phone_number: string;
 
