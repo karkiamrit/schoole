@@ -5,6 +5,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { ForgotPasswordMethod } from '@/auth/auth.enums';
 
 @InputType()
 export class SignUpInput {
@@ -24,3 +25,14 @@ export class SignUpInput {
 
 @InputType()
 export class SignInInput extends SignUpInput {}
+
+@InputType()
+export class ForgotPasswordInput {
+  @Field()
+  @IsNotEmpty()
+  method: ForgotPasswordMethod;
+
+  @Field()
+  @IsNotEmpty()
+  input: string;
+}

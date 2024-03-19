@@ -11,7 +11,6 @@ import { MailService } from '@/mail/mail.service';
 import { FULL_WEB_URL } from 'src/util/config/config';
 import { OtpType } from 'src/otp/entities/otp.entity';
 import { ApolloError } from 'apollo-server-core';
-import { Http } from 'src/util/http';
 import * as crypto from 'crypto';
 import { TokenService } from '@/token/token.service';
 
@@ -31,7 +30,6 @@ export class AuthService {
     private readonly otpService: OtpService,
     private readonly mailService: MailService,
     private readonly tokenService: TokenService,
-    private readonly http: Http,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -50,9 +48,10 @@ export class AuthService {
 
     return this.jwtService.sign(payload, {
       expiresIn: '1h',
+      secret: 'secrectkeyneedtochangelater',
+      privateKey: 'Privatekeyneedtochangelater',
     });
   }
-
   async signUp(input: SignUpInput): Promise<User> {
     const { phone, password } = input;
 
@@ -102,7 +101,7 @@ export class AuthService {
    * @returns  Boolean if the operation is successful.
    */
 
-  async forgotPassword(email: string): Promise<boolean> {
+  async forgotPasswordWithEmail(email: string): Promise<boolean> {
     const user = await this.userService.getOne({ where: { email } });
     if (!user) {
       throw new ApolloError("Email doesn't exist!", 'EMAIL_NOT_FOUND', {
@@ -122,17 +121,52 @@ export class AuthService {
     return true;
   }
 
+  async forgotPasswordWithPhone(phone: string): Promise<boolean> {
+    const user = await this.userService.getOne({ where: { phone } });
+    if (!user) {
+      throw new ApolloError("Phone doesn't exist!", 'PHONE_NOT_FOUND', {
+        statusCode: 404, // Not Found
+      });
+    }
+
+    // Generate a reset password token
+
+    await this.otpService.create_password_reset_otp(phone);
+
+    // ideally this otp is supposed to be sent through sms. currently the otp is static we will change it later
+
+    // // Create a reset password URL with the token
+    // const resetPasswordUrl = `${FULL_WEB_URL}/reset-password/${resetPasswordToken}`;
+    //
+    // // Send the reset password link to the user's email
+    // await this.mailService.sendResetPasswordLink(user.email, resetPasswordUrl);
+    return true;
+  }
+
+  async validateResetPasswordOtp(
+    phone: string,
+    otp: string,
+  ): Promise<string | null> {
+    // first check the otp is available with correspoing phone number & check it expirity
+    const otp_instance = await this.otpService.CheckValidOtp(phone, otp);
+    if (otp_instance) {
+      const user = await this.userService.getOne({ where: { phone } });
+      return this.generateResetPasswordToken(user);
+    } else {
+      return null;
+    }
+  }
+
   /**
    * Resets the password for a user using a reset password token
-   * @param {string} token - Reset password token received by the user.
-   * @param {string} password - New password to set for the user.
    * @returns   boolean if the operation is successful.
    */
-
   async resetPassword(token: string, password: string): Promise<boolean> {
     try {
       // Verify and decode the token to get user information
-      const payload = this.jwtService.verify(token);
+      const payload = this.jwtService.verify(token, {
+        secret: 'secrectkeyneedtochangelater',
+      });
       const userId = payload.sub; // Assuming 'sub' contains the user's ID
 
       // Find the user based on the decoded user ID
@@ -178,7 +212,7 @@ export class AuthService {
   /**
    * Initiates the process of sending a One-Time Password (OTP) to the user's email for verification.
    * @param {string}email -Email address of the user for whom the OTP is requested.
-   * @param {OtpType}otpType- An enumeration specifying the type of OTP (e.g., "EMAIL", "PHONE").
+   * @param otpType
    * @returns  boolean if the operation is successful.
    */
   async requestOtpVerifyEmail(

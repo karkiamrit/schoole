@@ -12,6 +12,7 @@ import { User } from 'src/user/entities/user.entity';
 export enum OtpType {
   EMAIL_VERIFY = 'EMAIL_VERIFY',
   PHONE_VERIFY = 'PHONE_VERIFY',
+  PASSWORD_RESET = 'PASSWORD_RESET',
 }
 
 @ObjectType()
@@ -24,6 +25,11 @@ export class Otp extends BaseEntity {
   @Field(() => String)
   @Column()
   code: string;
+
+
+  @Field(()=> String)
+  @Column()
+  phone_number: string;
 
   @Field()
   @ManyToOne(() => User)

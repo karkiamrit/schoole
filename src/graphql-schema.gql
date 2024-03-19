@@ -128,6 +128,11 @@ type Event {
   updated_at: DateTime!
 }
 
+input ForgotPasswordInput {
+  input: String!
+  method: String!
+}
+
 """The gender of the students or users"""
 enum Gender {
   female
@@ -331,7 +336,7 @@ type Mutation {
   deleteStudent(id: Float!): Student!
   deleteUser(id: Float!): JSON!
   deleteVolunteer(id: Float!): volunteers!
-  forgotPassword(email: String!): Boolean!
+  forgotPassword(data: ForgotPasswordInput!): Boolean!
   logout: Boolean!
   participateInCompetition(competitionID: Float!): JSON!
   refreshToken(refreshToken: String!): String!
@@ -352,6 +357,7 @@ type Mutation {
   updateUser(id: Float!, input: UpdateUserInput!): User!
   updateVolunteer(id: Float!, input: UpdateVolunteerInput!): volunteers!
   verifyEmail(email: String!, otpCode: String!): Boolean!
+  verifyForgotPasswordOtp(otpCode: String!, phone: String!): String!
   verifyPhone(otpCode: String!, phone: String!): OnlyJwt!
 }
 

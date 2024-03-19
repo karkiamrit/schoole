@@ -22,6 +22,20 @@ export class OtpService {
     otp.code = otpCode;
     otp.operation = otpType;
     otp.user = user;
+    otp.phone_number = user.phone;
+    otp.expires_in = expiresIn;
+    return this.otpRepository.save(otp);
+  }
+
+  async create_password_reset_otp(phone: string): Promise<Otp> {
+    const otpCode = String(Math.floor(100000 + Math.random() * 900000));
+    const expiresIn = new Date(Date.now() + 15 * 60_000);
+
+    // Create the OTP object without using the repository
+    const otp = new Otp();
+    otp.code = otpCode;
+    otp.operation = OtpType.PASSWORD_RESET;
+    otp.phone_number = phone;
     otp.expires_in = expiresIn;
     return this.otpRepository.save(otp);
   }
@@ -38,13 +52,30 @@ export class OtpService {
       where: { code: otpCode, user: { id: user.id }, operation },
     });
   }
+
   /**
    * Udpate and save an OTP object to the database.
    * @param {Otp} otp - The  OTP which should be updated.
    * @returns  The boolean value if the update is successfull.
-   */
+   */ data;
   async update(otp: Otp): Promise<boolean> {
     await this.otpRepository.save(otp);
     return true;
+  }
+
+  async CheckValidOtp(phone: string, otpCode: string): Promise<Otp | null> {
+    const otp = await this.otpRepository
+      .createQueryBuilder('otp')
+      .where('otp.phone_number = :phoneNumber', { phoneNumber: phone })
+      .andWhere('otp.code = :otpCode', { otpCode: otpCode })
+      .andWhere('otp.is_used = :isUsed', { isUsed: false })
+      .andWhere('otp.expires_in  > :currentTime', { currentTime: new Date() })
+      .getOne();
+
+    if (otp) {
+      otp.is_used = true;
+      await this.otpRepository.save(otp);
+      return otp;
+    }
   }
 }

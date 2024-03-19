@@ -1,6 +1,10 @@
-import { Args, Mutation, Resolver, Context } from '@nestjs/graphql';
+import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
-import { SignInInput, SignUpInput } from './inputs/auth.input';
+import {
+  ForgotPasswordInput,
+  SignInInput,
+  SignUpInput,
+} from './inputs/auth.input';
 import { JwtWithUser, OnlyJwt } from '@/auth/entities/auth._entity';
 import { UseGuards } from '@nestjs/common';
 import { SignInGuard } from '../modules/guards/graphql-signin-guard';
@@ -9,6 +13,7 @@ import { User } from '../user/entities/user.entity';
 import { CurrentUser } from 'src/modules/decorators/user.decorator';
 import { GraphqlPassportAuthGuard } from 'src/modules/guards/graphql-passport-auth.guard';
 import { Response } from 'express';
+import { ApolloError } from 'apollo-server-core';
 
 @Resolver()
 export class AuthResolver {
@@ -32,9 +37,13 @@ export class AuthResolver {
   }
 
   @Mutation(() => Boolean)
-  async forgotPassword(@Args('email') email: string): Promise<boolean> {
-    const result = await this.authService.forgotPassword(email);
-    return result;
+  async forgotPassword(
+    @Args('data') data: ForgotPasswordInput,
+  ): Promise<boolean> {
+    if (data.method === 'email') {
+      return await this.authService.forgotPasswordWithEmail(data.input);
+    }
+    return await this.authService.forgotPasswordWithPhone(data.input);
   }
 
   @Mutation(() => Boolean)
@@ -42,8 +51,7 @@ export class AuthResolver {
     @Args('token') token: string,
     @Args('newPassword') newPassword: string,
   ): Promise<boolean> {
-    const result = await this.authService.resetPassword(token, newPassword);
-    return result;
+    return await this.authService.resetPassword(token, newPassword);
   }
 
   @Mutation(() => Boolean)
@@ -84,6 +92,24 @@ export class AuthResolver {
     res.cookie('access_token', accessToken, { httpOnly: true }); // Set the cookie
     res.cookie('refresh_token', refreshToken, { httpOnly: true });
     return { accessToken, refreshToken };
+  }
+
+  @Mutation(() => String)
+  async verifyForgotPasswordOtp(
+    @Args('phone') phone: string,
+    @Args('otpCode') otpCode: string,
+  ): Promise<string> {
+    const response_token = await this.authService.validateResetPasswordOtp(
+      phone,
+      otpCode,
+    );
+    if (response_token) {
+      return response_token;
+    } else {
+      throw new ApolloError('Invalid OTP Code', 'OTP_NOT_FOUND_OR_EXPIRED', {
+        statusCode: 404,
+      });
+    }
   }
 
   @Mutation(() => Boolean)
