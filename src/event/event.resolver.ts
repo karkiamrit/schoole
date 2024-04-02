@@ -13,7 +13,7 @@ export class EventResolver {
   constructor(private readonly eventService: EventService) {}
 
   @Query(() => GetEventType)
-  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('User'))
   getManyEvents(
     @Args({ name: 'input', nullable: true })
     qs: GetManyInput<Event>,
