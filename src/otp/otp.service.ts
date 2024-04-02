@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { OtpRepository } from './otp.repository';
 import { Otp, OtpType } from './entities/otp.entity';
 import { User } from 'src/user/entities/user.entity';
+import { MoreThan } from 'typeorm';
 
 @Injectable()
 export class OtpService {
@@ -31,6 +32,7 @@ export class OtpService {
     const otpCode = String(Math.floor(100000 + Math.random() * 900000));
     const expiresIn = new Date(Date.now() + 15 * 60_000);
 
+    await this.invalidPreviosIssuedPasswordResetOtp(phone);
     // Create the OTP object without using the repository
     const otp = new Otp();
     otp.code = otpCode;
@@ -76,6 +78,24 @@ export class OtpService {
       otp.is_used = true;
       await this.otpRepository.save(otp);
       return otp;
+    }
+  }
+
+  async invalidPreviosIssuedPasswordResetOtp(phone: string): Promise<boolean> {
+    try {
+      await this.otpRepository
+        .createQueryBuilder('otp')
+        .update()
+        .set({ expires_in: new Date() })
+        .where({
+          phone_number: phone,
+          expires_in: MoreThan(new Date()),
+          is_used: false,
+        })
+        .execute();
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 }
