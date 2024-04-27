@@ -1,5 +1,6 @@
 import { IsNotEmpty, IsOptional } from 'class-validator';
 import { Field, InputType } from '@nestjs/graphql';
+import { CreateAddressInput } from '@/address/inputs/address.input';
 
 @InputType()
 export class CreateEventInput {
@@ -14,6 +15,14 @@ export class CreateEventInput {
   @Field(() => Date)
   @IsNotEmpty()
   end_date: Date;
+
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  description?: string;
+
+  @Field(() => CreateAddressInput, { nullable: true })
+  @IsOptional()
+  address?: CreateAddressInput;
 }
 
 @InputType()
@@ -29,4 +38,12 @@ export class UpdateEventInput {
   @Field(() => Date)
   @IsOptional()
   end_date: Date;
+
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  description?: string;
+
+  @Field(() => CreateAddressInput, { nullable: true })
+  @IsOptional()
+  address?: CreateAddressInput;
 }

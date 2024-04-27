@@ -50,8 +50,9 @@ export class SubEventResolver {
   createManySubEvent(
     @Args({ name: 'input', type: () => [CreateSubEventInput] })
     input: CreateSubEventInput[],
+    @Args('eventID') eventID: number,
   ) {
-    return this.subEventService.createMany(input);
+    return this.subEventService.createMany(input );
   }
 
   @Mutation(() => SubEvent)

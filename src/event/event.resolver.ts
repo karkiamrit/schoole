@@ -8,6 +8,8 @@ import { GetEventType, Event } from './entities/event.entity';
 import { CreateEventInput, UpdateEventInput } from './inputs/event.input';
 import { CurrentUser } from '@/modules/decorators/user.decorator';
 import { User } from '@/user/entities/user.entity';
+import { CreateSubEventInput } from '@/subevent/inputs/subEvent.input';
+import { CreateAddressInput } from '@/address/inputs/address.input';
 @Resolver()
 export class EventResolver {
   constructor(private readonly eventService: EventService) {}
@@ -30,6 +32,15 @@ export class EventResolver {
     @CurrentQuery() query: string,
   ) {
     return this.eventService.getOne(qs, query);
+  }
+
+  @Mutation(() => Event)
+  async createEventWithSubEvents(
+    @Args('input') input: CreateEventInput,
+    @Args('subEvents', { type: () => [CreateSubEventInput], nullable: true })
+    subEvents: CreateSubEventInput[],
+  ): Promise<Event> {
+    return this.eventService.createEventWithSubEvents(input, subEvents );
   }
 
   @Mutation(() => Event)

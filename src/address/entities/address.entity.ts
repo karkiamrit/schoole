@@ -15,8 +15,11 @@ export class Address {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @ManyToOne(() => User, (user) => user.addresses, { onDelete: 'CASCADE' })
-  @Field(() => User)
+  @ManyToOne(() => User, (user) => user.addresses, {
+    onDelete: 'CASCADE',
+    nullable: true,
+  })
+  @Field(() => User, { nullable: true })
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: User;
 

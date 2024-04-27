@@ -8,6 +8,9 @@ import { EventService } from '@/event/event.service';
 import { EventRepository } from '@/event/event.repository';
 import { InstitutionService } from '@/institution/institution.service';
 import { InstitutionRepository } from '@/institution/institution.repository';
+import { ParticipantModule } from '@/participant/participant.module';
+import { AddressRepository } from '@/address/address.repository';
+import { AddressService } from '@/address/address.service';
 
 @Module({
   imports: [
@@ -16,6 +19,7 @@ import { InstitutionRepository } from '@/institution/institution.repository';
       ParticipantRepository,
       EventRepository,
       InstitutionRepository,
+      AddressRepository,
     ]),
   ],
   providers: [
@@ -23,6 +27,7 @@ import { InstitutionRepository } from '@/institution/institution.repository';
     SubEventResolver,
     EventService,
     InstitutionService,
+    AddressService,
   ],
   exports: [SubEventService],
 })

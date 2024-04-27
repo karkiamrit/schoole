@@ -12,7 +12,7 @@ type Address {
   municipality: String!
   postal_code: String!
   state: String!
-  user: User!
+  user: User
 }
 
 type Certificate {
@@ -23,7 +23,14 @@ type Certificate {
 }
 
 input CreateAddressInput {
+  address_type: String!
+  country: String
+  display_name: String!
   latitude: String!
+  longitude: String!
+  municipality: String
+  postal_code: String
+  state: String
 }
 
 input CreateCertificateInput {
@@ -32,6 +39,8 @@ input CreateCertificateInput {
 }
 
 input CreateEventInput {
+  address: CreateAddressInput
+  description: String
   end_date: DateTime!
   name: String!
   start_date: DateTime!
@@ -76,6 +85,7 @@ input CreateStudentInput {
 }
 
 input CreateSubEventInput {
+  address: CreateAddressInput
   category: String!
   description: String!
   end_date: DateTime!
@@ -104,8 +114,9 @@ scalar DateTime
 
 type Event {
   SubEvents: [SubEvent!]!
-  address: Address!
+  address: Address
   created_at: DateTime!
+  description: String
   end_date: DateTime!
   id: ID!
   institutions: [Institution!]!
@@ -282,6 +293,7 @@ type Mutation {
   createCertificate(input: CreateCertificateInput!, transactionId: String!): Certificate!
   createEvent(input: CreateEventInput!): Event!
   createEventByInstitution(input: CreateEventInput!): Event!
+  createEventWithSubEvents(input: CreateEventInput!, subEvents: [CreateSubEventInput!]): Event!
   createInstitution(input: CreateInstitutionInput!): Institution!
   createKyc(input: CreateKycInput!): Kyc!
   createManyAddress(input: [CreateAddressInput!]!): [Address!]!
@@ -292,7 +304,7 @@ type Mutation {
   createManyMenu(input: [CreateMenuInput!]!): [Menu!]!
   createManyOrganizer(input: [CreateOrganizerInput!]!): [Organizer!]!
   createManyStudent(input: [CreateStudentInput!]!): [Student!]!
-  createManySubEvent(input: [CreateSubEventInput!]!): [SubEvent!]!
+  createManySubEvent(eventID: Float!, input: [CreateSubEventInput!]!): [SubEvent!]!
   createManyUsers(input: [CreateUserInput!]!): [User!]!
   createManyVolunteer(input: [CreateVolunteerInput!]!): [volunteers!]!
   createMenu(input: CreateMenuInput!): Menu!
@@ -443,7 +455,14 @@ enum SubEventType {
 }
 
 input UpdateAddressInput {
-  latitude: String!
+  address_type: String
+  country: String
+  display_name: String
+  latitude: String
+  longitude: String
+  municipality: String
+  postal_code: String
+  state: String
 }
 
 input UpdateCertificateInput {
@@ -452,6 +471,8 @@ input UpdateCertificateInput {
 }
 
 input UpdateEventInput {
+  address: CreateAddressInput
+  description: String
   end_date: DateTime!
   name: String!
   start_date: DateTime!
@@ -493,6 +514,7 @@ input UpdateStudentInput {
 }
 
 input UpdateSubEventInput {
+  address: CreateAddressInput
   category: String
   description: String
   end_date: DateTime

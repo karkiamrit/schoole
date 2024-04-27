@@ -7,11 +7,18 @@ import { CreateEventInput, UpdateEventInput } from './inputs/event.input';
 import { FindOneOptions } from 'typeorm';
 import { User } from '@/user/entities/user.entity';
 import { InstitutionService } from '@/institution/institution.service';
+// import { SubEventService } from '@/subevent/subEvent.service';
+import { CreateSubEventInput } from '@/subevent/inputs/subEvent.input';
+import { SubEventRepository } from '@/subevent/subEvent.repository';
+import { AddressService } from '@/address/address.service';
+import { CreateAddressInput } from '@/address/inputs/address.input';
 @Injectable()
 export class EventService {
   constructor(
     private readonly eventRepository: EventRepository,
     private readonly institutionService: InstitutionService,
+    private readonly subEventRepository: SubEventRepository,
+    private readonly addressService: AddressService,
   ) {}
 
   getMany(qs?: RepoQuery<Event>, query?: string) {
@@ -23,6 +30,44 @@ export class EventService {
       return this.eventRepository.getOne(qs, query);
     } else {
       return this.eventRepository.findOne(qs as FindOneOptions<Event>);
+    }
+  }
+
+  async createEventWithSubEvents(
+    input: CreateEventInput,
+    subEvents: CreateSubEventInput[],
+  ): Promise<Event> {
+    const entityManager = this.eventRepository.manager;
+    const queryRunner = entityManager.connection.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+
+      // const address = await this.addressService.create(addressInput);
+      // Create Event
+      const event = await this.eventRepository.save(
+        this.eventRepository.create(input),
+      );
+
+      // Create SubEvents
+      const createdSubEvents = [];
+      for (const subEventInput of subEvents) {
+        const subEvent = await this.subEventRepository.save({
+          // Add await here
+          ...subEventInput,
+          event,
+        });
+        createdSubEvents.push(subEvent);
+      }
+
+      await queryRunner.commitTransaction();
+      return event;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
     }
   }
 

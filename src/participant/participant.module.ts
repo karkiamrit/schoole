@@ -4,5 +4,7 @@ import { ParticipantRepository } from './participant.repository';
 
 @Module({
   imports: [TypeOrmExModule.forCustomRepository([ParticipantRepository])],
+  providers: [ParticipantRepository],
+  exports: [ParticipantRepository],
 })
 export class ParticipantModule {}

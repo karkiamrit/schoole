@@ -6,6 +6,7 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -13,6 +14,7 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Event } from '@/event/entities/event.entity';
 import { Participant } from '@/participant/entities/participant.entity';
 import { SubEventType } from '../inputs/enums';
+import { Address } from '@/address/entities/address.entity';
 
 @ObjectType()
 @Entity('SubEvents')
@@ -60,6 +62,10 @@ export class SubEvent {
   @JoinTable()
   @Field(() => [Participant])
   participants: Participant[];
+
+  @OneToOne(() => Address, { nullable: true })
+  @JoinColumn({ name: 'address_id' })
+  address: Address;
 
   @Field()
   @CreateDateColumn({

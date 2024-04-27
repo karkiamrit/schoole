@@ -26,11 +26,15 @@ export class Event {
   @Column()
   name: string;
 
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
+  description: string;
+
   @OneToOne(() => Address, (address) => address.id, {
     eager: true,
     onDelete: 'CASCADE',
   })
-  @Field(() => Address)
+  @Field(() => Address, { nullable: true })
   @JoinColumn({ name: 'address_id', referencedColumnName: 'id' })
   address: Address;
 
