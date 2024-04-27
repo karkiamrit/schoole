@@ -7,8 +7,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Competition } from '@/competition/entities/competition.entity';
 import { Student } from '@/student/entities/student.entity';
+import { SubEvent } from '@/competition/entities/subEvent.entity';
 
 @ObjectType()
 @Entity('participants')
@@ -22,8 +22,8 @@ export class Participant {
   @Field(() => Student)
   student: Student;
 
-  @ManyToMany(() => Competition, (competition) => competition.participants)
+  @ManyToMany(() => SubEvent, (SubEvent) => SubEvent.participants)
   @JoinTable()
-  @Field(() => [Competition])
-  competitions: Competition[];
+  @Field(() => [SubEvent])
+  SubEvents: SubEvent[];
 }

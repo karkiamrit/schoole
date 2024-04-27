@@ -12,10 +12,11 @@ import {
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Event } from '@/event/entities/event.entity';
 import { Participant } from '@/participant/entities/participant.entity';
+import { SubEventType } from '../inputs/enums';
 
 @ObjectType()
-@Entity('competitions')
-export class Competition {
+@Entity('SubEvents')
+export class SubEvent {
   @Field(() => ID)
   @PrimaryGeneratedColumn('increment', { type: 'bigint' })
   id: number;
@@ -27,6 +28,10 @@ export class Competition {
   @Field(() => String)
   @Column()
   description: string;
+
+  @Field(() => SubEventType)
+  @Column({ enum: SubEventType, default: SubEventType.other })
+  type: SubEventType;
 
   @Field(() => String)
   @Column()
@@ -44,12 +49,12 @@ export class Competition {
   @Column()
   end_date: Date;
 
-  @ManyToOne(() => Event, (event) => event.competitions)
+  @ManyToOne(() => Event, (event) => event.SubEvents)
   @Field(() => Event)
   @JoinColumn({ name: 'event_id', referencedColumnName: 'id' })
   event: Event;
 
-  @ManyToMany(() => Participant, (participant) => participant.competitions, {
+  @ManyToMany(() => Participant, (participant) => participant.SubEvents, {
     eager: true,
   })
   @JoinTable()
@@ -70,9 +75,9 @@ export class Competition {
 }
 
 @ObjectType()
-export class GetCompetitionType {
-  @Field(() => [Competition], { nullable: true })
-  data?: Competition[];
+export class GetSubEventType {
+  @Field(() => [SubEvent], { nullable: true })
+  data?: SubEvent[];
 
   @Field(() => Number, { nullable: true })
   count?: number;

@@ -2,7 +2,7 @@ import { IsNotEmpty, IsOptional } from 'class-validator';
 import { Field, InputType } from '@nestjs/graphql';
 
 @InputType()
-export class CreateCompetitionInput {
+export class CreateSubEventInput {
   @Field(() => String)
   @IsNotEmpty()
   name: string;
@@ -29,7 +29,7 @@ export class CreateCompetitionInput {
 }
 
 @InputType()
-export class UpdateCompetitionInput {
+export class UpdateSubEventInput {
   @Field(() => String, { nullable: true })
   @IsOptional()
   name?: string;

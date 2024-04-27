@@ -47,7 +47,7 @@ export class Student {
   })
   bio: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({
     nullable: false,
     type: 'date',

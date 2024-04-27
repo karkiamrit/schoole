@@ -13,7 +13,7 @@ import {
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Address } from '@/address/entities/address.entity';
 import { Institution } from '@/institution/entities/institution.entity';
-import { Competition } from '@/competition/entities/competition.entity';
+import { SubEvent } from '@/competition/entities/subEvent.entity';
 
 @ObjectType()
 @Entity('events')
@@ -34,9 +34,9 @@ export class Event {
   @JoinColumn({ name: 'address_id', referencedColumnName: 'id' })
   address: Address;
 
-  @OneToMany(() => Competition, (competition) => competition.event)
-  @Field(() => [Competition])
-  competitions: Competition[];
+  @OneToMany(() => SubEvent, (SubEvent) => SubEvent.event)
+  @Field(() => [SubEvent])
+  SubEvents: SubEvent[];
 
   @ManyToMany(() => Institution, (institution) => institution.events, {
     eager: true,

@@ -1,7 +1,6 @@
 import { MenuModule } from './menu/menu.module';
 import { TokenModule } from './token/token.module';
 import { ParticipantModule } from './participant/participant.module';
-import { CompetitionModule } from './competition/competition.module';
 import { EventModule } from './event/event.module';
 import { AddressModule } from './address/address.module';
 import { CertificateModule } from './certificate/certificate.module';
@@ -28,6 +27,7 @@ import { HealthModule } from './health/health.module';
 import { Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { SubEventModule } from './competition/subEvent.module';
 
 @Module({
   imports: [
@@ -69,7 +69,7 @@ import { join } from 'path';
     CertificateModule,
     AddressModule,
     EventModule,
-    CompetitionModule,
+    SubEventModule,
     TokenModule,
     MenuModule,
     ParticipantModule,
