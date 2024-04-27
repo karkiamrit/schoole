@@ -22,20 +22,6 @@ type Certificate {
   student: Student!
 }
 
-type Competition {
-  category: String!
-  createdAt: DateTime!
-  description: String!
-  end_date: DateTime!
-  event: Event!
-  id: ID!
-  name: String!
-  participants: [Participant!]!
-  rules: [String!]!
-  start_date: DateTime!
-  updatedAt: DateTime!
-}
-
 input CreateAddressInput {
   latitude: String!
 }
@@ -443,7 +429,7 @@ type SubEvent {
   id: ID!
   name: String!
   participants: [Participant!]!
-  rules: [String!]!
+  rules: [String!]
   start_date: DateTime!
   type: SubEventType!
   updatedAt: DateTime!

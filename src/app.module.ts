@@ -27,7 +27,7 @@ import { HealthModule } from './health/health.module';
 import { Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { SubEventModule } from './competition/subEvent.module';
+import { SubEventModule } from './subevent/subEvent.module';
 
 @Module({
   imports: [

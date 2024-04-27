@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Student } from '@/student/entities/student.entity';
-import { SubEvent } from '@/competition/entities/subEvent.entity';
+import { SubEvent } from '@/subevent/entities/subEvent.entity';
 
 @ObjectType()
 @Entity('participants')
