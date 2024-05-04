@@ -12,9 +12,13 @@ import {
 import GraphQLJSON from 'graphql-type-json';
 import { User } from '@/user/entities/user.entity';
 import { CurrentUser } from '@/modules/decorators/user.decorator';
+import { UserRepository } from '@/user/user.repository';
 @Resolver()
 export class SubEventResolver {
-  constructor(private readonly subEventService: SubEventService) {}
+  constructor(
+    private readonly subEventService: SubEventService,
+    private readonly userRepository: UserRepository,
+  ) {}
 
   @Query(() => GetSubEventType)
   @UseGuards(new GraphqlPassportAuthGuard('Admin'))
@@ -52,7 +56,7 @@ export class SubEventResolver {
     input: CreateSubEventInput[],
     @Args('eventID') eventID: number,
   ) {
-    return this.subEventService.createMany(input );
+    return this.subEventService.createMany(input);
   }
 
   @Mutation(() => SubEvent)
@@ -71,6 +75,16 @@ export class SubEventResolver {
     @CurrentUser() user: User,
   ) {
     return this.subEventService.participate(id, user);
+  }
+
+  @Mutation(() => GraphQLJSON)
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
+  async allocateStudentToSubEvent(
+    @Args('subEventId') subEventID: number,
+    @Args('userId') userId: number,
+  ) {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    return this.subEventService.participate(subEventID, user);
   }
 
   @Mutation(() => SubEvent)

@@ -289,6 +289,7 @@ enum MenuFor {
 
 type Mutation {
   SignUp(input: SignUpInput!): User!
+  allocateStudentToSubEvent(subEventId: Float!, userId: Float!): JSON!
   createAddress(input: CreateAddressInput!): Address!
   createCertificate(input: CreateCertificateInput!, transactionId: String!): Certificate!
   createEvent(input: CreateEventInput!): Event!

@@ -11,6 +11,8 @@ import { InstitutionRepository } from '@/institution/institution.repository';
 import { ParticipantModule } from '@/participant/participant.module';
 import { AddressRepository } from '@/address/address.repository';
 import { AddressService } from '@/address/address.service';
+import { UserService } from '@/user/user.service';
+import { UserRepository } from '@/user/user.repository';
 
 @Module({
   imports: [
@@ -20,6 +22,7 @@ import { AddressService } from '@/address/address.service';
       EventRepository,
       InstitutionRepository,
       AddressRepository,
+      UserRepository,
     ]),
   ],
   providers: [
