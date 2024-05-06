@@ -1,18 +1,18 @@
 import { IsNotEmpty, IsOptional } from 'class-validator';
-import { Field, InputType, ID } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
 
 @InputType()
 export class CreateAddressInput {
   @Field(() => String)
-  @IsNotEmpty()
+  @IsOptional()
   latitude: string;
 
   @Field(() => String)
-  @IsNotEmpty()
+  @IsOptional()
   longitude: string;
 
   @Field(() => String)
-  @IsNotEmpty()
+  @IsOptional()
   address_type: string;
 
   @Field(() => String)

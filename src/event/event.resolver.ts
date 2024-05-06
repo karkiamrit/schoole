@@ -5,11 +5,13 @@ import { EventService } from './event.service';
 import { GetManyInput, GetOneInput } from 'src/declare/inputs/custom.input';
 import { CurrentQuery } from 'src/modules/decorators/query.decorator';
 import { GetEventType, Event } from './entities/event.entity';
-import { CreateEventInput, UpdateEventInput } from './inputs/event.input';
+import {
+  CreateEventInput,
+  CreateEventWithSubEventsInput,
+  UpdateEventInput,
+} from './inputs/event.input';
 import { CurrentUser } from '@/modules/decorators/user.decorator';
 import { User } from '@/user/entities/user.entity';
-import { CreateSubEventInput } from '@/subevent/inputs/subEvent.input';
-import { CreateAddressInput } from '@/address/inputs/address.input';
 @Resolver()
 export class EventResolver {
   constructor(private readonly eventService: EventService) {}
@@ -35,12 +37,12 @@ export class EventResolver {
   }
 
   @Mutation(() => Event)
+  @UseGuards(new GraphqlPassportAuthGuard('User'))
   async createEventWithSubEvents(
-    @Args('input') input: CreateEventInput,
-    @Args('subEvents', { type: () => [CreateSubEventInput], nullable: true })
-    subEvents: CreateSubEventInput[],
+    @Args('input') input: CreateEventWithSubEventsInput,
+    @CurrentUser() user: User,
   ): Promise<Event> {
-    return this.eventService.createEventWithSubEvents(input, subEvents );
+    return this.eventService.createEventWithSubEvents(input, user);
   }
 
   @Mutation(() => Event)

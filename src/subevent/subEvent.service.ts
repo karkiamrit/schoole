@@ -40,7 +40,7 @@ export class SubEventService {
     return this.subEventRepository.save(subEvent);
   }
 
-  createMany(input: CreateSubEventInput[]): Promise<SubEvent[]> {
+  async createMany(input: CreateSubEventInput[]): Promise<SubEvent[]> {
     return this.subEventRepository.save(input);
   }
 

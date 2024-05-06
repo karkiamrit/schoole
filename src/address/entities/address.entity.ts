@@ -23,35 +23,35 @@ export class Address {
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: User;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column()
   latitude: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column()
   longitude: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column()
   address_type: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: false })
   @Column()
   display_name: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({ nullable: true })
   country: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({ nullable: true })
   state: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({ nullable: true })
   municipality: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({ nullable: true })
   postal_code: string;
 }

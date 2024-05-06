@@ -3,15 +3,15 @@
 # ------------------------------------------------------
 
 type Address {
-  address_type: String!
-  country: String!
+  address_type: String
+  country: String
   display_name: String!
   id: ID!
-  latitude: String!
-  longitude: String!
-  municipality: String!
-  postal_code: String!
-  state: String!
+  latitude: String
+  longitude: String
+  municipality: String
+  postal_code: String
+  state: String
   user: User
 }
 
@@ -42,8 +42,19 @@ input CreateEventInput {
   address: CreateAddressInput
   description: String
   end_date: DateTime!
+  entry_fee: Float
   name: String!
   start_date: DateTime!
+}
+
+input CreateEventWithSubEventsInput {
+  address: CreateAddressInput
+  description: String
+  end_date: DateTime!
+  entry_fee: Float
+  name: String!
+  start_date: DateTime!
+  sub_events: [CreateSubEventInput!]
 }
 
 input CreateInstitutionInput {
@@ -90,8 +101,10 @@ input CreateSubEventInput {
   description: String!
   end_date: DateTime!
   name: String!
+  registration_fee: Float
   rules: [String!]
   start_date: DateTime!
+  type: SubEventType!
 }
 
 input CreateUserInput {
@@ -118,12 +131,14 @@ type Event {
   banner: String
   created_at: DateTime!
   description: String
-  end_date: DateTime!
+  end_date: String!
+  entry_fee: Float
   id: ID!
   institutions: [Institution!]!
   name: String!
-  start_date: DateTime!
+  start_date: String!
   updated_at: DateTime!
+  user: User!
 }
 
 input ForgotPasswordInput {
@@ -295,7 +310,7 @@ type Mutation {
   createCertificate(input: CreateCertificateInput!, transactionId: String!): Certificate!
   createEvent(input: CreateEventInput!): Event!
   createEventByInstitution(input: CreateEventInput!): Event!
-  createEventWithSubEvents(input: CreateEventInput!, subEvents: [CreateSubEventInput!]): Event!
+  createEventWithSubEvents(input: CreateEventWithSubEventsInput!): Event!
   createInstitution(input: CreateInstitutionInput!): Institution!
   createKyc(input: CreateKycInput!): Kyc!
   createManyAddress(input: [CreateAddressInput!]!): [Address!]!
@@ -435,6 +450,7 @@ type Student {
 }
 
 type SubEvent {
+  address: Address!
   banner: String
   category: String!
   createdAt: DateTime!
@@ -444,6 +460,7 @@ type SubEvent {
   id: ID!
   name: String!
   participants: [Participant!]!
+  registration_fee: Float
   rules: [String!]
   start_date: DateTime!
   type: SubEventType!
@@ -478,6 +495,7 @@ input UpdateEventInput {
   banner: String
   description: String
   end_date: DateTime!
+  entry_fee: Float
   name: String!
   start_date: DateTime!
 }
@@ -524,8 +542,10 @@ input UpdateSubEventInput {
   description: String
   end_date: DateTime
   name: String
+  registration_fee: Float
   rules: [String!]
   start_date: DateTime
+  type: SubEventType!
 }
 
 input UpdateUserInput {

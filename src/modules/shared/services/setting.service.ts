@@ -78,7 +78,7 @@ export class SettingService {
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: true,
       extra: {
-        ssl: true,
+        ssl: false,
         // sslmode: 'require',
       },
       autoLoadEntities: true,

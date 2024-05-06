@@ -17,7 +17,7 @@ import { SubEventType } from '../inputs/enums';
 import { Address } from '@/address/entities/address.entity';
 
 @ObjectType()
-@Entity('SubEvents')
+@Entity('sub_events')
 export class SubEvent {
   @Field(() => ID)
   @PrimaryGeneratedColumn('increment', { type: 'bigint' })
@@ -28,8 +28,12 @@ export class SubEvent {
   name: string;
 
   @Field(() => String)
-  @Column()
+  @Column('text')
   description: string;
+
+  @Field(() => Number, { nullable: true })
+  @Column({ nullable: true })
+  registration_fee: number;
 
   @Field(() => SubEventType)
   @Column({ enum: SubEventType, default: SubEventType.other })
@@ -64,6 +68,7 @@ export class SubEvent {
   participants: Participant[];
 
   @OneToOne(() => Address, { nullable: true })
+  @Field(() => Address)
   @JoinColumn({ name: 'address_id' })
   address: Address;
 

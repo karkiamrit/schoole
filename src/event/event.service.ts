@@ -2,23 +2,25 @@ import { Injectable } from '@nestjs/common';
 import { OneRepoQuery, RepoQuery } from 'src/declare/types';
 import { EventRepository } from './event.repository';
 import { Event } from './entities/event.entity';
-import { CreateEventInput, UpdateEventInput } from './inputs/event.input';
+import {
+  CreateEventInput,
+  CreateEventWithSubEventsInput,
+  UpdateEventInput,
+} from './inputs/event.input';
 
 import { FindOneOptions } from 'typeorm';
 import { User } from '@/user/entities/user.entity';
 import { InstitutionService } from '@/institution/institution.service';
-// import { SubEventService } from '@/subevent/subEvent.service';
-import { CreateSubEventInput } from '@/subevent/inputs/subEvent.input';
 import { SubEventRepository } from '@/subevent/subEvent.repository';
 import { AddressService } from '@/address/address.service';
-import { CreateAddressInput } from '@/address/inputs/address.input';
-import { FileUploadService } from '@/modules/upload/file-upload.service';
+
 @Injectable()
 export class EventService {
   constructor(
     private readonly eventRepository: EventRepository,
     private readonly institutionService: InstitutionService,
     private readonly subEventRepository: SubEventRepository,
+    private readonly addressService: AddressService,
   ) {}
 
   getMany(qs?: RepoQuery<Event>, query?: string) {
@@ -34,8 +36,8 @@ export class EventService {
   }
 
   async createEventWithSubEvents(
-    input: CreateEventInput,
-    subEvents: CreateSubEventInput[],
+    input: CreateEventWithSubEventsInput,
+    user: User,
   ): Promise<Event> {
     const entityManager = this.eventRepository.manager;
     const queryRunner = entityManager.connection.createQueryRunner();
@@ -43,21 +45,38 @@ export class EventService {
     await queryRunner.startTransaction();
 
     try {
-      // const address = await this.addressService.create(addressInput);
+      // Separate sub_events from the events
+      const { sub_events, ...event_data } = input;
+
       // Create Event
       const event = await this.eventRepository.save(
-        this.eventRepository.create(input),
+        this.eventRepository.create({ ...event_data, user: user }),
       );
 
+      event.user = user;
+
+      // Get event's address and save it to database
+      if (event_data?.address) {
+        event.address = await this.addressService.create(event_data.address);
+      }
+      await this.eventRepository.save(event);
       // Create SubEvents
-      const createdSubEvents = [];
-      for (const subEventInput of subEvents) {
-        const subEvent = await this.subEventRepository.save({
-          // Add await here
-          ...subEventInput,
-          event,
-        });
-        createdSubEvents.push(subEvent);
+      if (sub_events && sub_events.length > 0) {
+        for (const subEventInput of sub_events) {
+          const subEvent = await this.subEventRepository.save({
+            // Add await here
+            ...subEventInput,
+            event,
+          });
+
+          // extract address of sub_event and create it on database
+          if (subEventInput?.address) {
+            subEvent.address = await this.addressService.create(
+              subEventInput.address,
+            );
+            await this.subEventRepository.save(subEvent);
+          }
+        }
       }
 
       await queryRunner.commitTransaction();

@@ -1,6 +1,7 @@
 import { IsNotEmpty, IsOptional } from 'class-validator';
 import { Field, InputType } from '@nestjs/graphql';
 import { CreateAddressInput } from '@/address/inputs/address.input';
+import { CreateSubEventInput } from '@/subevent/inputs/subEvent.input';
 
 @InputType()
 export class CreateEventInput {
@@ -19,6 +20,10 @@ export class CreateEventInput {
   @Field(() => String, { nullable: true })
   @IsOptional()
   description?: string;
+
+  @Field(() => Number, { nullable: true })
+  @IsOptional()
+  entry_fee: number;
 
   @Field(() => CreateAddressInput, { nullable: true })
   @IsOptional()
@@ -47,7 +52,18 @@ export class UpdateEventInput {
   @IsOptional()
   banner?: string;
 
+  @Field(() => Number, { nullable: true })
+  @IsOptional()
+  entry_fee: number;
+
   @Field(() => CreateAddressInput, { nullable: true })
   @IsOptional()
   address?: CreateAddressInput;
+}
+
+@InputType()
+export class CreateEventWithSubEventsInput extends CreateEventInput {
+  @Field(() => [CreateSubEventInput], { nullable: true })
+  @IsOptional()
+  sub_events?: CreateSubEventInput[];
 }

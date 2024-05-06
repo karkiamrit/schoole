@@ -5,6 +5,7 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -14,6 +15,7 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Address } from '@/address/entities/address.entity';
 import { Institution } from '@/institution/entities/institution.entity';
 import { SubEvent } from '@/subevent/entities/subEvent.entity';
+import { User } from '@/user/entities/user.entity';
 
 @ObjectType()
 @Entity('events')
@@ -29,6 +31,10 @@ export class Event {
   @Field(() => String, { nullable: true })
   @Column({ nullable: true })
   description: string;
+
+  @Field(() => Number, { nullable: true })
+  @Column({ nullable: true })
+  entry_fee: number;
 
   @OneToOne(() => Address, (address) => address.id, {
     eager: true,
@@ -49,17 +55,25 @@ export class Event {
   @Field(() => [Institution])
   institutions: Institution[];
 
-  @Field(() => Date)
-  @Column()
+  @Field(() => String)
+  @Column('date')
   start_date: Date;
 
-  @Field(() => Date)
-  @Column()
+  @Field(() => String)
+  @Column('date')
   end_date: Date;
 
   @Field(() => String, { nullable: true })
   @Column({ nullable: true })
   banner: string;
+
+  @ManyToOne(() => User, {
+    onDelete: 'CASCADE',
+    nullable: false,
+  })
+  @Field(() => User, { nullable: false })
+  @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
+  user: User;
 
   @Field()
   @CreateDateColumn({
