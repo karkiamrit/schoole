@@ -12,13 +12,13 @@ import { CreateSubEventInput } from '@/subevent/inputs/subEvent.input';
 import { SubEventRepository } from '@/subevent/subEvent.repository';
 import { AddressService } from '@/address/address.service';
 import { CreateAddressInput } from '@/address/inputs/address.input';
+import { FileUploadService } from '@/modules/upload/file-upload.service';
 @Injectable()
 export class EventService {
   constructor(
     private readonly eventRepository: EventRepository,
     private readonly institutionService: InstitutionService,
     private readonly subEventRepository: SubEventRepository,
-    private readonly addressService: AddressService,
   ) {}
 
   getMany(qs?: RepoQuery<Event>, query?: string) {
@@ -43,7 +43,6 @@ export class EventService {
     await queryRunner.startTransaction();
 
     try {
-
       // const address = await this.addressService.create(addressInput);
       // Create Event
       const event = await this.eventRepository.save(

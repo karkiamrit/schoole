@@ -43,6 +43,10 @@ export class UpdateEventInput {
   @IsOptional()
   description?: string;
 
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  banner?: string;
+
   @Field(() => CreateAddressInput, { nullable: true })
   @IsOptional()
   address?: CreateAddressInput;

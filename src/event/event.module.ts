@@ -8,6 +8,8 @@ import { InstitutionRepository } from '@/institution/institution.repository';
 import { SubEventRepository } from '@/subevent/subEvent.repository';
 import { AddressService } from '@/address/address.service';
 import { AddressRepository } from '@/address/address.repository';
+import { EventsController } from './event.controller';
+import { FileUploadService } from '@/modules/upload/file-upload.service';
 
 @Module({
   imports: [
@@ -18,7 +20,14 @@ import { AddressRepository } from '@/address/address.repository';
       AddressRepository,
     ]),
   ],
-  providers: [EventService, EventResolver, InstitutionService, AddressService],
+  controllers: [EventsController],
+  providers: [
+    EventService,
+    EventResolver,
+    InstitutionService,
+    AddressService,
+    FileUploadService,
+  ],
   exports: [EventService],
 })
 export class EventModule {}

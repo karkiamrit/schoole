@@ -57,6 +57,10 @@ export class Event {
   @Column()
   end_date: Date;
 
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
+  banner: string;
+
   @Field()
   @CreateDateColumn({
     type: 'timestamp with time zone',

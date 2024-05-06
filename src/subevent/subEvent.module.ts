@@ -13,6 +13,7 @@ import { AddressRepository } from '@/address/address.repository';
 import { AddressService } from '@/address/address.service';
 import { UserService } from '@/user/user.service';
 import { UserRepository } from '@/user/user.repository';
+import { SubEventsController } from './subEvent.controller';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { UserRepository } from '@/user/user.repository';
       UserRepository,
     ]),
   ],
+  controllers: [SubEventsController],
   providers: [
     SubEventService,
     SubEventResolver,

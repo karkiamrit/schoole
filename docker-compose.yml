@@ -17,5 +17,20 @@ services:
     command: redis-server --requirepass yournewpassword
     ports:
       - 6379:6379
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    command: yarn dev
+    env_file:
+      - .env
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/usr/src/app
+      - ./uploads:/usr/src/app/uploads
+   
+
 volumes:
   postgres_data:

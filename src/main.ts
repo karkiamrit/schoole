@@ -7,6 +7,7 @@ import { LoggingInterceptor } from './modules/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from './modules/interceptors/timeout.interceptor';
 import { ConfigService } from '@nestjs/config';
 import * as cookieParser from 'cookie-parser';
+import * as express from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -22,6 +23,23 @@ async function bootstrap() {
         enableImplicitConversion: true,
       },
     }),
+  );
+
+  app.use(
+    '/uploads',
+    (
+      req: express.Request,
+      res: express.Response,
+      next: express.NextFunction,
+    ) => {
+      res.header('Access-Control-Allow-Origin', '*');
+      res.header(
+        'Access-Control-Allow-Headers',
+        'Origin, X-Requested-With, Content-Type, Accept',
+      );
+      next();
+    },
+    express.static('/usr/src/app/uploads'),
   );
 
   app.enableCors({

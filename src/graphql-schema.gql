@@ -115,6 +115,7 @@ scalar DateTime
 type Event {
   SubEvents: [SubEvent!]!
   address: Address
+  banner: String
   created_at: DateTime!
   description: String
   end_date: DateTime!
@@ -434,6 +435,7 @@ type Student {
 }
 
 type SubEvent {
+  banner: String
   category: String!
   createdAt: DateTime!
   description: String!
@@ -473,6 +475,7 @@ input UpdateCertificateInput {
 
 input UpdateEventInput {
   address: CreateAddressInput
+  banner: String
   description: String
   end_date: DateTime!
   name: String!
@@ -516,6 +519,7 @@ input UpdateStudentInput {
 
 input UpdateSubEventInput {
   address: CreateAddressInput
+  banner: String
   category: String
   description: String
   end_date: DateTime

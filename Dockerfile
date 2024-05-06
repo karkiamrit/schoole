@@ -1,17 +1,35 @@
-FROM node:16-alpine
+FROM node:alpine as development
 
-WORKDIR /app
+WORKDIR /usr/src/app
 
-COPY package.json ./
+COPY package.json ./ 
+
 COPY yarn.lock ./
+
+COPY tsconfig.json tsconfig.json
+
+COPY nest-cli.json nest-cli.json
 
 RUN yarn install
 
-COPY . .
+RUN yarn run build 
 
-RUN yarn build
+FROM node:alpine as production
 
-EXPOSE 8000
+ARG NODE_ENV=production 
+ENV NODE_ENV=${NODE_ENV}
 
-CMD [ "yarn", "start" ]
+WORKDIR /usr/src/app
 
+COPY package.json ./ 
+COPY yarn.lock ./
+
+RUN npm install -g yarn
+
+RUN yarn install --prod
+
+RUN yarn global add @nestjs/cli
+
+COPY --from=development /usr/src/app/dist ./dist
+
+CMD ["node", "dist"]

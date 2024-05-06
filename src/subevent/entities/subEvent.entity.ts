@@ -67,6 +67,10 @@ export class SubEvent {
   @JoinColumn({ name: 'address_id' })
   address: Address;
 
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
+  banner: string;
+
   @Field()
   @CreateDateColumn({
     type: 'timestamp with time zone',
