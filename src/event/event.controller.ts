@@ -1,5 +1,3 @@
-import { CurrentUser } from '@/modules/decorators/user.decorator';
-import { FileUploadService } from '@/modules/upload/file-upload.service';
 import {
   Body,
   Controller,
@@ -15,10 +13,7 @@ import { UpdateEventInput } from './inputs/event.input';
 
 @Controller('events')
 export class EventsController {
-  constructor(
-    private readonly fileUploadService: FileUploadService,
-    private readonly eventService: EventService,
-  ) {}
+  constructor(private readonly eventService: EventService) {}
 
   //   @Post('uploadBanner')
   //   @UseInterceptors(FileInterceptor('banner'))

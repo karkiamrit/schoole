@@ -27,7 +27,7 @@ export class EventResolver {
   }
 
   @Query(() => Event)
-  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('User'))
   getOneEvent(
     @Args({ name: 'input' })
     qs: GetOneInput<Event>,

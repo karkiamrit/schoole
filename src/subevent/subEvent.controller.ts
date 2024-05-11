@@ -1,5 +1,3 @@
-import { CurrentUser } from '@/modules/decorators/user.decorator';
-import { FileUploadService } from '@/modules/upload/file-upload.service';
 import {
   Body,
   Controller,
@@ -40,9 +38,9 @@ export class SubEventsController {
   )
   async create(
     @UploadedFile() file: Express.Multer.File,
-    @Body('SubEventId') SubEventId: number,
+    @Body('eventId') eventId: number,
   ) {
-    await this.SubEventService.update(SubEventId, {
+    await this.SubEventService.update(eventId, {
       banner: file.path,
     } as UpdateSubEventInput);
   }
