@@ -70,7 +70,7 @@ export class EventResolver {
   }
 
   @Mutation(() => Event)
-  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('User'))
   updateEvent(@Args('id') id: number, @Args('input') input: UpdateEventInput) {
     return this.eventService.update(id, input);
   }

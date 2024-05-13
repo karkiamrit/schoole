@@ -109,6 +109,11 @@ export class EventService {
 
   async update(id: number, input: UpdateEventInput): Promise<Event> {
     const event = await this.eventRepository.findOne({ where: { id } });
+
+    // check address in the input and if the address is available update its address as well
+    if (input.address) {
+      await this.addressService.update(event.address.id, { ...input.address });
+    }
     return this.eventRepository.save({ ...event, ...input });
   }
 
