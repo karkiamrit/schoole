@@ -53,9 +53,15 @@ export class SubEventService {
   }
 
   async update(id: number, input: UpdateSubEventInput): Promise<SubEvent> {
-    const SubEvent = await this.subEventRepository.findOne({
-      where: { id },
-    });
+    const SubEvent = await this.subEventRepository.findOne({ where: { id } });
+    // check address in the input and if the address is available update its address as well
+    // check address in the input and if the address is available update its address as well
+    if (input.address) {
+      await this.addressService.update(SubEvent.address.id, {
+        ...input.address,
+      });
+    }
+
     return this.subEventRepository.save({ ...SubEvent, ...input });
   }
 

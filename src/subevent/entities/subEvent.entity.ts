@@ -67,9 +67,12 @@ export class SubEvent {
   @Field(() => [Participant])
   participants: Participant[];
 
-  @OneToOne(() => Address, { nullable: true })
-  @Field(() => Address)
-  @JoinColumn({ name: 'address_id' })
+  @OneToOne(() => Address, (address) => address.id, {
+    eager: true,
+    onDelete: 'CASCADE',
+  })
+  @Field(() => Address, { nullable: true })
+  @JoinColumn({ name: 'address_id', referencedColumnName: 'id' })
   address: Address;
 
   @Field(() => String, { nullable: true })

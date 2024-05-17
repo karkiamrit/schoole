@@ -450,7 +450,7 @@ type Student {
 }
 
 type SubEvent {
-  address: Address!
+  address: Address
   banner: String
   category: String!
   createdAt: DateTime!

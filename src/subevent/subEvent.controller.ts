@@ -11,6 +11,7 @@ import { extname } from 'path';
 import { UpdateSubEventInput } from './inputs/subEvent.input';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { SubEventService } from '@/subevent/subEvent.service';
+import { SubEvent } from '@/subevent/entities/subEvent.entity';
 
 @Controller('sub-events')
 export class SubEventsController {
@@ -40,8 +41,8 @@ export class SubEventsController {
   async create(
     @UploadedFile() file: Express.Multer.File,
     @Body('eventId') eventId: number,
-  ) {
-    await this.SubEventService.update(eventId, {
+  ): Promise<SubEvent> {
+    return await this.SubEventService.update(eventId, {
       banner: file.path,
     } as UpdateSubEventInput);
   }
