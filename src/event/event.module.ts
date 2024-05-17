@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmExModule } from '../modules/decorators/typeorm.module';
 import { EventService } from './event.service';
 import { EventRepository } from './event.repository';

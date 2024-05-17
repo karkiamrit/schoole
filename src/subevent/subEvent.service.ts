@@ -9,15 +9,17 @@ import {
 
 import { FindOneOptions } from 'typeorm';
 import { User } from '@/user/entities/user.entity';
-import { Participant } from '../participant/entities/participant.entity';
+import { Participant } from '@/participant/entities/participant.entity';
 import { ParticipantRepository } from '@/participant/participant.repository';
 import { EventService } from '@/event/event.service';
+import { AddressService } from '@/address/address.service';
 @Injectable()
 export class SubEventService {
   constructor(
     private readonly subEventRepository: SubEventRepository,
     private readonly participantRepository: ParticipantRepository,
     private readonly eventService: EventService,
+    private readonly addressService: AddressService,
   ) {}
 
   getMany(qs?: RepoQuery<SubEvent>, query?: string) {
@@ -33,10 +35,16 @@ export class SubEventService {
   }
 
   async create(input: CreateSubEventInput, eventId: number): Promise<SubEvent> {
-    const subEvent = new SubEvent();
+    // const subEvent = new SubEvent();
     const event = await this.eventService.getOne({ where: { id: eventId } });
-    Object.assign(SubEvent, input);
-    subEvent.event = event;
+    const { address, ...SubEventInput } = input;
+    const subEvent = await this.subEventRepository.save(
+      this.subEventRepository.create({ ...SubEventInput, event }),
+    );
+    // Get sub event's address and save it to database
+    if (address) {
+      subEvent.address = await this.addressService.create(address);
+    }
     return this.subEventRepository.save(subEvent);
   }
 

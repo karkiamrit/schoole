@@ -8,10 +8,8 @@ import { EventService } from '@/event/event.service';
 import { EventRepository } from '@/event/event.repository';
 import { InstitutionService } from '@/institution/institution.service';
 import { InstitutionRepository } from '@/institution/institution.repository';
-import { ParticipantModule } from '@/participant/participant.module';
 import { AddressRepository } from '@/address/address.repository';
 import { AddressService } from '@/address/address.service';
-import { UserService } from '@/user/user.service';
 import { UserRepository } from '@/user/user.repository';
 import { SubEventsController } from './subEvent.controller';
 

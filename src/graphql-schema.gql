@@ -102,7 +102,7 @@ input CreateSubEventInput {
   end_date: DateTime!
   name: String!
   registration_fee: Float
-  rules: [String!]
+  rules: String
   start_date: DateTime!
   type: SubEventType!
 }
@@ -321,7 +321,7 @@ type Mutation {
   createManyMenu(input: [CreateMenuInput!]!): [Menu!]!
   createManyOrganizer(input: [CreateOrganizerInput!]!): [Organizer!]!
   createManyStudent(input: [CreateStudentInput!]!): [Student!]!
-  createManySubEvent(eventID: Float!, input: [CreateSubEventInput!]!): [SubEvent!]!
+  createManySubEvent(input: [CreateSubEventInput!]!): [SubEvent!]!
   createManyUsers(input: [CreateUserInput!]!): [User!]!
   createManyVolunteer(input: [CreateVolunteerInput!]!): [volunteers!]!
   createMenu(input: CreateMenuInput!): Menu!
@@ -461,7 +461,7 @@ type SubEvent {
   name: String!
   participants: [Participant!]!
   registration_fee: Float
-  rules: [String!]
+  rules: String
   start_date: DateTime!
   type: SubEventType!
   updatedAt: DateTime!
@@ -543,7 +543,7 @@ input UpdateSubEventInput {
   end_date: DateTime
   name: String
   registration_fee: Float
-  rules: [String!]
+  rules: String
   start_date: DateTime
   type: SubEventType!
 }

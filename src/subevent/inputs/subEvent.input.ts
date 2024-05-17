@@ -25,9 +25,9 @@ export class CreateSubEventInput {
   @IsNotEmpty()
   category: string;
 
-  @Field(() => [String], { nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
-  rules: string[];
+  rules: string;
 
   @Field(() => Date)
   @IsNotEmpty()
@@ -72,9 +72,9 @@ export class UpdateSubEventInput {
   @IsOptional()
   category?: string;
 
-  @Field(() => [String], { nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
-  rules?: string[];
+  rules?: string;
 
   @Field(() => Date, { nullable: true })
   @IsOptional()

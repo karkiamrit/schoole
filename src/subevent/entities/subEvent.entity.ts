@@ -43,9 +43,9 @@ export class SubEvent {
   @Column()
   category: string;
 
-  @Field(() => [String], { nullable: true })
-  @Column('simple-array', { nullable: true })
-  rules: string[];
+  @Field(() => String, { nullable: true })
+  @Column('text', { nullable: true })
+  rules: string;
 
   @Field(() => Date)
   @Column()

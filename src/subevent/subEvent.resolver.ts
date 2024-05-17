@@ -41,7 +41,7 @@ export class SubEventResolver {
   }
 
   @Mutation(() => SubEvent)
-  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('User'))
   createSubEvent(
     @Args('input') input: CreateSubEventInput,
     @Args('eventID') eventID: number,
@@ -54,13 +54,12 @@ export class SubEventResolver {
   createManySubEvent(
     @Args({ name: 'input', type: () => [CreateSubEventInput] })
     input: CreateSubEventInput[],
-    @Args('eventID') eventID: number,
   ) {
     return this.subEventService.createMany(input);
   }
 
   @Mutation(() => SubEvent)
-  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('User'))
   updateSubEvent(
     @Args('id') id: number,
     @Args('input') input: UpdateSubEventInput,

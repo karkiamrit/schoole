@@ -8,8 +8,9 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { SubEventService } from './subEvent.service';
 import { UpdateSubEventInput } from './inputs/subEvent.input';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { SubEventService } from '@/subevent/subEvent.service';
 
 @Controller('sub-events')
 export class SubEventsController {
