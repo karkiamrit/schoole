@@ -8,15 +8,9 @@ services:
       POSTGRES_PASSWORD: E2tNYwbdiP9L
       POSTGRES_DB: verceldb
     ports:
-      - 5432:5432
+      - 5433:5432
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-  redis:
-    image: redis:latest
-    restart: always
-    command: redis-server --requirepass yournewpassword
-    ports:
-      - 6379:6379
   app:
     build:
       context: .
@@ -30,7 +24,7 @@ services:
     volumes:
       - .:/usr/src/app
       - ./uploads:/usr/src/app/uploads
-   
+      - /usr/src/app/node_modules
 
 volumes:
   postgres_data:

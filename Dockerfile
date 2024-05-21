@@ -26,6 +26,8 @@ COPY yarn.lock ./
 
 RUN npm install -g yarn
 
+RUN yarn add @nestjs/cli 
+
 RUN yarn install --prod
 
 RUN yarn global add @nestjs/cli
