@@ -14,7 +14,7 @@ export class StudentResolver {
   constructor(private readonly studentService: StudentService) {}
 
   @Query(() => GetStudentType)
-  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
+  @UseGuards(new GraphqlPassportAuthGuard('User'))
   getManyStudents(
     @Args({ name: 'input', nullable: true })
     qs: GetManyInput<Student>,

@@ -571,7 +571,7 @@ type User {
   password: String!
   phone: String!
   phone_verified: Boolean!
-  profile_picture: String!
+  profile_picture: String
   refresh_token: String!
   role: Role!
   student: Student
