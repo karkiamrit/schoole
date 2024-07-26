@@ -1,7 +1,6 @@
 import {
   Entity,
   JoinColumn,
-  JoinTable,
   ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -23,7 +22,6 @@ export class Participant {
   student: Student;
 
   @ManyToMany(() => SubEvent, (SubEvent) => SubEvent.participants)
-  @JoinTable()
   @Field(() => [SubEvent])
   SubEvents: SubEvent[];
 }

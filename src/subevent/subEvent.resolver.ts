@@ -1,6 +1,6 @@
 import { GraphqlPassportAuthGuard } from '../modules/guards/graphql-passport-auth.guard';
 import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { SubEventService } from './subEvent.service';
 import { GetManyInput, GetOneInput } from 'src/declare/inputs/custom.input';
 import { CurrentQuery } from 'src/modules/decorators/query.decorator';
@@ -13,6 +13,7 @@ import GraphQLJSON from 'graphql-type-json';
 import { User } from '@/user/entities/user.entity';
 import { CurrentUser } from '@/modules/decorators/user.decorator';
 import { UserRepository } from '@/user/user.repository';
+import { Participant } from '@/participant/entities/participant.entity';
 @Resolver()
 export class SubEventResolver {
   constructor(
@@ -90,5 +91,14 @@ export class SubEventResolver {
   @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   deleteSubEvent(@Args('id') id: number) {
     return this.subEventService.delete(id);
+  }
+
+  @Mutation(() => [Participant])
+  @UseGuards(new GraphqlPassportAuthGuard('User'))
+  async participateMany(
+    @Args({ name: 'subEventId', type: () => Int }) subEventId: number,
+    @Args({ name: 'studentIds', type: () => [Int] }) studentIds: number[],
+  ) {
+    return this.subEventService.participateMany(subEventId, studentIds);
   }
 }

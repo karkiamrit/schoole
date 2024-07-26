@@ -12,6 +12,8 @@ import { AddressRepository } from '@/address/address.repository';
 import { AddressService } from '@/address/address.service';
 import { UserRepository } from '@/user/user.repository';
 import { SubEventsController } from './subEvent.controller';
+import { StudentService } from '@/student/student.service';
+import { StudentRepository } from '@/student/student.repository';
 
 @Module({
   imports: [
@@ -22,6 +24,7 @@ import { SubEventsController } from './subEvent.controller';
       InstitutionRepository,
       AddressRepository,
       UserRepository,
+      StudentRepository,
     ]),
   ],
   controllers: [SubEventsController],
@@ -31,6 +34,7 @@ import { SubEventsController } from './subEvent.controller';
     EventService,
     InstitutionService,
     AddressService,
+    StudentService,
   ],
   exports: [SubEventService],
 })

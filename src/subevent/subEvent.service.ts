@@ -13,6 +13,7 @@ import { Participant } from '@/participant/entities/participant.entity';
 import { ParticipantRepository } from '@/participant/participant.repository';
 import { EventService } from '@/event/event.service';
 import { AddressService } from '@/address/address.service';
+import { StudentRepository } from '@/student/student.repository';
 @Injectable()
 export class SubEventService {
   constructor(
@@ -20,6 +21,7 @@ export class SubEventService {
     private readonly participantRepository: ParticipantRepository,
     private readonly eventService: EventService,
     private readonly addressService: AddressService,
+    private readonly studentRepository: StudentRepository,
   ) {}
 
   getMany(qs?: RepoQuery<SubEvent>, query?: string) {
@@ -90,5 +92,44 @@ export class SubEventService {
     await this.participantRepository.save(participant);
     SubEvent.participants.push(participant);
     return { status: 'success' };
+  }
+  async participateMany(id: number, studentIds: number[]) {
+    // Find the SubEvent by id
+    const SubEvent = await this.subEventRepository.findOne({
+      where: { id: id },
+    });
+    // console.log(SubEvent.participants, 'participants');
+    if (!SubEvent) {
+      throw new Error(`SubEvent  not found`);
+    }
+
+    // Create an array to hold participant promises
+    const participantPromises = studentIds.map(async (studentId: number) => {
+      // Find the student by id
+      const student = await this.studentRepository.findOne({
+        where: { id: studentId },
+      });
+
+      if (!student) {
+        throw new Error(`Student with id ${studentId} not found`);
+      }
+
+      const participants = await this.participantRepository.find({
+        where: { student: { id: studentId } },
+      });
+      if (participants) {
+        throw new Error(`${student.first_name} has already Registered`);
+      }
+      // Create a new participant
+      const participant = new Participant();
+      participant.student = student;
+      participant.SubEvents = [SubEvent];
+
+      // Save the participant and return it
+      return await this.participantRepository.save(participant);
+    });
+
+    // Wait for all participant promises to resolve
+    return await Promise.all(participantPromises);
   }
 }

@@ -344,6 +344,7 @@ type Mutation {
   forgotPassword(data: ForgotPasswordInput!): Boolean!
   logout: Boolean!
   participateInSubEvent(SubEventID: Float!): JSON!
+  participateMany(studentIds: [Int!]!, subEventId: Int!): [Participant!]!
   refreshToken(refreshToken: String!): String!
   requestOtpVerifyEmail(email: String!, otpType: String!): Boolean!
   requestOtpVerifyPhone(otpType: String!, phone: String!): Boolean!
