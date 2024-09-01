@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from './user.repository';
-import { SignUpInput } from 'src/auth/inputs/auth.input';
+import { SignUpInput, SignUpWithEmailInput } from 'src/auth/inputs/auth.input';
 import { OneRepoQuery, RepoQuery } from 'src/declare/types';
 import { User } from './entities/user.entity';
 import {
@@ -27,7 +27,9 @@ export class UserService {
     return await this.userRepository.getMany(qs || {}, query);
   }
 
-  async create(input: CreateUserInput | SignUpInput): Promise<User> {
+  async create(
+    input: CreateUserInput | SignUpInput | SignUpWithEmailInput,
+  ): Promise<User> {
     const username = this.generateUniqueUsername();
     return await this.userRepository.save(
       Object.assign(new User(), { ...input, username }),

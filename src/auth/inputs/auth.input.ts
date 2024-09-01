@@ -27,7 +27,7 @@ export class SignUpInput {
 export class SignInInput extends SignUpInput {}
 
 @InputType()
-export class SignInWithEmailInput {
+export class SignUpWithEmailInput {
   @Field(() => String, { nullable: false })
   @IsNotEmpty()
   email: string;
@@ -39,6 +39,9 @@ export class SignInWithEmailInput {
   @MaxLength(255, { message: 'Password should be at most 255 digits long' })
   password: string;
 }
+
+@InputType()
+export class SignInWithEmailInput extends SignUpWithEmailInput {}
 
 @InputType()
 export class ForgotPasswordInput {

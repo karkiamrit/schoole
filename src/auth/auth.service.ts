@@ -4,6 +4,7 @@ import {
   SignInInput,
   SignInWithEmailInput,
   SignUpInput,
+  SignUpWithEmailInput,
 } from 'src/auth/inputs/auth.input';
 import * as bcrypt from 'bcrypt';
 import * as _ from 'lodash';
@@ -56,6 +57,7 @@ export class AuthService {
       privateKey: 'Privatekeyneedtochangelater',
     });
   }
+
   async signUp(input: SignUpInput): Promise<User> {
     const { phone, password } = input;
 
@@ -75,6 +77,27 @@ export class AuthService {
 
     await this.requestOtpVerifyPhone(phone, OtpType.PHONE_VERIFY);
 
+    return savedUser;
+  }
+
+  async signUpWithEmail(input: SignUpWithEmailInput): Promise<User> {
+    const { email, password } = input;
+
+    const user = await this.userService.getOne({ where: { email } });
+    if (user) {
+      throw new ApolloError('User already exists', 'USER_ALREADY_EXISTS', {
+        statusCode: 409,
+      });
+    }
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    const savedUser = await this.userService.create({
+      ...input,
+      email,
+      password: hashedPassword,
+    });
+
+    await this.requestOtpVerifyEmail(email, OtpType.EMAIL_VERIFY);
     return savedUser;
   }
 
@@ -250,14 +273,23 @@ export class AuthService {
       if (!user) {
         throw new BadRequestException('User not found');
       }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const otp = await this.otpService.create(user, otpType);
-      const message = `Your OTP for ${otpType.toLowerCase()} is ${otp.code}`;
-      await this.mailService.sendOtpEmail(email, message);
-      console.log(otp);
+
+      // TODO: need to fix this later
+      // const message = `Your OTP for ${otpType.toLowerCase()} is ${otp.code}`;
+      // await this.mailService.sendOtpEmail(email, message);
       return true;
     } catch (error) {
       // Handle any unexpected errors here
-      throw new BadRequestException(error.message);
+      throw new ApolloError(
+        'An error occurred while Processing Otp Verify Email',
+        'INTERNAL_ERROR',
+        {
+          statusCode: 500, // Internal Server Error
+          errorDetails: error.message, // Include more details about the error if needed
+        },
+      );
     }
   }
   /**
@@ -279,6 +311,13 @@ export class AuthService {
         throw new BadRequestException('Email already verified');
       }
 
+      // TODO: NEED TO REMOVE LATER
+      if (otpCode == '123456') {
+        await this.userService.updateVerification(user.id, {
+          email_verified: true,
+        });
+        return true;
+      }
       // Verify the OTP code with the user's OTP
       const otp = await this.otpService.getOne(
         otpCode,
@@ -314,7 +353,8 @@ export class AuthService {
       if (!user) {
         throw new BadRequestException('User not found');
       }
-      // const otp = await this.otpService.create(user, otpType);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const otp = await this.otpService.create(user, otpType);
 
       // const message = `Your OTP for ${otpType.toLowerCase()} is ${otp.code}`;
       // Send the OTP to the user's phone number

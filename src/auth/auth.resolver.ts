@@ -4,8 +4,8 @@ import {
   ForgotPasswordInput,
   SignInInput,
   SignInWithEmailInput,
-  SignUpInput,
-} from './inputs/auth.input';
+  SignUpInput, SignUpWithEmailInput
+} from "./inputs/auth.input";
 import { JwtWithUser, OnlyJwt } from '@/auth/entities/auth._entity';
 import { UseGuards } from '@nestjs/common';
 import { SignInGuard } from '../modules/guards/graphql-signin-guard';
@@ -23,6 +23,13 @@ export class AuthResolver {
   @Mutation(() => User)
   async SignUp(@Args('input') input: SignUpInput): Promise<User> {
     return await this.authService.signUp(input);
+  }
+
+  @Mutation(() => User)
+  async SignUpWithEmail(
+    @Args('input') input: SignUpWithEmailInput,
+  ): Promise<User> {
+    return await this.authService.signUpWithEmail(input);
   }
 
   @Mutation(() => JwtWithUser)

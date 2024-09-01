@@ -27,8 +27,12 @@ export class Otp extends BaseEntity {
   code: string;
 
   @Field(() => String)
-  @Column()
-  phone_number: string;
+  @Column({ nullable: true })
+  phone_number?: string;
+
+  @Field(() => String)
+  @Column({ nullable: true })
+  email?: string;
 
   @Field()
   @ManyToOne(() => User)
