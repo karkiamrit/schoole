@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import {
   ForgotPasswordInput,
   SignInInput,
+  SignInWithEmailInput,
   SignUpInput,
 } from './inputs/auth.input';
 import { JwtWithUser, OnlyJwt } from '@/auth/entities/auth._entity';
@@ -31,6 +32,18 @@ export class AuthResolver {
     @Context() { res }: { res: Response },
   ): Promise<JwtWithUser> {
     const result = await this.authService.signIn(input);
+    res.cookie('access_token', result.accessToken, { httpOnly: true }); // Set the cookie
+    res.cookie('refresh_token', result.refreshToken, { httpOnly: true });
+    return result;
+  }
+
+  @Mutation(() => JwtWithUser)
+  @UseGuards(SignInGuard)
+  async signInWithEmail(
+    @Args('input') input: SignInWithEmailInput,
+    @Context() { res }: { res: Response },
+  ): Promise<JwtWithUser> {
+    const result = await this.authService.SignInWithEmail(input);
     res.cookie('access_token', result.accessToken, { httpOnly: true }); // Set the cookie
     res.cookie('refresh_token', result.refreshToken, { httpOnly: true });
     return result;

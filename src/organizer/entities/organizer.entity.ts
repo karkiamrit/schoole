@@ -7,14 +7,14 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { OrganizerType } from '../inputs/enums/organization_type.enums';
 import { User } from '../../user/entities/user.entity';
 
 @ObjectType()
 @Entity('organizers')
 export class Organizer {
-  @Field(() => ID)
+  @Field(() => Int)
   @PrimaryGeneratedColumn('increment')
   id: number;
 

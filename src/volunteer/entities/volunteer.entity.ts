@@ -7,13 +7,13 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { User } from '@/user/entities/user.entity';
 
 @ObjectType('volunteers')
 @Entity()
 export class Volunteer {
-  @Field(() => ID)
+  @Field(() => Int)
   @PrimaryGeneratedColumn('increment', { type: 'bigint' })
   id: number;
 

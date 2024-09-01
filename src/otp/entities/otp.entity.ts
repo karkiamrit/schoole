@@ -6,7 +6,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { User } from 'src/user/entities/user.entity';
 
 export enum OtpType {
@@ -18,7 +18,7 @@ export enum OtpType {
 @ObjectType()
 @Entity('otps')
 export class Otp extends BaseEntity {
-  @Field(() => ID)
+  @Field(() => Int)
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

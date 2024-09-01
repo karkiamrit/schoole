@@ -29,7 +29,7 @@ const createEntityFileText = (
     `@ObjectType()`,
     `@Entity('${name}s')`,
     `export class ${capitalize(name)} {`,
-    `  @Field(() => ID)`,
+    `  @Field(() => Number)`,
     `  @PrimaryGeneratedColumn('${typeOfId}', ${
       typeOfId === 'increment' ? '{type: "bigint" }' : ''
     } )`,

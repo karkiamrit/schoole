@@ -5,14 +5,14 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { Student } from '@/student/entities/student.entity';
 import { SubEvent } from '@/subevent/entities/subEvent.entity';
 
 @ObjectType()
 @Entity('participants')
 export class Participant {
-  @Field(() => ID)
+  @Field(() => Int)
   @PrimaryGeneratedColumn('increment', { type: 'bigint' })
   id: number;
 

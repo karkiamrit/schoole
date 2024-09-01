@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { User } from 'src/user/entities/user.entity';
 import { Type } from '../inputs/enum/type.enum';
 import { Event } from '@/event/entities/event.entity';
@@ -16,7 +16,7 @@ import { Event } from '@/event/entities/event.entity';
 @ObjectType()
 @Entity('institutions')
 export class Institution {
-  @Field(() => ID)
+  @Field(() => Int)
   @PrimaryGeneratedColumn('increment')
   id: number;
 

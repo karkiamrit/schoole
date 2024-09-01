@@ -5,13 +5,13 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { User } from '@/user/entities/user.entity';
 
 @ObjectType()
 @Entity('addresses')
 export class Address {
-  @Field(() => ID)
+  @Field(() => Int)
   @PrimaryGeneratedColumn('increment')
   id: number;
 

@@ -9,7 +9,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { Role } from '../inputs/enums/role.enum';
 import { Address } from '@/address/entities/address.entity';
 import { UserType } from '@/user/inputs/enums/usertype.enum';
@@ -19,7 +19,7 @@ import { Institution } from '@/institution/entities/institution.entity';
 @ObjectType()
 @Entity('users')
 export class User extends BaseEntity {
-  @Field(() => ID)
+  @Field(() => Int)
   @PrimaryGeneratedColumn('increment') // change to bigInt in Production
   id: number;
 

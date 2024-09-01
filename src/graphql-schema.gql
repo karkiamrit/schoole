@@ -6,7 +6,7 @@ type Address {
   address_type: String
   country: String
   display_name: String!
-  id: ID!
+  id: Int!
   latitude: String
   longitude: String
   municipality: String
@@ -17,7 +17,7 @@ type Address {
 
 type Certificate {
   certificate_title: String!
-  id: ID!
+  id: Int!
   photo: String!
   student: Student!
 }
@@ -133,7 +133,7 @@ type Event {
   description: String
   end_date: String!
   entry_fee: Float
-  id: ID!
+  id: Int!
   institutions: [Institution!]!
   name: String!
   start_date: String!
@@ -236,7 +236,7 @@ input IPagination {
 type Institution {
   created_at: DateTime!
   events: [Event!]!
-  id: ID!
+  id: Int!
   name: String!
   type: type!
   updated_at: DateTime!
@@ -256,7 +256,7 @@ type JwtWithUser {
 
 type Kyc {
   created_at: DateTime!
-  id: ID!
+  id: Int!
   institution: Institution
   kyc_document: String!
   kyc_type: String!
@@ -277,7 +277,7 @@ enum Level {
 type Mail {
   created_at: DateTime!
   html_content: String!
-  id: ID!
+  id: Int!
   name: String!
   subject: String!
   text_content: String!
@@ -288,7 +288,7 @@ type Menu {
   can_edit: Boolean
   href: String!
   icon: String
-  id: ID!
+  id: Int!
   is_hidden: Boolean
   is_static_route: Boolean
   menu_for: MenuFor!
@@ -350,6 +350,7 @@ type Mutation {
   requestOtpVerifyPhone(otpType: String!, phone: String!): Boolean!
   resetPassword(newPassword: String!, token: String!): Boolean!
   signIn(input: SignInInput!): JwtWithUser!
+  signInWithEmail(input: SignInWithEmailInput!): JwtWithUser!
   updateAddress(id: Float!, input: UpdateAddressInput!): Address!
   updateCertificate(id: Float!, input: UpdateCertificateInput!): Certificate!
   updateEvent(id: Float!, input: UpdateEventInput!): Event!
@@ -375,7 +376,7 @@ type OnlyJwt {
 type Organizer {
   created_at: DateTime!
   full_name: String!
-  id: ID!
+  id: Int!
   organizer_type: OrganizerType!
   updated_at: DateTime!
   user: User!
@@ -388,7 +389,7 @@ enum OrganizerType {
 
 type Participant {
   SubEvents: [SubEvent!]!
-  id: ID!
+  id: Int!
   student: Student!
 }
 
@@ -429,6 +430,11 @@ input SignInInput {
   phone: String!
 }
 
+input SignInWithEmailInput {
+  email: String!
+  password: String!
+}
+
 input SignUpInput {
   password: String!
   phone: String!
@@ -440,7 +446,7 @@ type Student {
   date_of_birth: String
   first_name: String!
   gender: Gender!
-  id: ID!
+  id: Int!
   interests: [String!]
   last_name: String!
   level: Level!
@@ -458,7 +464,7 @@ type SubEvent {
   description: String!
   end_date: DateTime!
   event: Event!
-  id: ID!
+  id: Int!
   name: String!
   participants: [Participant!]!
   registration_fee: Float
@@ -566,7 +572,7 @@ type User {
   created_at: DateTime!
   email: String
   email_verified: Boolean!
-  id: ID!
+  id: Int!
   institution: Institution
   last_login: DateTime
   password: String!
@@ -597,7 +603,7 @@ type volunteers {
   created_at: DateTime!
   event_date: DateTime!
   full_name: String!
-  id: ID!
+  id: Int!
   starting_date: DateTime!
   updated_at: DateTime!
   user: User!

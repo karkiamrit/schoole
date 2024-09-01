@@ -27,6 +27,20 @@ export class SignUpInput {
 export class SignInInput extends SignUpInput {}
 
 @InputType()
+export class SignInWithEmailInput {
+  @Field(() => String, { nullable: false })
+  @IsNotEmpty()
+  email: string;
+
+  @Field()
+  @IsStrongPassword()
+  @IsNotEmpty()
+  @MinLength(10, { message: 'Password should be at least 10 digits long' })
+  @MaxLength(255, { message: 'Password should be at most 255 digits long' })
+  password: string;
+}
+
+@InputType()
 export class ForgotPasswordInput {
   @Field()
   @IsNotEmpty()

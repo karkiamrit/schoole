@@ -1,6 +1,10 @@
 import { UserService } from '@/user/user.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { SignInInput, SignUpInput } from 'src/auth/inputs/auth.input';
+import {
+  SignInInput,
+  SignInWithEmailInput,
+  SignUpInput,
+} from 'src/auth/inputs/auth.input';
 import * as bcrypt from 'bcrypt';
 import * as _ from 'lodash';
 import { JwtService } from '@nestjs/jwt';
@@ -95,12 +99,34 @@ export class AuthService {
 
     return { user, accessToken, refreshToken };
   }
+
+  async SignInWithEmail(input: SignInWithEmailInput): Promise<JwtWithUser> {
+    const user = await this.userService.getOne({
+      where: { email: input.email },
+    });
+
+    if (!user) {
+      throw new ApolloError("User doesn't exist", 'USER_NOT_FOUND', {
+        statusCode: 404,
+      });
+    }
+    if (user.email_verified === false) {
+      throw new ApolloError('Email not verified', 'EMAIL_NOT_VERIFIED', {
+        statusCode: 403,
+      });
+    }
+
+    const accessToken = this.tokenService.generateAccessToken(user);
+    const refreshToken = this.tokenService.generateRefreshToken(user);
+
+    return { user, accessToken, refreshToken };
+  }
+
   /**
    * Initiates the password reset process.
    * @param  {string} email -The email address of the user for whom the password reset is requested.
    * @returns  Boolean if the operation is successful.
    */
-
   async forgotPasswordWithEmail(email: string): Promise<boolean> {
     const user = await this.userService.getOne({ where: { email } });
     if (!user) {

@@ -1,12 +1,12 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { MenuFor } from '@/menu/enum/menu.enum';
 import { IsNotEmpty } from 'class-validator';
 
 @ObjectType()
 @Entity('menus')
 export class Menu {
-  @Field(() => ID)
+  @Field(() => Int)
   @PrimaryGeneratedColumn('increment', { type: 'bigint' })
   id: number;
 

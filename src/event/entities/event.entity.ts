@@ -11,7 +11,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { Address } from '@/address/entities/address.entity';
 import { Institution } from '@/institution/entities/institution.entity';
 import { SubEvent } from '@/subevent/entities/subEvent.entity';
@@ -20,7 +20,7 @@ import { User } from '@/user/entities/user.entity';
 @ObjectType()
 @Entity('events')
 export class Event {
-  @Field(() => ID)
+  @Field(() => Int)
   @PrimaryGeneratedColumn('increment', { type: 'bigint' })
   id: number;
 
