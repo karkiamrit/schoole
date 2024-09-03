@@ -295,11 +295,14 @@ export class AuthService {
   /**
    * Verifies the user's email by checking the validity of the provided OTP code.
    * @param {string} email -Email address of the user for whom email verification is requested.
-   * @param {string}otpCode-The OTP code provided by the user for verification.
+   * @param {string} otpCode- The OTP code provided by the user for verification.
    * @returns Boolean if the email verification is successful.
    */
 
-  async verifyEmail(email: string, otpCode: string): Promise<boolean> {
+  async verifyEmail(
+    email: string,
+    otpCode: string,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     try {
       const user = await this.userService.getOne({ where: { email } });
       if (!user) {
@@ -311,12 +314,15 @@ export class AuthService {
         throw new BadRequestException('Email already verified');
       }
 
+      const accessToken = this.tokenService.generateAccessToken(user);
+      const refreshToken = this.tokenService.generateRefreshToken(user);
+
       // TODO: NEED TO REMOVE LATER
       if (otpCode == '123456') {
         await this.userService.updateVerification(user.id, {
           email_verified: true,
         });
-        return true;
+        return { accessToken, refreshToken };
       }
       // Verify the OTP code with the user's OTP
       const otp = await this.otpService.getOne(
@@ -336,7 +342,7 @@ export class AuthService {
         email_verified: true,
       });
 
-      return true;
+      return { accessToken, refreshToken };
     } catch (error) {
       // Handle any unexpected errors here
       throw new BadRequestException(error.message);

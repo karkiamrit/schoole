@@ -10,7 +10,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Field, Int, ObjectType } from "@nestjs/graphql";
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Event } from '@/event/entities/event.entity';
 import { Participant } from '@/participant/entities/participant.entity';
 import { SubEventType } from '../inputs/enums';

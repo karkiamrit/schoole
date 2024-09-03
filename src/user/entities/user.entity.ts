@@ -9,7 +9,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Field, Int, ObjectType } from "@nestjs/graphql";
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Role } from '../inputs/enums/role.enum';
 import { Address } from '@/address/entities/address.entity';
 import { UserType } from '@/user/inputs/enums/usertype.enum';

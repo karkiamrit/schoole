@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Field, Int, ObjectType } from "@nestjs/graphql";
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Gender, Level } from '../inputs/enums/index';
 import { User } from 'src/user/entities/user.entity';
 import { Certificate } from '@/certificate/entities/certificate.entity';

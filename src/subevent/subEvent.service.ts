@@ -117,7 +117,7 @@ export class SubEventService {
       const participants = await this.participantRepository.find({
         where: { student: { id: studentId } },
       });
-      if (participants.length> 0) {
+      if (participants.length > 0) {
         throw new Error(`${student.first_name} has already Registered`);
       }
       // Create a new participant

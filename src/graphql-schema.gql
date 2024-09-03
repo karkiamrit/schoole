@@ -364,7 +364,7 @@ type Mutation {
   updateSubEvent(id: Float!, input: UpdateSubEventInput!): SubEvent!
   updateUser(id: Float!, input: UpdateUserInput!): User!
   updateVolunteer(id: Float!, input: UpdateVolunteerInput!): volunteers!
-  verifyEmail(email: String!, otpCode: String!): Boolean!
+  verifyEmail(email: String!, otpCode: String!): OnlyJwt!
   verifyForgotPasswordOtp(otpCode: String!, phone: String!): String!
   verifyPhone(otpCode: String!, phone: String!): OnlyJwt!
 }

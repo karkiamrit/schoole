@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Field, Int, ObjectType } from "@nestjs/graphql";
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Institution } from '@/institution/entities/institution.entity';
 import { Volunteer } from '@/volunteer/entities/volunteer.entity';
 

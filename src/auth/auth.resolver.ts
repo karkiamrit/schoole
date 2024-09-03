@@ -4,8 +4,9 @@ import {
   ForgotPasswordInput,
   SignInInput,
   SignInWithEmailInput,
-  SignUpInput, SignUpWithEmailInput
-} from "./inputs/auth.input";
+  SignUpInput,
+  SignUpWithEmailInput,
+} from './inputs/auth.input';
 import { JwtWithUser, OnlyJwt } from '@/auth/entities/auth._entity';
 import { UseGuards } from '@nestjs/common';
 import { SignInGuard } from '../modules/guards/graphql-signin-guard';
@@ -90,13 +91,12 @@ export class AuthResolver {
     return await this.authService.requestOtpVerifyPhone(phone, otpType);
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => OnlyJwt)
   async verifyEmail(
     @Args('email') email: string,
     @Args('otpCode') otpCode: string,
-  ): Promise<boolean> {
-    const result = await this.authService.verifyEmail(email, otpCode);
-    return result;
+  ): Promise<OnlyJwt> {
+    return await this.authService.verifyEmail(email, otpCode);
   }
 
   @Mutation(() => OnlyJwt)
