@@ -582,7 +582,7 @@ type User {
   institution: Institution
   last_login: DateTime
   password: String!
-  phone: String!
+  phone: String
   phone_verified: Boolean!
   profile_picture: String
   refresh_token: String!

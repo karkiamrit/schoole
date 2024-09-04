@@ -46,7 +46,7 @@ export class AuthResolver {
   }
 
   @Mutation(() => JwtWithUser)
-  @UseGuards(SignInGuard)
+  // @UseGuards(SignInGuard)
   async signInWithEmail(
     @Args('input') input: SignInWithEmailInput,
     @Context() { res }: { res: Response },
@@ -95,8 +95,12 @@ export class AuthResolver {
   async verifyEmail(
     @Args('email') email: string,
     @Args('otpCode') otpCode: string,
+    @Context() { res }: { res: Response },
   ): Promise<OnlyJwt> {
-    return await this.authService.verifyEmail(email, otpCode);
+    const result = await this.authService.verifyEmail(email, otpCode);
+    res.cookie('access_token', result.accessToken, { httpOnly: true }); // Set the cookie
+    res.cookie('refresh_token', result.refreshToken, { httpOnly: true });
+    return result;
   }
 
   @Mutation(() => OnlyJwt)

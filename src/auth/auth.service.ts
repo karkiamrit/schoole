@@ -309,7 +309,7 @@ export class AuthService {
         throw new BadRequestException('User not found');
       }
 
-      // Send the reset password link to the user's email
+      // Send the reset passrequestOtpVerifyEmailword link to the user's email
       if (user.email_verified) {
         throw new BadRequestException('Email already verified');
       }
@@ -337,11 +337,12 @@ export class AuthService {
       // Implement OTP verification logic here
       // Retrieve the OTP associated with the user and check if it matches otpCode
 
-      // If the OTP is valid, set user.phone_verified to true and update the user
-      await this.userService.updateVerification(user.id, {
-        email_verified: true,
-      });
-
+      await this.otpService.update(
+        _.merge(otp, {
+          is_used: true,
+          user: _.assign(user, { email_verified: true, email }),
+        }),
+      );
       return { accessToken, refreshToken };
     } catch (error) {
       // Handle any unexpected errors here

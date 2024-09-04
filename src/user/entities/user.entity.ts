@@ -23,9 +23,9 @@ export class User extends BaseEntity {
   @PrimaryGeneratedColumn('increment') // change to bigInt in Production
   id: number;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({ nullable: true, unique: true })
-  phone: string;
+  phone?: string;
 
   @Field(() => String, { nullable: true })
   @Column({ unique: true, nullable: true })

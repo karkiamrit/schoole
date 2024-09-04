@@ -24,6 +24,7 @@ export class OtpService {
     otp.operation = otpType;
     otp.user = user;
     otp.phone_number = user.phone;
+    otp.email = user.email;
     otp.expires_in = expiresIn;
     return this.otpRepository.save(otp);
   }
