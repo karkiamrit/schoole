@@ -467,6 +467,7 @@ type SubEvent {
   banner: String
   category: String!
   createdAt: DateTime!
+  created_by: User
   description: String!
   end_date: DateTime!
   event: Event!
@@ -588,6 +589,7 @@ type User {
   refresh_token: String!
   role: Role!
   student: Student
+  subEvents: [SubEvent!]!
   updated_at: DateTime!
   user_type: UserType!
   username: String!

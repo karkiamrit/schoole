@@ -15,6 +15,7 @@ import { Address } from '@/address/entities/address.entity';
 import { UserType } from '@/user/inputs/enums/usertype.enum';
 import { Student } from '@/student/entities/student.entity';
 import { Institution } from '@/institution/entities/institution.entity';
+import { SubEvent } from '@/subevent/entities/subEvent.entity';
 
 @ObjectType()
 @Entity('users')
@@ -95,6 +96,10 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Address, (address) => address.user, { eager: true })
   addresses: Address[];
+
+  @OneToMany(() => SubEvent, (SubEvent) => SubEvent.created_by)
+  @Field(() => [SubEvent])
+  subEvents: SubEvent[];
 
   @BeforeInsert()
   async beforeInsert() {

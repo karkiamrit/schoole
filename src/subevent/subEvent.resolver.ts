@@ -22,7 +22,7 @@ export class SubEventResolver {
   ) {}
 
   @Query(() => GetSubEventType)
-  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
+  // @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   getManySubEvents(
     @Args({ name: 'input', nullable: true })
     qs: GetManyInput<SubEvent>,
@@ -32,7 +32,7 @@ export class SubEventResolver {
   }
 
   @Query(() => SubEvent)
-  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
+  // @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   getOneSubEvent(
     @Args({ name: 'input' })
     qs: GetOneInput<SubEvent>,

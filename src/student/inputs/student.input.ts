@@ -20,11 +20,11 @@ export class CreateStudentInput {
 
   @Field(() => Date)
   @IsOptional()
-  date_of_birth?: Date;
+  date_of_birth: Date;
 
   @Field(() => String, { nullable: true })
   @IsOptional()
-  bio?: string;
+  bio: string;
 
   @Field(() => Gender)
   @IsNotEmpty()

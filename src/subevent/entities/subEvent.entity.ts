@@ -15,6 +15,7 @@ import { Event } from '@/event/entities/event.entity';
 import { Participant } from '@/participant/entities/participant.entity';
 import { SubEventType } from '../inputs/enums';
 import { Address } from '@/address/entities/address.entity';
+import { User } from '@/user/entities/user.entity';
 
 @ObjectType()
 @Entity('sub_events')
@@ -90,6 +91,11 @@ export class SubEvent {
     type: 'timestamp with time zone',
   })
   updatedAt: Date;
+
+  @ManyToOne(() => User, (user) => user.subEvents)
+  @Field(() => User, { nullable: true })
+  @JoinColumn({ name: 'created_by', referencedColumnName: 'id' })
+  created_by: User;
 }
 
 @ObjectType()
