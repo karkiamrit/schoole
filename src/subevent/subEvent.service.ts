@@ -81,17 +81,38 @@ export class SubEventService {
     const SubEvent = await this.subEventRepository.findOne({
       where: { id: id },
     });
-    const participant = new Participant();
-    console.log(user.student.participations);
-    if (user.student.participations.length >= 1) {
-      participant.SubEvents.push(SubEvent);
+
+    const participants = await this.participantRepository.find({
+      where: {
+        student: { id: user.student.id },
+        SubEvents: {
+          id: SubEvent.id,
+        },
+      },
+    });
+    if (participants.length > 0) {
+      throw new Error(`$You Have already Registered`);
     }
-    participant.SubEvents = [];
-    participant.SubEvents.push(SubEvent);
+
+    // Create a new participant
+    const participant = new Participant();
     participant.student = user.student;
-    await this.participantRepository.save(participant);
-    SubEvent.participants.push(participant);
-    return { status: 'success' };
+    participant.SubEvents = [SubEvent];
+
+    // Save the participant and return it
+    return await this.participantRepository.save(participant);
+
+    // const participant = new Participant();
+    // console.log(user.student.participations);
+    // if (user.student.participations.length >= 1) {
+    //   participant.SubEvents.push(SubEvent);
+    // }
+    // participant.SubEvents = [];
+    // participant.SubEvents.push(SubEvent);
+    // participant.student = user.student;
+    // await this.participantRepository.save(participant);
+    // SubEvent.participants.push(participant);
+    // return { status: 'success' };
   }
   async participateMany(id: number, studentIds: number[]) {
     // Find the SubEvent by id
@@ -115,8 +136,14 @@ export class SubEventService {
       }
 
       const participants = await this.participantRepository.find({
-        where: { student: { id: studentId } },
+        where: {
+          student: { id: studentId },
+          SubEvents: {
+            id: SubEvent.id,
+          },
+        },
       });
+
       if (participants.length > 0) {
         throw new Error(`${student.first_name} has already Registered`);
       }
