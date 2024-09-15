@@ -134,7 +134,7 @@ type Event {
   end_date: String!
   entry_fee: Float
   id: Int!
-  institutions: [Institution!]!
+  institution: Institution!
   name: String!
   start_date: String!
   updated_at: DateTime!
@@ -235,7 +235,6 @@ input IPagination {
 
 type Institution {
   created_at: DateTime!
-  events: [Event!]!
   id: Int!
   name: String!
   type: type!
@@ -345,7 +344,7 @@ type Mutation {
   forgotPassword(data: ForgotPasswordInput!): Boolean!
   logout: Boolean!
   participateInSubEvent(SubEventID: Float!): JSON!
-  participateMany(studentIds: [Int!]!, subEventId: Int!): [Participant!]!
+  participateMany(studentIds: [Int!]!, subEventId: Int!): JSON!
   refreshToken(refreshToken: String!): String!
   requestOtpVerifyEmail(email: String!, otpType: String!): Boolean!
   requestOtpVerifyPhone(otpType: String!, phone: String!): Boolean!
@@ -388,12 +387,6 @@ enum OrganizerType {
   club
 }
 
-type Participant {
-  SubEvents: [SubEvent!]!
-  id: Int!
-  student: Student!
-}
-
 type Query {
   getManyAddresss(input: GetManyInput): GetAddressType!
   getManyCertificates(input: GetManyInput): GetCertificateType!
@@ -407,6 +400,7 @@ type Query {
   getManyUsers(input: GetManyInput): GetUserType!
   getManyVolunteers(input: GetManyInput): GetVolunteerType!
   getMe: User!
+  getMyParticipation: [SubEvent!]!
   getOneAddress(input: GetOneInput!): Address!
   getOneCertificate(input: GetOneInput!): Certificate!
   getOneEvent(input: GetOneInput!): Event!
@@ -457,7 +451,7 @@ type Student {
   last_name: String!
   level: Level!
   middle_name: String
-  participations: [Participant!]!
+  participatedSubEvents: [SubEvent!]
   updated_at: DateTime!
   user: User!
 }
@@ -473,7 +467,7 @@ type SubEvent {
   event: Event!
   id: Int!
   name: String!
-  participants: [Participant!]!
+  participants: [Student!]
   registration_fee: Float
   rules: String
   start_date: DateTime!

@@ -3,7 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  ManyToMany,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -35,8 +35,7 @@ export class Institution {
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: User;
 
-  @ManyToMany(() => Event, (event) => event.institutions)
-  @Field(() => [Event])
+  @OneToMany(() => Event, (event) => event.institution)
   events: Event[];
 
   @Field(() => Date)

@@ -9,8 +9,7 @@ import {
 
 import { FindOneOptions } from 'typeorm';
 import { User } from '@/user/entities/user.entity';
-import { Participant } from '@/participant/entities/participant.entity';
-import { ParticipantRepository } from '@/participant/participant.repository';
+import { In } from 'typeorm';
 import { EventService } from '@/event/event.service';
 import { AddressService } from '@/address/address.service';
 import { StudentRepository } from '@/student/student.repository';
@@ -18,7 +17,6 @@ import { StudentRepository } from '@/student/student.repository';
 export class SubEventService {
   constructor(
     private readonly subEventRepository: SubEventRepository,
-    private readonly participantRepository: ParticipantRepository,
     private readonly eventService: EventService,
     private readonly addressService: AddressService,
     private readonly studentRepository: StudentRepository,
@@ -78,85 +76,69 @@ export class SubEventService {
     if (!user.student) {
       throw new Error('You must be a student to participate');
     }
-    const SubEvent = await this.subEventRepository.findOne({
+
+    const subEvent = await this.subEventRepository.findOne({
       where: { id: id },
+      relations: ['participants'],
     });
 
-    const participants = await this.participantRepository.find({
-      where: {
-        student: { id: user.student.id },
-        SubEvents: {
-          id: SubEvent.id,
-        },
-      },
-    });
-    if (participants.length > 0) {
-      throw new Error(`$You Have already Registered`);
+    if (!subEvent) {
+      throw new Error('Event not found!!');
     }
 
-    // Create a new participant
-    const participant = new Participant();
-    participant.student = user.student;
-    participant.SubEvents = [SubEvent];
+    const isAlreadyParticipating = subEvent.participants.some(
+      (participant) => participant.id === user.student.id,
+    );
 
-    // Save the participant and return it
-    return await this.participantRepository.save(participant);
+    if (isAlreadyParticipating) {
+      throw new Error('You have already registered for this SubEvent');
+    }
 
-    // const participant = new Participant();
-    // console.log(user.student.participations);
-    // if (user.student.participations.length >= 1) {
-    //   participant.SubEvents.push(SubEvent);
-    // }
-    // participant.SubEvents = [];
-    // participant.SubEvents.push(SubEvent);
-    // participant.student = user.student;
-    // await this.participantRepository.save(participant);
-    // SubEvent.participants.push(participant);
-    // return { status: 'success' };
+    // Add the student to the SubEvent's participants
+    subEvent.participants.push(user.student);
+
+    // Save the updated SubEvent
+    await this.subEventRepository.save(subEvent);
+
+    return { message: 'Successfully registered for the SubEvent' };
   }
+
   async participateMany(id: number, studentIds: number[]) {
-    // Find the SubEvent by id
-    const SubEvent = await this.subEventRepository.findOne({
-      where: { id: id },
+    const subEvent = await this.subEventRepository.findOne({
+      where: { id },
+      relations: ['participants'],
     });
-    // console.log(SubEvent.participants, 'participants');
-    if (!SubEvent) {
-      throw new Error(`SubEvent  not found`);
+
+    if (!subEvent) {
+      throw new Error('SubEvent not found');
     }
 
-    // Create an array to hold participant promises
-    const participantPromises = studentIds.map(async (studentId: number) => {
-      // Find the student by id
-      const student = await this.studentRepository.findOne({
-        where: { id: studentId },
-      });
-
-      if (!student) {
-        throw new Error(`Student with id ${studentId} not found`);
-      }
-
-      const participants = await this.participantRepository.find({
-        where: {
-          student: { id: studentId },
-          SubEvents: {
-            id: SubEvent.id,
-          },
-        },
-      });
-
-      if (participants.length > 0) {
-        throw new Error(`${student.first_name} has already Registered`);
-      }
-      // Create a new participant
-      const participant = new Participant();
-      participant.student = student;
-      participant.SubEvents = [SubEvent];
-
-      // Save the participant and return it
-      return await this.participantRepository.save(participant);
+    const students = await this.studentRepository.find({
+      where: { id: In(studentIds) },
     });
 
-    // Wait for all participant promises to resolve
-    return await Promise.all(participantPromises);
+    if (students.length !== studentIds.length) {
+      throw new Error('One or more students not found');
+    }
+
+    const newParticipants = students.filter(
+      (student) =>
+        !subEvent.participants.some(
+          (participant) => participant.id === student.id,
+        ),
+    );
+
+    if (newParticipants.length === 0) {
+      throw new Error('All provided students are already participating');
+    }
+
+    subEvent.participants.push(...newParticipants);
+
+    await this.subEventRepository.save(subEvent);
+
+    return {
+      message: `Successfully added ${newParticipants.length} new participants to the SubEvent`,
+      newParticipants: newParticipants.map((student) => student.id),
+    };
   }
 }

@@ -3,8 +3,6 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   OneToOne,
@@ -48,12 +46,12 @@ export class Event {
   @Field(() => [SubEvent])
   SubEvents: SubEvent[];
 
-  @ManyToMany(() => Institution, (institution) => institution.events, {
+  @ManyToOne(() => Institution, (institution) => institution.events, {
     eager: true,
   })
-  @JoinTable()
-  @Field(() => [Institution])
-  institutions: Institution[];
+  @Field(() => Institution)
+  @JoinColumn({ name: 'institution_id', referencedColumnName: 'id' })
+  institution: Institution;
 
   @Field(() => String)
   @Column('date')

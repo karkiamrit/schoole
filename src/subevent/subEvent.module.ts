@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmExModule } from '../modules/decorators/typeorm.module';
+import { TypeOrmExModule } from '@/modules/decorators/typeorm.module';
 import { SubEventService } from './subEvent.service';
 import { SubEventRepository } from './subEvent.repository';
 import { SubEventResolver } from './subEvent.resolver';
-import { ParticipantRepository } from '@/participant/participant.repository';
 import { EventService } from '@/event/event.service';
 import { EventRepository } from '@/event/event.repository';
 import { InstitutionService } from '@/institution/institution.service';
@@ -19,7 +18,6 @@ import { StudentRepository } from '@/student/student.repository';
   imports: [
     TypeOrmExModule.forCustomRepository([
       SubEventRepository,
-      ParticipantRepository,
       EventRepository,
       InstitutionRepository,
       AddressRepository,

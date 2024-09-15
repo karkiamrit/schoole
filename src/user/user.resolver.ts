@@ -8,10 +8,16 @@ import { GetUserType, User } from './entities/user.entity';
 import { CreateUserInput, UpdateUserInput } from './inputs/user.input';
 import { CurrentQuery } from '@/modules/decorators/query.decorator';
 import { CurrentUser } from '@/modules/decorators/user.decorator';
+import { ApolloError } from 'apollo-server-core';
+import { StudentService } from '@/student/student.service';
+import { SubEvent } from '@/subevent/entities/subEvent.entity';
 
 @Resolver()
 export class UserResolver {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly studentService: StudentService,
+  ) {}
 
   @Query(() => GetUserType)
   @UseGuards(new GraphqlPassportAuthGuard('Admin'))
@@ -60,7 +66,6 @@ export class UserResolver {
     @CurrentUser() user: User,
     @Args('input') input: UpdateUserInput,
   ) {
-    console.log('user is', user);
     return this.userService.updateProfile(user.id, input);
   }
 
@@ -77,5 +82,21 @@ export class UserResolver {
       return null;
     }
     return user;
+  }
+
+  @Query(() => [SubEvent])
+  @UseGuards(new GraphqlPassportAuthGuard('User'))
+  getMyParticipation(@CurrentUser() user: User) {
+    if (!user) {
+      throw new ApolloError('User Not Found', 'USER_NOT_FOUND', {
+        statusCode: 404,
+      });
+    }
+    if (!user.student) {
+      throw new ApolloError('Student Not Found', 'STUDENT_NOT_FOUND', {
+        statusCode: 404,
+      });
+    }
+    return this.studentService.getStudentParticipation(user.student.id);
   }
 }

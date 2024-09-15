@@ -92,14 +92,16 @@ export class EventService {
   async create(input: CreateEventInput, user: User | null): Promise<Event> {
     const event = new Event();
     Object.assign(event, input);
+
     if (user) {
       const institution = await this.institutionService.getOne({
         where: { user: { id: user.id } },
       });
       if (institution) {
-        event.institutions.push(institution);
+        event.institution = institution; // Assign the institution directly
       }
     }
+
     return this.eventRepository.save(event);
   }
 

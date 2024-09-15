@@ -1,27 +1,26 @@
-import {
-  Entity,
-  JoinColumn,
-  ManyToMany,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import { ObjectType } from '@nestjs/graphql';
 import { Student } from '@/student/entities/student.entity';
 import { SubEvent } from '@/subevent/entities/subEvent.entity';
 
 @ObjectType()
 @Entity('participants')
 export class Participant {
-  @Field(() => Int)
-  @PrimaryGeneratedColumn('increment', { type: 'bigint' })
-  id: number;
+  @PrimaryColumn()
+  student_id: number;
 
-  @ManyToOne(() => Student, (student) => student.participations)
-  @JoinColumn()
-  @Field(() => Student)
+  @PrimaryColumn()
+  sub_event_id: number;
+
+  @ManyToOne(() => Student, (student) => student.participatedSubEvents, {
+    nullable: false,
+  })
+  @JoinColumn({ name: 'student_id' })
   student: Student;
 
-  @ManyToMany(() => SubEvent, (SubEvent) => SubEvent.participants)
-  @Field(() => [SubEvent])
-  SubEvents: SubEvent[];
+  @ManyToOne(() => SubEvent, (subEvent) => subEvent.participants, {
+    nullable: false,
+  })
+  @JoinColumn({ name: 'sub_event_id' })
+  subEvent: SubEvent;
 }

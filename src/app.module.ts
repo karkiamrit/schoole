@@ -1,6 +1,5 @@
 import { MenuModule } from './menu/menu.module';
 import { TokenModule } from './token/token.module';
-import { ParticipantModule } from './participant/participant.module';
 import { EventModule } from './event/event.module';
 import { AddressModule } from './address/address.module';
 import { CertificateModule } from './certificate/certificate.module';
@@ -72,7 +71,6 @@ import { SubEventModule } from './subevent/subEvent.module';
     SubEventModule,
     TokenModule,
     MenuModule,
-    ParticipantModule,
     OtpModule,
     MailModule,
   ],

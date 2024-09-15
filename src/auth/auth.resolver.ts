@@ -146,7 +146,6 @@ export class AuthResolver {
     if (success) {
       res.clearCookie('access_token');
       res.clearCookie('refresh_token');
-      console.log(res.get('access_token'));
     }
     return success;
   }

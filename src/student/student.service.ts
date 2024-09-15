@@ -43,4 +43,13 @@ export class StudentService {
     await this.studentRepository.delete({ id });
     return student;
   }
+
+  async getStudentParticipation(id: number) {
+    const student = await this.studentRepository.findOne({
+      where: { id: id },
+      relations: ['participatedSubEvents'],
+    });
+
+    return student.participatedSubEvents;
+  }
 }

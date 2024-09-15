@@ -65,8 +65,6 @@ export class StudentResolver {
     @Args('id') id: number,
     @Args('input') input: UpdateStudentInput,
   ) {
-    console.log(user.id);
-    console.log(id);
     if (user.student.id === id) {
       return this.studentService.update(id, input);
     } else {

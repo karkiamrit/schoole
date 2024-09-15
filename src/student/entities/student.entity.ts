@@ -3,6 +3,8 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -12,7 +14,7 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Gender, Level } from '../inputs/enums/index';
 import { User } from 'src/user/entities/user.entity';
 import { Certificate } from '@/certificate/entities/certificate.entity';
-import { Participant } from '@/participant/entities/participant.entity';
+import { SubEvent } from '@/subevent/entities/subEvent.entity';
 
 @ObjectType()
 @Entity('students')
@@ -83,11 +85,20 @@ export class Student {
   @OneToMany(() => Certificate, (certificate) => certificate.student)
   certificates: Certificate[];
 
-  @OneToMany(() => Participant, (participant) => participant.student, {
-    eager: true,
+  @Field(() => [SubEvent], { nullable: true })
+  @ManyToMany(() => SubEvent, (subEvent) => subEvent.participants)
+  @JoinTable({
+    name: 'participants',
+    joinColumn: {
+      name: 'student_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'sub_event_id',
+      referencedColumnName: 'id',
+    },
   })
-  @Field(() => [Participant])
-  participations: Participant[];
+  participatedSubEvents: SubEvent[];
 }
 
 @ObjectType()

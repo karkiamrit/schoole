@@ -3,7 +3,6 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  JoinTable,
   ManyToMany,
   ManyToOne,
   OneToOne,
@@ -12,10 +11,10 @@ import {
 } from 'typeorm';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Event } from '@/event/entities/event.entity';
-import { Participant } from '@/participant/entities/participant.entity';
 import { SubEventType } from '../inputs/enums';
 import { Address } from '@/address/entities/address.entity';
 import { User } from '@/user/entities/user.entity';
+import { Student } from '@/student/entities/student.entity';
 
 @ObjectType()
 @Entity('sub_events')
@@ -61,13 +60,6 @@ export class SubEvent {
   @JoinColumn({ name: 'event_id', referencedColumnName: 'id' })
   event: Event;
 
-  @ManyToMany(() => Participant, (participant) => participant.SubEvents, {
-    eager: true,
-  })
-  @JoinTable()
-  @Field(() => [Participant])
-  participants: Participant[];
-
   @OneToOne(() => Address, (address) => address.id, {
     eager: true,
     onDelete: 'CASCADE',
@@ -96,6 +88,10 @@ export class SubEvent {
   @Field(() => User, { nullable: true })
   @JoinColumn({ name: 'created_by', referencedColumnName: 'id' })
   created_by: User;
+
+  @Field(() => [Student], { nullable: true })
+  @ManyToMany(() => Student, (student) => student.participatedSubEvents)
+  participants: Student[];
 }
 
 @ObjectType()

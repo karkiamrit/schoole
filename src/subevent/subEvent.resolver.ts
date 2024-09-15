@@ -13,7 +13,6 @@ import GraphQLJSON from 'graphql-type-json';
 import { User } from '@/user/entities/user.entity';
 import { CurrentUser } from '@/modules/decorators/user.decorator';
 import { UserRepository } from '@/user/user.repository';
-import { Participant } from '@/participant/entities/participant.entity';
 @Resolver()
 export class SubEventResolver {
   constructor(
@@ -93,7 +92,7 @@ export class SubEventResolver {
     return this.subEventService.delete(id);
   }
 
-  @Mutation(() => [Participant])
+  @Mutation(() => GraphQLJSON)
   @UseGuards(new GraphqlPassportAuthGuard('User'))
   async participateMany(
     @Args({ name: 'subEventId', type: () => Int }) subEventId: number,

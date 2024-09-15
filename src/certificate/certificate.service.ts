@@ -68,7 +68,6 @@ export class CertificateService {
       // Delete the file locally
       unlink(filePath, (err) => {
         if (err) throw err;
-        console.log(`${filePath} was deleted`);
       });
 
       // Remove the file path from the temporary storage

@@ -51,7 +51,6 @@ export class Mailer {
     try {
       return (await transporter.sendMail(mailOptions)) ? true : false;
     } catch (err) {
-      console.log('Error sending email', err);
       return false;
     }
   }

@@ -14,10 +14,8 @@ export class Http {
         to: phone,
         text: message,
       });
-      console.log(`The response is ${JSON.stringify(response.data)}`);
       return response.data;
     } catch (err) {
-      console.log(err.response.data);
       throw err;
     }
   }
