@@ -16,6 +16,7 @@ import { UserType } from '@/user/inputs/enums/usertype.enum';
 import { Student } from '@/student/entities/student.entity';
 import { Institution } from '@/institution/entities/institution.entity';
 import { SubEvent } from '@/subevent/entities/subEvent.entity';
+import { Social } from '@/social/entity/social.entity';
 
 @ObjectType()
 @Entity('users')
@@ -94,8 +95,13 @@ export class User extends BaseEntity {
   @Column({ default: false })
   phone_verified: boolean;
 
-  @OneToMany(() => Address, (address) => address.user, { eager: true })
+  @OneToOne(() => Address, (address) => address.user, { eager: true })
+  @Field(() => Address, { nullable: true })
   addresses: Address[];
+
+  @OneToMany(() => Social, (social) => social.user, { eager: true })
+  @Field(() => [Social], { nullable: true })
+  socials: Social[];
 
   @OneToMany(() => SubEvent, (SubEvent) => SubEvent.created_by)
   @Field(() => [SubEvent])

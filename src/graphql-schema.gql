@@ -440,6 +440,23 @@ input SignUpWithEmailInput {
   password: String!
 }
 
+type Social {
+  id: Int!
+  social_link: String!
+  social_type: SocialType!
+  user: User!
+}
+
+"""Different type of social platform"""
+enum SocialType {
+  facebook
+  github
+  instagram
+  linked_in
+  twitter
+  website
+}
+
 type Student {
   bio: String
   created_at: DateTime!
@@ -570,6 +587,7 @@ input UpdateVolunteerInput {
 }
 
 type User {
+  addresses: Address
   created_at: DateTime!
   email: String
   email_verified: Boolean!
@@ -582,6 +600,7 @@ type User {
   profile_picture: String
   refresh_token: String!
   role: Role!
+  socials: [Social!]
   student: Student
   subEvents: [SubEvent!]!
   updated_at: DateTime!

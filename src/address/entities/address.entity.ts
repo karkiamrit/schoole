@@ -2,7 +2,7 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
@@ -15,7 +15,7 @@ export class Address {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @ManyToOne(() => User, (user) => user.addresses, {
+  @OneToOne(() => User, (user) => user.addresses, {
     onDelete: 'CASCADE',
     nullable: true,
   })
