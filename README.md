@@ -1,204 +1,49 @@
-# NestJS/TypeORM/GraphQL/PostgresQL
+## Backend Overview
 
-NestJS boilerplate with TypeORM, GraphQL and PostgreSQL
+The backend of the School and Academic Event Management Platform is designed to handle data management, user authentication, and business logic efficiently. It provides a robust API to serve requests from the frontend while ensuring secure and scalable data handling.
 
-## Open for Contribution
+### Key Components
 
-Totally open for any Pull Request, please feel free to contribute in any ways.
-There can be errors related with type or something. It would be very helpful to me for you to fix these errors.
+- **GraphQL API**: 
+  - Utilizes GraphQL to provide a flexible API that allows clients to request only the data they need. This reduces over-fetching and improves performance. The API supports various queries and mutations for creating, updating, and retrieving event data, user information, and analytics.
 
-## [NestJS](https://docs.nestjs.com/)
+- **PostgreSQL Database**: 
+  - The platform uses PostgreSQL as the relational database management system. It stores all event-related data, user profiles, and other necessary information in a structured format. PostgreSQL’s robust querying capabilities and support for complex data types allow for efficient data management and retrieval.
 
-Base NestJS, We like it
+- **User Authentication**: 
+  - Implements secure user authentication using JWT (JSON Web Tokens). This ensures that users can safely log in and access their accounts while protecting sensitive data. Role-based access control is implemented to manage permissions for students, teachers, and administrators.
 
-## [TypeORM](https://typeorm.io/)
+- **Data Validation and Error Handling**: 
+  - The backend includes comprehensive data validation to ensure that only valid data is processed. Error handling mechanisms are in place to provide meaningful feedback to the frontend, helping to improve user experience.
 
-We use [Nestjs/TypeORM](https://docs.nestjs.com/techniques/database)
-In this template, We've been trying not to use `Pure SQL` to make the most of TypeORM.
+- **Scalability and Performance**: 
+  - Designed with scalability in mind, the backend can handle a growing number of users and events efficiently. Caching strategies can be implemented to improve performance for frequently accessed data, reducing the load on the database.
 
-## [PostgresQL Database](https://www.postgresql.org/)
+### Technology Stack
 
-We use postgresQL for backend database, The default database taht will be used is named 'postgres'
-You have to have postgresql Database server before getting started.
-You can use [Docker postgresQL](https://hub.docker.com/_/postgres) to have server easily
+- **Node.js**: The backend is built using Node.js, providing a non-blocking, event-driven architecture that is ideal for handling multiple requests simultaneously.
+- **Nest.js**: A lightweight framework for building RESTful APIs and handling server-side logic.
+- **Apollo Server**: Used for integrating GraphQL into the Node.js application, simplifying the development of the GraphQL API.
+- **TypeORM**: An ORM (Object-Relational Mapping) tool for managing database interactions with PostgreSQL, making it easier to perform CRUD operations.
 
-## [GraphQL](https://graphql.org/)
+This architecture ensures that the backend is robust, maintainable, and capable of supporting the platform's growing needs. By leveraging modern technologies and best practices, we aim to provide a seamless experience for users engaging with the platform.
 
-##### packages: graphql, apollo-server-express and @nestjs/graphql, [graphqlUpload](https://www.npmjs.com/package/graphql-upload) ...
 
-We use GraphQL in a Code First approach (our code will create the GraphQL Schemas).
+![Event Management](https://media.discordapp.net/attachments/1185614957241434192/1287317353239019530/image.png?ex=66f11b36&is=66efc9b6&hm=2fa2258ef7039d0a690517378ecfd4f4339b269a830347e38a37a902a75eb084&=&format=webp&quality=lossless&width=901&height=603)
 
-We don't use [swagger](https://docs.nestjs.com/openapi/introduction) now, but you can use this if you want to.
-You can see [playground](http://localhost:8000/graphql)
+## Features
 
-We use apollographql as playground. but if you want to use default playground, you can do like below.
+- **Event Creation and Management**: Easily create and manage events with customizable settings.
+- **User Roles**: Different user roles for students, teachers, and administrators to enhance functionality and security.
+- **Real-time Updates**: Instant notifications and updates for events and announcements.
+- **Analytics Dashboard**: Insights into event participation and engagement metrics.
 
-```js
-// app.modules.js
+![User Interface](https://media.discordapp.net/attachments/1185614957241434192/1287317583690731520/image.png?ex=66f11b6d&is=66efc9ed&hm=2ce81b97c09fabd547c2e7b38dba4e4ed55b8ca94d198eeb2c2339c71362a88d&=&format=webp&quality=lossless&width=945&height=603)
 
-GraphQLModule.forRootAsync <
-  ApolloDriverConfig >
-  {
-    ...
-    useFactory: (configService: ConfigService) => ({
-      ...
-      playground: true,
-      ...
-    }),
-    ...
-  };
-```
+## Technologies Used in Frontend
 
-### Protected queries/mutation by user role with guard
-
-Some of the GraphQL queries are protected by a NestJS Guard (`GraphqlPassportAuthGuard`) and requires you to be authenticated (and some also requires to have the Admin role).
-You can solve them with Sending JWT token in `Http Header` with the `Authorization`.
-
-```json
-# Http Header
-{
-  "Authorization": "Bearer TOKEN"
-}
-```
-
-#### Example of some protected GraphQL
-
-- getMe (must be authenticated)
-- All the other generated by generator (must be authenticated and must be Admin)
-
-## License
-
-MIT
-
-## Custom CRUD
-
-To make most of GraphQL's advantage, We created its own api, such as GetMany or GetOne.
-We tried to make it as comfortable as possible, but if you find any mistakes or improvements, please point them out or promote them.
-
-You can see detail in `declare.module.ts`, `processWhere.ts` and `custom.input.ts`
-
-```js
-// query
-query($input:GetManyInput) {
-  getManyPlaces(input:$input){
-    data{
-      id
-      logitude
-      count
-    }
-  }
-}
-```
-
-```js
-// variables
-{
-  input: {
-    pagination: {
-      size: 10,
-      page: 0, // Started from 0
-    },
-    order: { id: 'DESC' },
-    dataType: 'data', //all or count or data - default: all
-    where: {
-      id: 3,
-    },
-  },
-};
-```
-
-You can see detail of operators in where below or in code.
-![image](https://bewave.s3.ap-northeast-2.amazonaws.com/docs.png)
-
-## Code generator
-
-There is [CRUD Generator in NestJS](https://docs.nestjs.com/recipes/crud-generator).
-In this repository, It has its own generator.
-You can use like below.
-
-```bash
-$ yarn g
-```
-
-## Getting Started
-
-### Installation
-
-Before you start, make sure you have a recent version of [NodeJS](http://nodejs.org/) environment _>=14.0_ with NPM 6 or Yarn.
-
-The first thing you will need is to install NestJS CLI.
-
-```bash
-$ yarn -g @nestjs/cli
-```
-
-And do install the dependencies
-
-```bash
-$ yarn install # or npm install
-```
-
-### Run
-
-for development
-
-```bash
-$ yarn dev # or npm run dev
-```
-
-for production
-
-```bash
-$ yarn build # or npm run build
-$ yarn start # or npm run start
-```
-
-or run with docker following below
-
-## Docker
-
-### Docker-compose installation
-
-Download docker from [Official website](https://docs.docker.com/compose/install)
-
-### Run
-
-Open terminal and navigate to project directory and run the following command.
-
-```bash
-# Only for prduction
-$ docker-compose --env-file ./.production.env up
-```
-
-### Note
-
-If you want to use docker, you have to set DB_HOST in .production.env to be `postgres`.
-The default set is `postgres`
-
-### Only database
-
-You can just create postgresql by below code, sync with .development.env
-
-```bash
-$ docker run -p 5432:5432 --name postgres -e POSTGRES_PASSWORD=1q2w3e4r -d postgres
-```
-
-## Todo
-
-- [ ] Get Jest(e2e or unit test) to be work
-- [ ] Add Many OAUths (Both of front and back end)
-
-  - [ ] Kakao
-  - [ ] Google
-  - [ ] Apple
-  - [ ] Naver
-
-- [x] GraphQL Upload
-- [x] Healthcheck
-- [x] Divide usefactory
-- [ ] Redis
-- [ ] ElasticSearch
-- [ ] Caching
-- [ ] Graphql Subscription
-
-I made change here too!
+- **Next.js**: A React framework for building server-rendered applications.
+- **TanStack Query**: For managing server state and data fetching in React.
+- **GraphQL**: For a flexible API that allows clients to request only the data they need.
+- **PostgreSQL**: A powerful relational database system for storing event and user data.
+- **Tailwind CSS**: For responsive and modern UI styling.
