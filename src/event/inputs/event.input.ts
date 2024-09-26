@@ -28,6 +28,10 @@ export class CreateEventInput {
   @Field(() => CreateAddressInput, { nullable: true })
   @IsOptional()
   address?: CreateAddressInput;
+
+  @Field(() => Number, { nullable: true })
+  @IsOptional()
+  institution_id?: number;
 }
 
 @InputType()

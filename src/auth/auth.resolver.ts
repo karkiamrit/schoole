@@ -108,14 +108,14 @@ export class AuthResolver {
     @Args('phone') phone: string,
     @Args('otpCode') otpCode: string,
     @Context() { res }: { res: Response },
-  ): Promise<OnlyJwt> {
-    const { accessToken, refreshToken } = await this.authService.verifyPhone(
+  ): Promise<JwtWithUser> {
+    const { accessToken, refreshToken, user } = await this.authService.verifyPhone(
       phone,
       otpCode,
     );
     res.cookie('access_token', accessToken, { httpOnly: true }); // Set the cookie
     res.cookie('refresh_token', refreshToken, { httpOnly: true });
-    return { accessToken, refreshToken };
+    return { accessToken, refreshToken, user };
   }
 
   @Mutation(() => String)

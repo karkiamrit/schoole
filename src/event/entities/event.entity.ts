@@ -48,6 +48,7 @@ export class Event {
 
   @ManyToOne(() => Institution, (institution) => institution.events, {
     eager: true,
+    nullable: true, //temp nullable
   })
   @Field(() => Institution)
   @JoinColumn({ name: 'institution_id', referencedColumnName: 'id' })

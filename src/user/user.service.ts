@@ -54,13 +54,16 @@ export class UserService {
     return await this.userRepository.save({ ...user, ...input });
   }
 
-  async updateVerification(
-    id: number,
-    input: UpdateVerificationInput,
-  ): Promise<User> {
+  async updateVerification(id: number, input: UpdateVerificationInput) {
     const user = await this.userRepository.findOne({ where: { id } });
-    const value = await this.userRepository.save({ ...user, ...input });
-    return value;
+    console.log(user);
+    const value = await this.userRepository.save({
+      ...user, // don't think this is necessary
+      ...input,
+    });
+    // Fetch the updated user to verify the changes
+    const updatedUser = await this.userRepository.findOne({ where: { id } });
+    return updatedUser;
   }
 
   // used in client frontend

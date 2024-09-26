@@ -384,12 +384,12 @@ export class AuthService {
   async verifyPhone(
     phone: string,
     otpCode: string,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
-    const user = await this.userService.getOne({ where: { phone } });
+  ): Promise<{ accessToken: string; refreshToken: string , user: User}> {
+    let user = await this.userService.getOne({ where: { phone } });
     if (!user) throw new ApolloError('Invalid phone number!');
 
     if (otpCode === '123456') {
-      await this.userService.updateVerification(user.id, {
+      user = await this.userService.updateVerification(user.id, {
         phone_verified: true,
       });
     } else {
@@ -410,7 +410,7 @@ export class AuthService {
     const accessToken = this.tokenService.generateAccessToken(user);
     const refreshToken = this.tokenService.generateRefreshToken(user);
 
-    return { accessToken, refreshToken };
+    return { user ,accessToken, refreshToken };
   }
 
   /**

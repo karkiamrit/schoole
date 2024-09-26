@@ -48,7 +48,7 @@ async function bootstrap() {
   });
 
   const configService = app.select(AppModule).get(ConfigService);
-
+  console.log('Server is running on port: ', configService.get('PORT'));
   await app.listen(configService.get('PORT'));
 }
 bootstrap();

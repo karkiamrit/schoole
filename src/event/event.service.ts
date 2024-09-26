@@ -46,13 +46,20 @@ export class EventService {
 
     try {
       // Separate sub_events from the events
-      const { sub_events, ...event_data } = input;
+      const { sub_events, institution_id, ...event_data } = input;
 
       // Create Event
       const event = await this.eventRepository.save(
         this.eventRepository.create({ ...event_data, user: user }),
       );
-
+      if (institution_id) {
+        const institution = await this.institutionService.getOne({
+          where: { id: institution_id },
+        });
+        if (institution) {
+          event.institution = institution; // Assign the institution directly
+        }
+      }
       event.user = user;
 
       // Get event's address and save it to database
@@ -67,6 +74,7 @@ export class EventService {
             // Add await here
             ...subEventInput,
             event,
+            created_by: user,
           });
 
           // extract address of sub_event and create it on database
