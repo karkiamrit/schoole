@@ -97,7 +97,7 @@ export class User extends BaseEntity {
 
   @OneToOne(() => Address, (address) => address.user, { eager: true })
   @Field(() => Address, { nullable: true })
-  addresses: Address[];
+  address: Address;
 
   @OneToMany(() => Social, (social) => social.user, { eager: true })
   @Field(() => [Social], { nullable: true })

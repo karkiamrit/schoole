@@ -5,12 +5,27 @@ import { UserResolver } from './user.resolver';
 import { UserService } from './user.service';
 import { StudentService } from '@/student/student.service';
 import { StudentRepository } from '@/student/student.repository';
+import { SocialService } from '@/social/social.service';
+import { SocialRepository } from '@/social/social.repository';
+import { AddressRepository } from '@/address/address.repository';
+import { AddressService } from '@/address/address.service';
 
 @Module({
   imports: [
-    TypeOrmExModule.forCustomRepository([UserRepository, StudentRepository]),
+    TypeOrmExModule.forCustomRepository([
+      UserRepository,
+      StudentRepository,
+      SocialRepository,
+      AddressRepository,
+    ]),
   ],
-  providers: [UserResolver, UserService, StudentService],
+  providers: [
+    UserResolver,
+    UserService,
+    StudentService,
+    SocialService,
+    AddressService,
+  ],
   exports: [UserService],
 })
 export class UserModule {}

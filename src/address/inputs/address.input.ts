@@ -34,6 +34,10 @@ export class CreateAddressInput {
   @Field(() => String, { nullable: true })
   @IsOptional()
   postal_code?: string;
+
+  @Field(() => Number, { nullable: true })
+  @IsOptional()
+  user_id?: number;
 }
 
 @InputType()
@@ -69,4 +73,8 @@ export class UpdateAddressInput {
   @Field(() => String, { nullable: true })
   @IsOptional()
   postal_code?: string;
+
+  @Field(() => Number, { nullable: true })
+  @IsOptional()
+  user_id?: number;
 }

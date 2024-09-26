@@ -1,4 +1,3 @@
-import { MenuModule } from './menu/menu.module';
 import { TokenModule } from './token/token.module';
 import { EventModule } from './event/event.module';
 import { AddressModule } from './address/address.module';
@@ -71,7 +70,6 @@ import { SocialModule } from './social/social.module';
     EventModule,
     SubEventModule,
     TokenModule,
-    MenuModule,
     OtpModule,
     MailModule,
     SocialModule,

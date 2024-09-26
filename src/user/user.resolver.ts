@@ -5,7 +5,11 @@ import { UserService } from './user.service';
 import GraphQLJSON from 'graphql-type-json';
 import { GetManyInput, GetOneInput } from 'src/declare/inputs/custom.input';
 import { GetUserType, User } from './entities/user.entity';
-import { CreateUserInput, UpdateUserInput } from './inputs/user.input';
+import {
+  CreateUserInput,
+  UpdateUserInput,
+  UpdateUserWithStudentSocialsAndAddressInput,
+} from './inputs/user.input';
 import { CurrentQuery } from '@/modules/decorators/query.decorator';
 import { CurrentUser } from '@/modules/decorators/user.decorator';
 import { ApolloError } from 'apollo-server-core';
@@ -60,13 +64,14 @@ export class UserResolver {
     return this.userService.update(id, input);
   }
 
+  // using in client
   @Mutation(() => User)
   @UseGuards(new GraphqlPassportAuthGuard('User'))
   async updateMe(
     @CurrentUser() user: User,
-    @Args('input') input: UpdateUserInput,
+    @Args('input') input: UpdateUserWithStudentSocialsAndAddressInput,
   ) {
-    return this.userService.updateProfile(user.id, input);
+    return this.userService.updateUserProfile(user.id, input);
   }
 
   @Mutation(() => GraphQLJSON)

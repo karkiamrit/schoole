@@ -5,6 +5,7 @@ import { Address } from './entities/address.entity';
 import { CreateAddressInput, UpdateAddressInput } from './inputs/address.input';
 
 import { FindOneOptions } from 'typeorm';
+import { User } from '@/user/entities/user.entity';
 /**
  * AddressService is a service class responsible for handling CRUD operations
  * related to the Address entity. It encapsulates the interaction with the
@@ -81,5 +82,16 @@ export class AddressService {
     const address = this.addressRepository.findOne({ where: { id } });
     await this.addressRepository.delete({ id });
     return address;
+  }
+
+  async createOrUpdateAddressForUser(user: User, address: UpdateAddressInput) {
+    const existing_address = await this.getOne({
+      where: { user: { id: user.id } },
+    });
+    if (existing_address) {
+      await this.update(existing_address.id, address);
+    } else {
+      await this.addressRepository.save({ user: user, ...address });
+    }
   }
 }

@@ -6,14 +6,23 @@ import { User } from './entities/user.entity';
 import {
   CreateUserInput,
   UpdateUserInput,
+  UpdateUserWithStudentSocialsAndAddressInput,
   UpdateVerificationInput,
 } from './inputs/user.input';
-import { Between, FindOneOptions } from 'typeorm';
+import { Between, FindOneOptions, UpdateResult } from 'typeorm';
 import * as crypto from 'crypto';
+import { SocialService } from '@/social/social.service';
+import { AddressService } from '@/address/address.service';
+import { StudentService } from '@/student/student.service';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly socialService: SocialService,
+    private readonly addressService: AddressService,
+    private readonly studentService: StudentService,
+  ) {}
 
   async getOne(qs: OneRepoQuery<User>, query?: string) {
     if (query) {
@@ -54,9 +63,36 @@ export class UserService {
     return value;
   }
 
-  async updateProfile(id: number, input: UpdateUserInput): Promise<User> {
+  // used in client frontend
+  async updateUserProfile(
+    id: number,
+    input: UpdateUserWithStudentSocialsAndAddressInput,
+  ): Promise<UpdateResult | User> {
     const user = await this.userRepository.findOne({ where: { id } });
-    return await this.userRepository.save({ ...user, ...input });
+
+    const { student, socials, address, ...user_input } = input;
+
+    if (student) {
+      await this.studentService.update(user.student.id, student);
+    }
+    if (socials) {
+      const updated_social = [];
+      input.socials.forEach((social) => {
+        updated_social.push(social.social_type);
+        this.socialService.updateSpecificSocialInformation(user, social);
+      });
+      await this.socialService.bulkDeleteSocialInformationByTypes(
+        updated_social,
+      );
+    }
+
+    if (address) {
+      await this.addressService.createOrUpdateAddressForUser(user, address);
+    }
+    if (user_input && Object.keys(user_input).length > 0) {
+      return await this.userRepository.update(user.id, user_input);
+    }
+    return await this.userRepository.findOne({ where: { id } });
   }
 
   async delete(id: number) {

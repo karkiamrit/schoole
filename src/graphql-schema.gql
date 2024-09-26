@@ -31,6 +31,7 @@ input CreateAddressInput {
   municipality: String
   postal_code: String
   state: String
+  user_id: Float
 }
 
 input CreateCertificateInput {
@@ -67,17 +68,6 @@ input CreateKycInput {
   kyc_document: String!
   kyc_type: String!
   volunteer: Float!
-}
-
-input CreateMenuInput {
-  can_edit: Boolean
-  href: String!
-  icon: String
-  is_hidden: Boolean
-  is_static_route: Boolean
-  menu_for: MenuFor!
-  menu_name: String!
-  parent_menu: String
 }
 
 input CreateOrganizerInput {
@@ -189,11 +179,6 @@ input GetManyInput {
   order: JSON
   pagination: IPagination
   where: JSON
-}
-
-type GetMenuType {
-  count: Float
-  data: [Menu!]
 }
 
 input GetOneInput {
@@ -318,13 +303,11 @@ type Mutation {
   createManyEvent(input: [CreateEventInput!]!): [Event!]!
   createManyInstitution(input: [CreateInstitutionInput!]!): [Institution!]!
   createManyKyc(input: [CreateKycInput!]!): [Kyc!]!
-  createManyMenu(input: [CreateMenuInput!]!): [Menu!]!
   createManyOrganizer(input: [CreateOrganizerInput!]!): [Organizer!]!
   createManyStudent(input: [CreateStudentInput!]!): [Student!]!
   createManySubEvent(input: [CreateSubEventInput!]!): [SubEvent!]!
   createManyUsers(input: [CreateUserInput!]!): [User!]!
   createManyVolunteer(input: [CreateVolunteerInput!]!): [volunteers!]!
-  createMenu(input: CreateMenuInput!): Menu!
   createOrganizer(input: CreateOrganizerInput!): Organizer!
   createStudent(input: CreateStudentInput!): Student!
   createSubEvent(eventID: Float!, input: CreateSubEventInput!): SubEvent!
@@ -335,7 +318,6 @@ type Mutation {
   deleteEvent(id: Float!): Event!
   deleteInstitution(id: Float!): Institution!
   deleteKyc(id: Float!): Kyc!
-  deleteMenu(id: Float!): Menu!
   deleteOrganizer(id: Float!): Organizer!
   deleteStudent(id: Float!): Student!
   deleteSubEvent(id: Float!): SubEvent!
@@ -356,8 +338,7 @@ type Mutation {
   updateEvent(id: Float!, input: UpdateEventInput!): Event!
   updateInstitution(id: Float!, input: UpdateInstitutionInput!): Institution!
   updateKyc(id: Float!, input: UpdateKycInput!): Kyc!
-  updateMe(input: UpdateUserInput!): User!
-  updateMenu(id: Float!, input: UpdateMenuInput!): Menu!
+  updateMe(input: UpdateUserWithStudentSocialsAndAddressInput!): User!
   updateOrganizer(id: Float!, input: UpdateOrganizerInput!): Organizer!
   updateStudent(id: Float!, input: UpdateStudentInput!): Student!
   updateSubEvent(id: Float!, input: UpdateSubEventInput!): SubEvent!
@@ -393,7 +374,6 @@ type Query {
   getManyEvents(input: GetManyInput): GetEventType!
   getManyInstitutions(input: GetManyInput): GetInstitutionType!
   getManyKycs(input: GetManyInput): GetKycType!
-  getManyMenus(input: GetManyInput): GetMenuType!
   getManyOrganizers(input: GetManyInput): GetOrganizerType!
   getManyStudents(input: GetManyInput): GetStudentType!
   getManySubEvents(input: GetManyInput): GetSubEventType!
@@ -406,7 +386,6 @@ type Query {
   getOneEvent(input: GetOneInput!): Event!
   getOneInstitution(input: GetOneInput!): Institution!
   getOneKyc(input: GetOneInput!): Kyc!
-  getOneMenu(input: GetOneInput!): Menu!
   getOneOrganizer(input: GetOneInput!): Organizer!
   getOneStudent(input: GetOneInput!): Student!
   getOneSubEvent(input: GetOneInput!): SubEvent!
@@ -508,6 +487,7 @@ input UpdateAddressInput {
   municipality: String
   postal_code: String
   state: String
+  user_id: Float
 }
 
 input UpdateCertificateInput {
@@ -534,19 +514,13 @@ input UpdateKycInput {
   established_on: String!
 }
 
-input UpdateMenuInput {
-  can_edit: Boolean
-  href: String
-  icon: String
-  is_hidden: Boolean
-  is_static_route: Boolean
-  menu_for: MenuFor!
-  menu_name: String
-  parent_menu: String
-}
-
 input UpdateOrganizerInput {
   full_name: String!
+}
+
+input UpdateSocialInput {
+  social_link: String!
+  social_type: SocialType!
 }
 
 input UpdateStudentInput {
@@ -582,12 +556,24 @@ input UpdateUserInput {
   username: String
 }
 
+input UpdateUserWithStudentSocialsAndAddressInput {
+  address: UpdateAddressInput
+  email: String
+  password: String
+  phone: String
+  profile_picture: String
+  refresh_token: String
+  socials: [UpdateSocialInput!]
+  student: UpdateStudentInput
+  username: String
+}
+
 input UpdateVolunteerInput {
   full_name: String!
 }
 
 type User {
-  addresses: Address
+  address: Address
   created_at: DateTime!
   email: String
   email_verified: Boolean!

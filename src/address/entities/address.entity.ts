@@ -15,7 +15,7 @@ export class Address {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @OneToOne(() => User, (user) => user.addresses, {
+  @OneToOne(() => User, (user) => user.address, {
     onDelete: 'CASCADE',
     nullable: true,
   })
