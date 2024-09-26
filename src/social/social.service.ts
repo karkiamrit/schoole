@@ -9,6 +9,7 @@ import { User } from "@/user/entities/user.entity";
 export class SocialService {
   constructor(private readonly socialRepository: SocialRepository) {}
 
+  // used in client frontend
   async updateSpecificSocialInformation(
     user: User,
     input: UpdateSocialInput,
@@ -27,6 +28,7 @@ export class SocialService {
     return await this.socialRepository.save({ user: user, ...input });
   }
 
+  // used in client frontend
   async bulkDeleteSocialInformationByTypes(social_types: string[]) {
     try {
       const socials = await this.socialRepository.getMany(

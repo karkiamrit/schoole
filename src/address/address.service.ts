@@ -84,6 +84,7 @@ export class AddressService {
     return address;
   }
 
+  // used in client frontend
   async createOrUpdateAddressForUser(user: User, address: UpdateAddressInput) {
     const existing_address = await this.getOne({
       where: { user: { id: user.id } },
