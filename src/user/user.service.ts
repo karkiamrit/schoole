@@ -78,7 +78,7 @@ export class UserService {
     if (student) {
       await this.studentService.update(user.student.id, student);
     }
-    if (socials) {
+    if (socials && Object.keys(socials).length > 0) {
       const updated_social = [];
       input.socials.forEach((social) => {
         updated_social.push(social.social_type);
@@ -89,7 +89,7 @@ export class UserService {
       );
     }
 
-    if (address) {
+    if (address && Object.keys(address).length > 0) {
       await this.addressService.createOrUpdateAddressForUser(user, address);
     }
     if (user_input && Object.keys(user_input).length > 0) {
