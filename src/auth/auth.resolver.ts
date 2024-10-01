@@ -9,9 +9,9 @@ import {
 } from './inputs/auth.input';
 import { JwtWithUser, OnlyJwt } from '@/auth/entities/auth._entity';
 import { UseGuards } from '@nestjs/common';
-import { SignInGuard } from '../modules/guards/graphql-signin-guard';
-import { OtpType } from '../otp/entities/otp.entity';
-import { User } from '../user/entities/user.entity';
+import { SignInGuard } from '@/modules/guards/graphql-signin-guard';
+import { Otp, OtpType } from '@/otp/entities/otp.entity';
+import { User } from '@/user/entities/user.entity';
 import { CurrentUser } from 'src/modules/decorators/user.decorator';
 import { GraphqlPassportAuthGuard } from 'src/modules/guards/graphql-passport-auth.guard';
 import { Response } from 'express';
@@ -84,6 +84,16 @@ export class AuthResolver {
   }
 
   @Mutation(() => Boolean)
+  @UseGuards(new GraphqlPassportAuthGuard('User'))
+  async requestOtpReverifyEmail(
+    @CurrentUser() user: User,
+    @Args('email') email: string,
+    @Args('otpType') otpType: OtpType,
+  ): Promise<boolean> {
+    return await this.authService.requestReverifyEmailOtp(user, email, otpType);
+  }
+
+  @Mutation(() => Boolean)
   async requestOtpVerifyPhone(
     @Args('phone') phone: string,
     @Args('otpType') otpType: OtpType,
@@ -91,6 +101,7 @@ export class AuthResolver {
     return await this.authService.requestOtpVerifyPhone(phone, otpType);
   }
 
+  // used in client side
   @Mutation(() => OnlyJwt)
   async verifyEmail(
     @Args('email') email: string,
@@ -103,16 +114,25 @@ export class AuthResolver {
     return result;
   }
 
+  // used in client side for reverification of email
+  @Mutation(() => Otp)
+  @UseGuards(new GraphqlPassportAuthGuard('User'))
+  async reverifyEmail(
+    @CurrentUser() user: User,
+    @Args('email') email: string,
+    @Args('otpCode') otpCode: string,
+  ): Promise<Otp> {
+    return await this.authService.reverifyEmail(user, email, otpCode);
+  }
+
   @Mutation(() => OnlyJwt)
   async verifyPhone(
     @Args('phone') phone: string,
     @Args('otpCode') otpCode: string,
     @Context() { res }: { res: Response },
   ): Promise<JwtWithUser> {
-    const { accessToken, refreshToken, user } = await this.authService.verifyPhone(
-      phone,
-      otpCode,
-    );
+    const { accessToken, refreshToken, user } =
+      await this.authService.verifyPhone(phone, otpCode);
     res.cookie('access_token', accessToken, { httpOnly: true }); // Set the cookie
     res.cookie('refresh_token', refreshToken, { httpOnly: true });
     return { accessToken, refreshToken, user };

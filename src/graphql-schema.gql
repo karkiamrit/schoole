@@ -330,9 +330,11 @@ type Mutation {
   participateInSubEvent(SubEventID: Float!): JSON!
   participateMany(studentIds: [Int!]!, subEventId: Int!): JSON!
   refreshToken(refreshToken: String!): String!
+  requestOtpReverifyEmail(email: String!, otpType: String!): Boolean!
   requestOtpVerifyEmail(email: String!, otpType: String!): Boolean!
   requestOtpVerifyPhone(otpType: String!, phone: String!): Boolean!
   resetPassword(newPassword: String!, token: String!): Boolean!
+  reverifyEmail(email: String!, otpCode: String!): Otp!
   signIn(input: SignInInput!): JwtWithUser!
   signInWithEmail(input: SignInWithEmailInput!): JwtWithUser!
   updateAddress(id: Float!, input: UpdateAddressInput!): Address!
@@ -368,6 +370,17 @@ type Organizer {
 """The basic organizer type of organizer user"""
 enum OrganizerType {
   club
+}
+
+type Otp {
+  code: String!
+  email: String!
+  expires_in: DateTime!
+  id: Int!
+  is_used: Boolean!
+  operation: String!
+  phone_number: String!
+  user: User!
 }
 
 type Query {

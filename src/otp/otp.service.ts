@@ -3,6 +3,7 @@ import { OtpRepository } from './otp.repository';
 import { Otp, OtpType } from './entities/otp.entity';
 import { User } from 'src/user/entities/user.entity';
 import { MoreThan } from 'typeorm';
+import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 
 @Injectable()
 export class OtpService {
@@ -26,6 +27,24 @@ export class OtpService {
     otp.phone_number = user.phone;
     otp.email = user.email;
     otp.expires_in = expiresIn;
+    return this.otpRepository.save(otp);
+  }
+
+  async createReverifyOtp(
+    user: User,
+    otpType: OtpType,
+    email?: string,
+    phone?: string,
+  ): Promise<Otp> {
+    const otpCode = String(Math.floor(100000 + Math.random() * 900000));
+    const expiresIn = new Date(Date.now() + 15 * 60_000);
+    const otp = new Otp();
+    otp.code = otpCode;
+    otp.expires_in = expiresIn;
+    otp.user = user;
+    otp.phone_number = phone;
+    otp.email = email;
+    otp.operation = otpType;
     return this.otpRepository.save(otp);
   }
 
@@ -56,6 +75,10 @@ export class OtpService {
     });
   }
 
+  findOne(qs: FindOneOptions<Otp>): Promise<Otp | null> {
+    return this.otpRepository.findOne(qs);
+  }
+
   /**
    * Udpate and save an OTP object to the database.
    * @param {Otp} otp - The  OTP which should be updated.
@@ -73,6 +96,27 @@ export class OtpService {
       .andWhere('otp.code = :otpCode', { otpCode: otpCode })
       .andWhere('otp.is_used = :isUsed', { isUsed: false })
       .andWhere('otp.expires_in  > :currentTime', { currentTime: new Date() })
+      .getOne();
+
+    if (otp) {
+      otp.is_used = true;
+      await this.otpRepository.save(otp);
+      return otp;
+    }
+  }
+
+  async checkValidOtpForEmailVerify(
+    email: string,
+    otpCode: string,
+    user: User,
+  ): Promise<Otp | null> {
+    const otp = await this.otpRepository
+      .createQueryBuilder('otp')
+      .where('otp.email = :email', { email: email })
+      .andWhere('otp.code = :otpCode', { otpCode: otpCode })
+      .andWhere('otp.is_used = :isUsed', { isUsed: false })
+      .andWhere('otp.expires_in  > :currentTime', { currentTime: new Date() })
+      .andWhere('otp.user_id = :userId', { userId: user.id })
       .getOne();
 
     if (otp) {

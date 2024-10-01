@@ -57,13 +57,12 @@ export class UserService {
   async updateVerification(id: number, input: UpdateVerificationInput) {
     const user = await this.userRepository.findOne({ where: { id } });
     console.log(user);
-    const value = await this.userRepository.save({
+    await this.userRepository.save({
       ...user, // don't think this is necessary
       ...input,
     });
     // Fetch the updated user to verify the changes
-    const updatedUser = await this.userRepository.findOne({ where: { id } });
-    return updatedUser;
+    return await this.userRepository.findOne({ where: { id } });
   }
 
   // used in client frontend
@@ -93,7 +92,8 @@ export class UserService {
       await this.addressService.createOrUpdateAddressForUser(user, address);
     }
     if (user_input && Object.keys(user_input).length > 0) {
-      return await this.userRepository.update(user.id, user_input);
+      console.log(user, 'if user input exists');
+      return await this.userRepository.save({ ...user, ...user_input });
     }
     return await this.userRepository.findOne({ where: { id } });
   }

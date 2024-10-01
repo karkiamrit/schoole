@@ -14,7 +14,7 @@ import { JwtWithUser } from './entities/auth._entity';
 import { OtpService } from '@/otp/otp.service';
 import { MailService } from '@/mail/mail.service';
 import { FULL_WEB_URL } from 'src/util/config/config';
-import { OtpType } from 'src/otp/entities/otp.entity';
+import { Otp, OtpType } from 'src/otp/entities/otp.entity';
 import { ApolloError } from 'apollo-server-core';
 import * as crypto from 'crypto';
 import { TokenService } from '@/token/token.service';
@@ -111,6 +111,7 @@ export class AuthService {
         statusCode: 404,
       });
     }
+    console.log(user, 'user');
     if (user.phone_verified === false) {
       throw new ApolloError('Phone not verified', 'PHONE_NOT_VERIFIED', {
         statusCode: 403,
@@ -292,6 +293,7 @@ export class AuthService {
       );
     }
   }
+
   /**
    * Verifies the user's email by checking the validity of the provided OTP code.
    * @param {string} email -Email address of the user for whom email verification is requested.
@@ -299,6 +301,7 @@ export class AuthService {
    * @returns Boolean if the email verification is successful.
    */
 
+  // used in client side
   async verifyEmail(
     email: string,
     otpCode: string,
@@ -350,6 +353,61 @@ export class AuthService {
     }
   }
 
+  // used in client
+  async requestReverifyEmailOtp(
+    user: User,
+    email: string,
+    otpType: OtpType,
+  ): Promise<boolean> {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const otp = await this.otpService.createReverifyOtp(
+        user,
+        otpType,
+        email,
+        null,
+      );
+
+      // TODO: need to fix this later
+      // const message = `Your OTP for ${otpType.toLowerCase()} is ${otp.code}`;
+      // await this.mailService.sendOtpEmail(email, message);
+      return true;
+    } catch (error) {
+      // Handle any unexpected errors here
+      throw new ApolloError(
+        'An error occurred while Processing Otp Verify Email',
+        'INTERNAL_ERROR',
+        {
+          statusCode: 500, // Internal Server Error
+          errorDetails: error.message, // Include more details about the error if needed
+        },
+      );
+    }
+  }
+
+  // used in client
+  async reverifyEmail(
+    user: User,
+    email: string,
+    otpCode: string,
+  ): Promise<Otp> {
+    try {
+      const otp = await this.otpService.checkValidOtpForEmailVerify(
+        email,
+        otpCode,
+        user,
+      );
+      if (!otp) {
+        throw new BadRequestException('Invalid OTP');
+      }
+      otp.is_used = true;
+      await this.otpService.update(otp);
+      return otp;
+    } catch (error) {
+      throw new ApolloError(error.message);
+    }
+  }
+
   async requestOtpVerifyPhone(
     phone: string,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -384,7 +442,7 @@ export class AuthService {
   async verifyPhone(
     phone: string,
     otpCode: string,
-  ): Promise<{ accessToken: string; refreshToken: string , user: User}> {
+  ): Promise<{ accessToken: string; refreshToken: string; user: User }> {
     let user = await this.userService.getOne({ where: { phone } });
     if (!user) throw new ApolloError('Invalid phone number!');
 
@@ -410,7 +468,7 @@ export class AuthService {
     const accessToken = this.tokenService.generateAccessToken(user);
     const refreshToken = this.tokenService.generateRefreshToken(user);
 
-    return { user ,accessToken, refreshToken };
+    return { user, accessToken, refreshToken };
   }
 
   /**

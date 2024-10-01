@@ -3,7 +3,7 @@ import { SocialRepository } from '@/social/social.repository';
 import { Social } from '@/social/entity/social.entity';
 import { UpdateSocialInput } from '@/social/inputs/social.input';
 import { UpdateResult } from 'typeorm';
-import { User } from "@/user/entities/user.entity";
+import { User } from '@/user/entities/user.entity';
 
 @Injectable()
 export class SocialService {

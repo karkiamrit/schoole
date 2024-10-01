@@ -10,7 +10,7 @@ import { Field, InputType } from '@nestjs/graphql';
 import { UserType } from '@/user/inputs/enums/usertype.enum';
 import { UpdateSocialInput } from '@/social/inputs/social.input';
 import { UpdateAddressInput } from '@/address/inputs/address.input';
-import {  UpdateStudentInput } from "@/student/inputs/student.input";
+import { UpdateStudentInput } from '@/student/inputs/student.input';
 
 @InputType()
 export class CreateUserInput {
