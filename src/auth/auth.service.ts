@@ -111,7 +111,6 @@ export class AuthService {
         statusCode: 404,
       });
     }
-    console.log(user, 'user');
     if (user.phone_verified === false) {
       throw new ApolloError('Phone not verified', 'PHONE_NOT_VERIFIED', {
         statusCode: 403,
@@ -136,6 +135,17 @@ export class AuthService {
     }
     if (user.email_verified === false) {
       throw new ApolloError('Email not verified', 'EMAIL_NOT_VERIFIED', {
+        statusCode: 403,
+      });
+    }
+
+    const hasValidPassword = await bcrypt.compare(
+      input.password,
+      user.password,
+    );
+    console.log({ hasValidPassword });
+    if (!hasValidPassword) {
+      throw new ApolloError('Invalid Password', 'INVALID_PASSWORD', {
         statusCode: 403,
       });
     }
@@ -259,6 +269,40 @@ export class AuthService {
     }
   }
 
+  async updatePassword(
+    oldPassword: string,
+    newPassword: string,
+    user: User,
+  ): Promise<boolean> {
+    const samePassword = await bcrypt.compare(newPassword, user.password);
+
+    if (samePassword) {
+      throw new ApolloError(
+        'Please Choose another password ',
+        'SAME_PASSWORD',
+        {
+          statusCode: 400,
+        },
+      );
+    }
+
+    const hasOldPasswordMatched = await bcrypt.compare(
+      oldPassword,
+      user.password,
+    );
+    console.log(hasOldPasswordMatched, 'has_old_pass');
+    if (hasOldPasswordMatched) {
+      const hashedPassword = await bcrypt.hash(newPassword, 12);
+      await this.userService.update(user.id, {
+        password: hashedPassword,
+      });
+      return true;
+    }
+
+    throw new ApolloError('Invalid Old Password', 'INVALID_OLD_PASSWORD', {
+      statusCode: 400,
+    });
+  }
   /**
    * Initiates the process of sending a One-Time Password (OTP) to the user's email for verification.
    * @param {string}email -Email address of the user for whom the OTP is requested.

@@ -14,6 +14,7 @@ import * as crypto from 'crypto';
 import { SocialService } from '@/social/social.service';
 import { AddressService } from '@/address/address.service';
 import { StudentService } from '@/student/student.service';
+import { ApolloError } from 'apollo-server-core';
 
 @Injectable()
 export class UserService {
@@ -56,7 +57,6 @@ export class UserService {
 
   async updateVerification(id: number, input: UpdateVerificationInput) {
     const user = await this.userRepository.findOne({ where: { id } });
-    console.log(user);
     await this.userRepository.save({
       ...user, // don't think this is necessary
       ...input,
@@ -92,7 +92,26 @@ export class UserService {
       await this.addressService.createOrUpdateAddressForUser(user, address);
     }
     if (user_input && Object.keys(user_input).length > 0) {
-      console.log(user, 'if user input exists');
+      const next_update_date = new Date(user.username_last_updated);
+      next_update_date.setDate(next_update_date.getDate() + 60);
+      if (
+        user.username !== user_input.username &&
+        next_update_date > new Date()
+      ) {
+        throw new ApolloError('Username has been updated in less than 60 days');
+      }
+
+      if (user.username !== user_input.username) {
+        const user_input_with_username = {
+          ...user_input,
+          username_last_updated: new Date().toISOString(),
+        };
+        console.log(new Date().toISOString(), 'new date');
+        return await this.userRepository.save({
+          ...user,
+          ...user_input_with_username,
+        });
+      }
       return await this.userRepository.save({ ...user, ...user_input });
     }
     return await this.userRepository.findOne({ where: { id } });

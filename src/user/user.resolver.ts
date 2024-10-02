@@ -71,7 +71,6 @@ export class UserResolver {
     @CurrentUser() user: User,
     @Args('input') input: UpdateUserWithStudentSocialsAndAddressInput,
   ) {
-    console.log(user, 'current user');
     return this.userService.updateUserProfile(user.id, input);
   }
 

@@ -112,3 +112,14 @@ export class UpdateUserWithStudentSocialsAndAddressInput extends UpdateUserInput
   @IsOptional()
   address?: UpdateAddressInput;
 }
+
+@InputType()
+export class ChangePasswordInput {
+  @Field(() => String, { nullable: false })
+  @IsNotEmpty()
+  oldPassword: string;
+
+  @Field(() => String, { nullable: false })
+  @IsStrongPassword()
+  newPassword: string;
+}

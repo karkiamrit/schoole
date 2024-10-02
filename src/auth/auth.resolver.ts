@@ -16,6 +16,7 @@ import { CurrentUser } from 'src/modules/decorators/user.decorator';
 import { GraphqlPassportAuthGuard } from 'src/modules/guards/graphql-passport-auth.guard';
 import { Response } from 'express';
 import { ApolloError } from 'apollo-server-core';
+import { ChangePasswordInput } from '@/user/inputs/user.input';
 
 @Resolver()
 export class AuthResolver {
@@ -55,6 +56,16 @@ export class AuthResolver {
     res.cookie('access_token', result.accessToken, { httpOnly: true }); // Set the cookie
     res.cookie('refresh_token', result.refreshToken, { httpOnly: true });
     return result;
+  }
+
+  @Mutation(() => Boolean)
+  @UseGuards(new GraphqlPassportAuthGuard())
+  async changePassword(
+    @Args('input') input: ChangePasswordInput,
+    @CurrentUser() user: User,
+  ): Promise<boolean> {
+    const { oldPassword, newPassword } = input;
+    return this.authService.updatePassword(oldPassword, newPassword, user);
   }
 
   @Mutation(() => Boolean)

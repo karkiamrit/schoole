@@ -9,6 +9,7 @@ import { SocialService } from '@/social/social.service';
 import { SocialRepository } from '@/social/social.repository';
 import { AddressRepository } from '@/address/address.repository';
 import { AddressService } from '@/address/address.service';
+import { UserController } from '@/user/user.controller';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { AddressService } from '@/address/address.service';
       AddressRepository,
     ]),
   ],
+  controllers: [UserController],
   providers: [
     UserResolver,
     UserService,

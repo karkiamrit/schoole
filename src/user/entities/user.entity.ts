@@ -95,6 +95,14 @@ export class User extends BaseEntity {
   @Column({ default: false })
   phone_verified: boolean;
 
+  @Field(() => Date)
+  @Column({
+    default: new Date(),
+    nullable: false,
+    type: 'timestamp without time zone', // or 'timestamp with time zone'
+  })
+  username_last_updated: Date;
+
   @OneToOne(() => Address, (address) => address.user, { eager: true })
   @Field(() => Address, { nullable: true })
   address: Address;
