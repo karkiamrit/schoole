@@ -9,7 +9,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType, ResolveField } from '@nestjs/graphql';
 import { Event } from '@/event/entities/event.entity';
 import { SubEventType } from '../inputs/enums';
 import { Address } from '@/address/entities/address.entity';
@@ -92,6 +92,10 @@ export class SubEvent {
   @Field(() => [Student], { nullable: true })
   @ManyToMany(() => Student, (student) => student.participatedSubEvents)
   participants: Student[];
+
+  @Field(() => Int, { nullable: true })
+  @Column({ default: 0, nullable: true })
+  participantCount?: number;
 }
 
 @ObjectType()

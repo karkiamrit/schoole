@@ -13,6 +13,7 @@ import { UserRepository } from '@/user/user.repository';
 import { SubEventsController } from './subEvent.controller';
 import { StudentService } from '@/student/student.service';
 import { StudentRepository } from '@/student/student.repository';
+import { ParticipantRepository } from '@/participant/participant.repository';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { StudentRepository } from '@/student/student.repository';
       AddressRepository,
       UserRepository,
       StudentRepository,
+      ParticipantRepository,
     ]),
   ],
   controllers: [SubEventsController],

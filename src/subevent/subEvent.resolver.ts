@@ -1,6 +1,6 @@
 import { GraphqlPassportAuthGuard } from '../modules/guards/graphql-passport-auth.guard';
 import { UseGuards } from '@nestjs/common';
-import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { SubEventService } from './subEvent.service';
 import { GetManyInput, GetOneInput } from 'src/declare/inputs/custom.input';
 import { CurrentQuery } from 'src/modules/decorators/query.decorator';
@@ -13,13 +13,14 @@ import GraphQLJSON from 'graphql-type-json';
 import { User } from '@/user/entities/user.entity';
 import { CurrentUser } from '@/modules/decorators/user.decorator';
 import { UserRepository } from '@/user/user.repository';
-@Resolver()
+@Resolver(()=> SubEvent)
 export class SubEventResolver {
   constructor(
     private readonly subEventService: SubEventService,
     private readonly userRepository: UserRepository,
   ) {}
 
+  
   @Query(() => GetSubEventType)
   // @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   getManySubEvents(
@@ -29,6 +30,7 @@ export class SubEventResolver {
   ) {
     return this.subEventService.getMany(qs, query);
   }
+
 
   @Query(() => SubEvent)
   // @UseGuards(new GraphqlPassportAuthGuard('Admin'))

@@ -13,6 +13,7 @@ import { In } from 'typeorm';
 import { EventService } from '@/event/event.service';
 import { AddressService } from '@/address/address.service';
 import { StudentRepository } from '@/student/student.repository';
+import { ParticipantRepository } from '@/participant/participant.repository';
 @Injectable()
 export class SubEventService {
   constructor(
@@ -20,6 +21,7 @@ export class SubEventService {
     private readonly eventService: EventService,
     private readonly addressService: AddressService,
     private readonly studentRepository: StudentRepository,
+    private readonly participantRepository: ParticipantRepository,
   ) {}
 
   getMany(qs?: RepoQuery<SubEvent>, query?: string) {
@@ -32,6 +34,23 @@ export class SubEventService {
     } else {
       return this.subEventRepository.findOne(qs as FindOneOptions<SubEvent>);
     }
+  }
+
+  async getParticipantCount(id: number) {
+    const participants = this.participantRepository.getMany(
+      {
+        where: {
+          sub_event_id: id,
+        },
+      },
+      `query GetManySubEvents($input: GetManyInput) {
+  getManySubEvents(input: $input) {
+   count
+  }
+}`,
+    );
+    let count = (await participants).count;
+    return count;
   }
 
   async create(input: CreateSubEventInput, eventId: number): Promise<SubEvent> {
@@ -55,13 +74,11 @@ export class SubEventService {
   async update(id: number, input: UpdateSubEventInput): Promise<SubEvent> {
     const SubEvent = await this.subEventRepository.findOne({ where: { id } });
     // check address in the input and if the address is available update its address as well
-    // check address in the input and if the address is available update its address as well
     if (input.address) {
       await this.addressService.update(SubEvent.address.id, {
         ...input.address,
       });
     }
-
     return this.subEventRepository.save({ ...SubEvent, ...input });
   }
 
@@ -97,6 +114,7 @@ export class SubEventService {
     // Add the student to the SubEvent's participants
     subEvent.participants.push(user.student);
 
+    subEvent.participantCount += 1;
     // Save the updated SubEvent
     await this.subEventRepository.save(subEvent);
 
@@ -133,7 +151,7 @@ export class SubEventService {
     }
 
     subEvent.participants.push(...newParticipants);
-
+    subEvent.participantCount += newParticipants.length;
     await this.subEventRepository.save(subEvent);
 
     return {
