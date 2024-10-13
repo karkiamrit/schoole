@@ -114,7 +114,7 @@ export class SubEventService {
     // Add the student to the SubEvent's participants
     subEvent.participants.push(user.student);
 
-    subEvent.participantCount += 1;
+    subEvent.participant_count += 1;
     // Save the updated SubEvent
     await this.subEventRepository.save(subEvent);
 
@@ -151,7 +151,7 @@ export class SubEventService {
     }
 
     subEvent.participants.push(...newParticipants);
-    subEvent.participantCount += newParticipants.length;
+    subEvent.participant_count += newParticipants.length;
     await this.subEventRepository.save(subEvent);
 
     return {

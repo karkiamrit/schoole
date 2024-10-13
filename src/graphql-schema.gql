@@ -484,7 +484,7 @@ type SubEvent {
   event: Event!
   id: Int!
   name: String!
-  participantCount: Int
+  participant_count: Int
   participants: [Student!]
   registration_fee: Float
   rules: String

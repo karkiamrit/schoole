@@ -95,7 +95,7 @@ export class SubEvent {
 
   @Field(() => Int, { nullable: true })
   @Column({ default: 0, nullable: true })
-  participantCount?: number;
+  participant_count?: number;
 }
 
 @ObjectType()

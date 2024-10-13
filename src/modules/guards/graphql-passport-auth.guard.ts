@@ -43,7 +43,7 @@ import { AuthGuard } from '@nestjs/passport';
 
 @Injectable()
 export class GraphqlPassportAuthGuard extends AuthGuard('jwt') {
-  _roles: string[] = ['user'];
+  _roles: string[] = ['User'];
 
   constructor(roles?: string | string[]) {
     super();
