@@ -1,3 +1,4 @@
+import { PaymentModule } from './payment/payment.module';
 import { TokenModule } from './token/token.module';
 import { EventModule } from './event/event.module';
 import { AddressModule } from './address/address.module';
@@ -70,6 +71,7 @@ import { SocialModule } from './social/social.module';
     EventModule,
     SubEventModule,
     TokenModule,
+    PaymentModule,
     OtpModule,
     MailModule,
     SocialModule,

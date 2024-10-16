@@ -81,6 +81,10 @@ input CreateOrganizerInput {
   full_name: String!
 }
 
+input CreatePaymentInput {
+  payment_method: String!
+}
+
 input CreateStudentInput {
   bio: String
   date_of_birth: DateTime!
@@ -121,6 +125,20 @@ input CreateVolunteerInput {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+input ESewaPaymentInput {
+  amount: String!
+  failure_url: String
+  product_code: String
+  product_delivery_charge: String!
+  product_service_charge: String!
+  signature: String
+  signed_field_names: String
+  success_url: String
+  tax_amount: String!
+  total_amount: String!
+  transaction_uuid: String!
+}
 
 type Event {
   SubEvents: [SubEvent!]!
@@ -195,6 +213,11 @@ input GetOneInput {
 type GetOrganizerType {
   count: Float
   data: [Organizer!]
+}
+
+type GetPaymentType {
+  count: Float
+  data: [Payment!]
 }
 
 type GetStudentType {
@@ -312,11 +335,13 @@ type Mutation {
   createManyInstitution(input: [CreateInstitutionInput!]!): [Institution!]!
   createManyKyc(input: [CreateKycInput!]!): [Kyc!]!
   createManyOrganizer(input: [CreateOrganizerInput!]!): [Organizer!]!
+  createManyPayment(input: [CreatePaymentInput!]!): [Payment!]!
   createManyStudent(input: [CreateStudentInput!]!): [Student!]!
   createManySubEvent(input: [CreateSubEventInput!]!): [SubEvent!]!
   createManyUsers(input: [CreateUserInput!]!): [User!]!
   createManyVolunteer(input: [CreateVolunteerInput!]!): [volunteers!]!
   createOrganizer(input: CreateOrganizerInput!): Organizer!
+  createPayment(input: CreatePaymentInput!): Payment!
   createStudent(input: CreateStudentInput!): Student!
   createSubEvent(eventID: Float!, input: CreateSubEventInput!): SubEvent!
   createUser(input: CreateUserInput!): User!
@@ -327,13 +352,15 @@ type Mutation {
   deleteInstitution(id: Float!): Institution!
   deleteKyc(id: Float!): Kyc!
   deleteOrganizer(id: Float!): Organizer!
+  deletePayment(id: Float!): Payment!
   deleteStudent(id: Float!): Student!
   deleteSubEvent(id: Float!): SubEvent!
   deleteUser(id: Float!): JSON!
   deleteVolunteer(id: Float!): volunteers!
   forgotPassword(data: ForgotPasswordInput!): Boolean!
+  getEsewaPaymentForm(payment_input: ESewaPaymentInput!): JSON!
   logout: Boolean!
-  participateInSubEvent(SubEventID: Float!): JSON!
+  participateInSubEvent(SubEventID: Float!, options: JSON): JSON!
   participateMany(studentIds: [Int!]!, subEventId: Int!): JSON!
   refreshToken(refreshToken: String!): String!
   requestOtpReverifyEmail(email: String!, otpType: String!): Boolean!
@@ -350,6 +377,7 @@ type Mutation {
   updateKyc(id: Float!, input: UpdateKycInput!): Kyc!
   updateMe(input: UpdateUserWithStudentSocialsAndAddressInput!): User!
   updateOrganizer(id: Float!, input: UpdateOrganizerInput!): Organizer!
+  updatePayment(id: Float!, input: UpdatePaymentInput!): Payment!
   updateStudent(id: Float!, input: UpdateStudentInput!): Student!
   updateSubEvent(id: Float!, input: UpdateSubEventInput!): SubEvent!
   updateUser(id: Float!, input: UpdateUserInput!): User!
@@ -389,6 +417,11 @@ type Otp {
   user: User!
 }
 
+type Payment {
+  id: Float!
+  payment_method: String!
+}
+
 type Query {
   getManyAddresss(input: GetManyInput): GetAddressType!
   getManyCertificates(input: GetManyInput): GetCertificateType!
@@ -396,6 +429,7 @@ type Query {
   getManyInstitutions(input: GetManyInput): GetInstitutionType!
   getManyKycs(input: GetManyInput): GetKycType!
   getManyOrganizers(input: GetManyInput): GetOrganizerType!
+  getManyPayments(input: GetManyInput): GetPaymentType!
   getManyStudents(input: GetManyInput): GetStudentType!
   getManySubEvents(input: GetManyInput): GetSubEventType!
   getManyUsers(input: GetManyInput): GetUserType!
@@ -408,6 +442,7 @@ type Query {
   getOneInstitution(input: GetOneInput!): Institution!
   getOneKyc(input: GetOneInput!): Kyc!
   getOneOrganizer(input: GetOneInput!): Organizer!
+  getOnePayment(input: GetOneInput!): Payment!
   getOneStudent(input: GetOneInput!): Student!
   getOneSubEvent(input: GetOneInput!): SubEvent!
   getOneUser(input: GetOneInput!): User!
@@ -538,6 +573,10 @@ input UpdateKycInput {
 
 input UpdateOrganizerInput {
   full_name: String!
+}
+
+input UpdatePaymentInput {
+  payment_method: String!
 }
 
 input UpdateSocialInput {

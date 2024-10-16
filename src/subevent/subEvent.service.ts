@@ -36,23 +36,6 @@ export class SubEventService {
     }
   }
 
-  async getParticipantCount(id: number) {
-    const participants = this.participantRepository.getMany(
-      {
-        where: {
-          sub_event_id: id,
-        },
-      },
-      `query GetManySubEvents($input: GetManyInput) {
-  getManySubEvents(input: $input) {
-   count
-  }
-}`,
-    );
-    let count = (await participants).count;
-    return count;
-  }
-
   async create(input: CreateSubEventInput, eventId: number): Promise<SubEvent> {
     // const subEvent = new SubEvent();
     const event = await this.eventService.getOne({ where: { id: eventId } });
@@ -89,7 +72,7 @@ export class SubEventService {
   }
 
   //student clicks SubEvent to participate
-  async participate(id: number, user: User) {
+  async participate(id: number, user: User, options?: Record<string, any>) {
     if (!user.student) {
       throw new Error('You must be a student to participate');
     }
@@ -117,6 +100,25 @@ export class SubEventService {
     subEvent.participant_count += 1;
     // Save the updated SubEvent
     await this.subEventRepository.save(subEvent);
+
+    if (options) {
+      const participation = await this.participantRepository.findOne({
+        where: {
+          student_id: user.student.id,
+          sub_event_id: subEvent.id,
+        },
+      });
+      const optionData = {
+        transaction_code: options.transaction_code,
+        transaction_uuid: options.transaction_uuid,
+        status: options.status,
+        total_amount: options.total_amount,
+      };
+      await this.participantRepository.save({
+        ...participation,
+        ...optionData,
+      });
+    }
 
     return { message: 'Successfully registered for the SubEvent' };
   }

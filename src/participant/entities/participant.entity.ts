@@ -1,5 +1,5 @@
-import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
-import { ObjectType } from '@nestjs/graphql';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { Student } from '@/student/entities/student.entity';
 import { SubEvent } from '@/subevent/entities/subEvent.entity';
 
@@ -11,6 +11,22 @@ export class Participant {
 
   @PrimaryColumn()
   sub_event_id: number;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Field(() => String)
+  transaction_code: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Field(() => String)
+  transaction_uuid: string;
+
+  @Column({ type: 'varchar', length: 20, nullable: true, default: 'COMPLETE' })
+  @Field(() => String)
+  status: string;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  @Field(() => Number)
+  total_amount: number;
 
   @ManyToOne(() => Student, (student) => student.participatedSubEvents, {
     nullable: false,

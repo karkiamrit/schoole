@@ -24,7 +24,7 @@ const createEntityFileText = (
     `  PrimaryGeneratedColumn,`,
     `${updatedAt ? 'UpdateDateColumn,' : ''}`,
     `} from 'typeorm'`,
-    `import { Field, ID, ObjectType } from '@nestjs/graphql'`,
+    `import { Field,  ObjectType } from '@nestjs/graphql'`,
     ``,
     `@ObjectType()`,
     `@Entity('${name}s')`,
