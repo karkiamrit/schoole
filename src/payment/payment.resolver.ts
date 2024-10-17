@@ -8,6 +8,7 @@ import { GetPaymentType, Payment } from './entities/payment.entity';
 import {
   CreatePaymentInput,
   ESewaPaymentInput,
+  KhaltiPaymentInput,
   UpdatePaymentInput,
 } from './inputs/payment.input';
 import GraphQLJSON from 'graphql-type-json';
@@ -68,7 +69,14 @@ export class PaymentResolver {
   @Mutation(() => GraphQLJSON)
   @UseGuards(new GraphqlPassportAuthGuard(''))
   getEsewaPaymentForm(@Args('payment_input') payment_input: ESewaPaymentInput) {
-    console.log(payment_input);
     return this.paymentService.createEsewaPaymentForm(payment_input);
+  }
+
+  @Mutation(() => GraphQLJSON)
+  @UseGuards(new GraphqlPassportAuthGuard(''))
+  performKhalitPayment(
+    @Args('payment_input') payment_input: KhaltiPaymentInput,
+  ) {
+    return this.paymentService.processKhaltiPayment(payment_input);
   }
 }

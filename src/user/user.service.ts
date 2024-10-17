@@ -106,7 +106,6 @@ export class UserService {
           ...user_input,
           username_last_updated: new Date().toISOString(),
         };
-        console.log(new Date().toISOString(), 'new date');
         return await this.userRepository.save({
           ...user,
           ...user_input_with_username,

@@ -113,6 +113,7 @@ export class SubEventService {
         transaction_uuid: options.transaction_uuid,
         status: options.status,
         total_amount: options.total_amount,
+        payment_method: options.payment_method,
       };
       await this.participantRepository.save({
         ...participation,

@@ -143,7 +143,6 @@ export class AuthService {
       input.password,
       user.password,
     );
-    console.log({ hasValidPassword });
     if (!hasValidPassword) {
       throw new ApolloError('Invalid Password', 'INVALID_PASSWORD', {
         statusCode: 403,
@@ -290,7 +289,6 @@ export class AuthService {
       oldPassword,
       user.password,
     );
-    console.log(hasOldPasswordMatched, 'has_old_pass');
     if (hasOldPasswordMatched) {
       const hashedPassword = await bcrypt.hash(newPassword, 12);
       await this.userService.update(user.id, {

@@ -61,3 +61,18 @@ export class ESewaPaymentInput {
   @IsOptional()
   signature?: string;
 }
+
+@InputType()
+export class KhaltiPaymentInput {
+  @Field(() => Number)
+  @IsNotEmpty()
+  amount: number;
+
+  @Field(() => Number)
+  @IsNotEmpty()
+  sub_event_id: number;
+
+  @Field(() => String)
+  @IsNotEmpty()
+  product_name: string;
+}

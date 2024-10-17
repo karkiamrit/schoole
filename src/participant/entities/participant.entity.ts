@@ -28,6 +28,10 @@ export class Participant {
   @Field(() => Number)
   total_amount: number;
 
+  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Field(() => String)
+  payment_method: string;
+
   @ManyToOne(() => Student, (student) => student.participatedSubEvents, {
     nullable: false,
   })

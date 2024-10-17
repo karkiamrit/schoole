@@ -16,9 +16,24 @@ export class PaymentController {
     @CurrentUser() user: User,
   ) {
     await this.paymentService.checkEsewaSuccess(query, user);
-    response.redirect(
-      `http://localhost:3000/payment-sucess/esewa?data=${query.data}`,
-      301,
-    );
+    const returnUrl = process.env.ESEWA_RETURN_URL;
+    response.redirect(`${returnUrl}?data=${query.data}`, 301);
+  }
+
+  @Get('/khalti-sucess')
+  @UseGuards(new GraphqlPassportAuthGuard())
+  async khaltiSucess(
+    @Query() query: any,
+    @Res() response: any,
+    @CurrentUser() user: User,
+  ) {
+    if (query.status == 'Completed') {
+      const data = await this.paymentService.handleKhaltiSucess(query, user);
+      const returnUrl = process.env.KHALTI_RETURN_URL;
+      response.redirect(`${returnUrl}?data=${data}`, 301);
+    } else {
+      const returnUrl = process.env.PAYMENT_FAILURE_URL;
+      response.redirect(`${returnUrl}`, 301);
+    }
   }
 }

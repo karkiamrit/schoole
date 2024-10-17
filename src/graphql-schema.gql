@@ -268,6 +268,12 @@ type JwtWithUser {
   user: User!
 }
 
+input KhaltiPaymentInput {
+  amount: Float!
+  product_name: String!
+  sub_event_id: Float!
+}
+
 type Kyc {
   created_at: DateTime!
   id: Int!
@@ -296,25 +302,6 @@ type Mail {
   subject: String!
   text_content: String!
   updated_at: DateTime!
-}
-
-type Menu {
-  can_edit: Boolean
-  href: String!
-  icon: String
-  id: Int!
-  is_hidden: Boolean
-  is_static_route: Boolean
-  menu_for: MenuFor!
-  menu_name: String!
-  parent_menu: String
-}
-
-"""Determine for whom the menu is primarily for. """
-enum MenuFor {
-  all
-  institution
-  student
 }
 
 type Mutation {
@@ -362,6 +349,7 @@ type Mutation {
   logout: Boolean!
   participateInSubEvent(SubEventID: Float!, options: JSON): JSON!
   participateMany(studentIds: [Int!]!, subEventId: Int!): JSON!
+  performKhalitPayment(payment_input: KhaltiPaymentInput!): JSON!
   refreshToken(refreshToken: String!): String!
   requestOtpReverifyEmail(email: String!, otpType: String!): Boolean!
   requestOtpVerifyEmail(email: String!, otpType: String!): Boolean!
