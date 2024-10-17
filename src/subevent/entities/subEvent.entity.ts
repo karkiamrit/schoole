@@ -96,6 +96,10 @@ export class SubEvent {
   @Field(() => Int, { nullable: true })
   @Column({ default: 0, nullable: true })
   participant_count?: number;
+
+  @Field(() => Boolean)
+  @Column({ default: false })
+  is_featured: boolean;
 }
 
 @ObjectType()

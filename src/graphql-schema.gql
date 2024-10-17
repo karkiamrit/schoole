@@ -506,6 +506,7 @@ type SubEvent {
   end_date: DateTime!
   event: Event!
   id: Int!
+  is_featured: Boolean!
   name: String!
   participant_count: Int
   participants: [Student!]
