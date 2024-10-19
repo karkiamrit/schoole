@@ -30,6 +30,22 @@ export class SubEventResolver {
     return this.subEventService.getMany(qs, query);
   }
 
+  @Query(() => [GraphQLJSON])
+  getEventForYou(
+    @Args('interests', { type: () => [String] })
+    interests: string[],
+  ) {
+    return this.subEventService.getEventsForYou(interests);
+  }
+
+  @Query(() => [GraphQLJSON])
+  getEventNearMe(
+    @Args('latitude', { type: () => Number }) latitude: number,
+    @Args('longitude', { type: () => Number }) longitude: number,
+  ) {
+    return this.subEventService.getEventNearMe(latitude, longitude);
+  }
+
   @Query(() => SubEvent)
   // @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   getOneSubEvent(

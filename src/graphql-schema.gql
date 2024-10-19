@@ -411,6 +411,8 @@ type Payment {
 }
 
 type Query {
+  getEventForYou(interests: [String!]!): [JSON!]!
+  getEventNearMe(latitude: Float!, longitude: Float!): [JSON!]!
   getManyAddresss(input: GetManyInput): GetAddressType!
   getManyCertificates(input: GetManyInput): GetCertificateType!
   getManyEvents(input: GetManyInput): GetEventType!

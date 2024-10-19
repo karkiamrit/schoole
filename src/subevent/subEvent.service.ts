@@ -162,4 +162,12 @@ export class SubEventService {
       newParticipants: newParticipants.map((student) => student.id),
     };
   }
+
+  async getEventsForYou(interests?: string[]) {
+    return this.subEventRepository.eventForYou(interests);
+  }
+
+  async getEventNearMe(latitude: number, longitude: number) {
+    return this.subEventRepository.eventNearMe(latitude, longitude);
+  }
 }
