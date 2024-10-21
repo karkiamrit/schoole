@@ -18,6 +18,7 @@ import { Otp, OtpType } from 'src/otp/entities/otp.entity';
 import { ApolloError } from 'apollo-server-core';
 import * as crypto from 'crypto';
 import { TokenService } from '@/token/token.service';
+import { UserType } from '@/user/inputs/enums/usertype.enum';
 
 @Injectable()
 export class AuthService {
@@ -548,5 +549,45 @@ export class AuthService {
     }
 
     return user;
+  }
+
+  async handleGoogleAuth(profile: any): Promise<JwtWithUser> {
+    const {
+      email,
+      given_name,
+      family_name,
+      sub: providerId,
+      picture,
+    } = profile;
+
+    // Construct a username from given_name and family_name
+    const username = `${given_name}.${family_name}`.toLowerCase();
+
+    // Find or create the user based on the profile data
+    let user = await this.userService.getOne({ where: { providerId } });
+
+    if (!user) {
+      user = await this.userService.createWithOauth({
+        provider: 'google',
+        providerId,
+        email,
+        profile_picture: picture,
+        username,
+        email_verified: true,
+      });
+    }
+
+    // Generate JWT tokens
+    const accessToken = this.jwtService.sign({ id: user.id });
+    const refreshToken = this.jwtService.sign(
+      { id: user.id },
+      { expiresIn: '7d' }, // Example expiration time for refresh token
+    );
+
+    return {
+      user,
+      accessToken,
+      refreshToken,
+    };
   }
 }

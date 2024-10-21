@@ -115,6 +115,14 @@ export class User extends BaseEntity {
   @Field(() => [SubEvent])
   subEvents: SubEvent[];
 
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
+  provider?: string; // e.g., 'google', 'facebook'
+
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true, unique: true })
+  providerId?: string; // The unique ID from the provider
+
   @BeforeInsert()
   async beforeInsert() {
     if (!this.role) {

@@ -5,6 +5,7 @@ import { OneRepoQuery, RepoQuery } from 'src/declare/types';
 import { User } from './entities/user.entity';
 import {
   CreateUserInput,
+  CreateUserOAuthInput,
   UpdateUserInput,
   UpdateUserWithStudentSocialsAndAddressInput,
   UpdateVerificationInput,
@@ -40,6 +41,13 @@ export class UserService {
   async create(
     input: CreateUserInput | SignUpInput | SignUpWithEmailInput,
   ): Promise<User> {
+    const username = this.generateUniqueUsername();
+    return await this.userRepository.save(
+      Object.assign(new User(), { ...input, username }),
+    );
+  }
+
+  async createWithOauth(input: CreateUserOAuthInput): Promise<User> {
     const username = this.generateUniqueUsername();
     return await this.userRepository.save(
       Object.assign(new User(), { ...input, username }),

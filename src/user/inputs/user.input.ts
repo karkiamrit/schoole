@@ -6,7 +6,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, PartialType } from '@nestjs/graphql';
 import { UserType } from '@/user/inputs/enums/usertype.enum';
 import { UpdateSocialInput } from '@/social/inputs/social.input';
 import { UpdateAddressInput } from '@/address/inputs/address.input';
@@ -45,6 +45,21 @@ export class CreateUserInput {
   @Field(() => String)
   @IsNotEmpty()
   user_type: UserType;
+}
+
+@InputType()
+export class CreateUserOAuthInput extends PartialType(CreateUserInput) {
+  @Field(() => String)
+  @IsOptional()
+  provider?: string;
+
+  @Field(() => String)
+  @IsOptional()
+  providerId?: string;
+
+  @Field(() => String)
+  @IsOptional()
+  email_verified?: boolean;
 }
 
 @InputType()

@@ -17,6 +17,7 @@ import { GraphqlPassportAuthGuard } from 'src/modules/guards/graphql-passport-au
 import { Response } from 'express';
 import { ApolloError } from 'apollo-server-core';
 import { ChangePasswordInput } from '@/user/inputs/user.input';
+import { GoogleOauthGuard } from './guards/oauth.guard';
 
 @Resolver()
 export class AuthResolver {
@@ -56,6 +57,34 @@ export class AuthResolver {
     res.cookie('access_token', result.accessToken, { httpOnly: true }); // Set the cookie
     res.cookie('refresh_token', result.refreshToken, { httpOnly: true });
     return result;
+  }
+
+  @Mutation(() => JwtWithUser)
+  @UseGuards(GoogleOauthGuard)
+  async googleAuth(@Context() { res }: { res: Response }) {
+    const user = res.locals.user; // OAuth'd user from the Google strategy
+
+    // Handle business logic: register/login the user
+    const {
+      accessToken,
+      refreshToken,
+      user: authenticatedUser,
+    } = await this.authService.handleGoogleAuth(user);
+
+    // Optionally set tokens as cookies
+    res.cookie('accessToken', accessToken, {
+      maxAge: 2592000000, // 30 days
+      sameSite: true,
+      secure: false,
+    });
+
+    res.cookie('refreshToken', refreshToken, {
+      maxAge: 2592000000, // 30 days
+      sameSite: true,
+      secure: false,
+    });
+
+    return { user: authenticatedUser, accessToken, refreshToken };
   }
 
   @Mutation(() => Boolean)
