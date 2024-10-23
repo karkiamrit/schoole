@@ -14,6 +14,8 @@ import { Http } from 'src/util/http';
 import { MailRepository } from 'src/mail/mail.repository';
 import { OtpRepository } from 'src/otp/otp.repository';
 import { TokenService } from '@/token/token.service';
+import { AuthController } from './auth.controller';
+import { GoogleStrategy } from './strategies/google.strategy';
 
 @Module({
   imports: [
@@ -44,11 +46,13 @@ import { TokenService } from '@/token/token.service';
     AuthService,
     UserRepository,
     JwtStrategy,
+    GoogleStrategy,
     LocalStrategy,
     TokenService,
     Http,
     MailRepository,
     OtpRepository,
   ],
+  controllers: [AuthController],
 })
 export class AuthModule {}

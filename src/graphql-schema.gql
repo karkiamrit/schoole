@@ -304,6 +304,25 @@ type Mail {
   updated_at: DateTime!
 }
 
+type Menu {
+  can_edit: Boolean
+  href: String!
+  icon: String
+  id: Int!
+  is_hidden: Boolean
+  is_static_route: Boolean
+  menu_for: MenuFor!
+  menu_name: String!
+  parent_menu: String
+}
+
+"""Determine for whom the menu is primarily for. """
+enum MenuFor {
+  all
+  institution
+  student
+}
+
 type Mutation {
   SignUp(input: SignUpInput!): User!
   SignUpWithEmail(input: SignUpWithEmailInput!): User!
@@ -358,6 +377,7 @@ type Mutation {
   reverifyEmail(email: String!, otpCode: String!): Otp!
   signIn(input: SignInInput!): JwtWithUser!
   signInWithEmail(input: SignInWithEmailInput!): JwtWithUser!
+  signInWithGoogle: JwtWithUser!
   updateAddress(id: Float!, input: UpdateAddressInput!): Address!
   updateCertificate(id: Float!, input: UpdateCertificateInput!): Certificate!
   updateEvent(id: Float!, input: UpdateEventInput!): Event!
@@ -636,6 +656,8 @@ type User {
   phone: String
   phone_verified: Boolean!
   profile_picture: String
+  provider: String
+  providerId: String
   refresh_token: String!
   role: Role!
   socials: [Social!]

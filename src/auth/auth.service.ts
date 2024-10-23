@@ -18,7 +18,6 @@ import { Otp, OtpType } from 'src/otp/entities/otp.entity';
 import { ApolloError } from 'apollo-server-core';
 import * as crypto from 'crypto';
 import { TokenService } from '@/token/token.service';
-import { UserType } from '@/user/inputs/enums/usertype.enum';
 
 @Injectable()
 export class AuthService {

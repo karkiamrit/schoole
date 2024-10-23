@@ -61,7 +61,7 @@ export class AuthResolver {
 
   @Mutation(() => JwtWithUser)
   @UseGuards(GoogleOauthGuard)
-  async googleAuth(@Context() { res }: { res: Response }) {
+  async signInWithGoogle(@Context() { res }: { res: Response }) {
     const user = res.locals.user; // OAuth'd user from the Google strategy
 
     // Handle business logic: register/login the user
