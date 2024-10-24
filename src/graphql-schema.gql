@@ -304,25 +304,6 @@ type Mail {
   updated_at: DateTime!
 }
 
-type Menu {
-  can_edit: Boolean
-  href: String!
-  icon: String
-  id: Int!
-  is_hidden: Boolean
-  is_static_route: Boolean
-  menu_for: MenuFor!
-  menu_name: String!
-  parent_menu: String
-}
-
-"""Determine for whom the menu is primarily for. """
-enum MenuFor {
-  all
-  institution
-  student
-}
-
 type Mutation {
   SignUp(input: SignUpInput!): User!
   SignUpWithEmail(input: SignUpWithEmailInput!): User!
@@ -652,7 +633,7 @@ type User {
   id: Int!
   institution: Institution
   last_login: DateTime
-  password: String!
+  password: String
   phone: String
   phone_verified: Boolean!
   profile_picture: String

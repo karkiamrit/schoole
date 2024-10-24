@@ -551,21 +551,16 @@ export class AuthService {
   }
 
   async handleGoogleAuth(profile: any): Promise<JwtWithUser> {
-    const {
-      email,
-      given_name,
-      family_name,
-      sub: providerId,
-      picture,
-    } = profile;
+    const { email, given_name, family_name, providerId, picture } = profile;
 
     // Construct a username from given_name and family_name
     const username = `${given_name}.${family_name}`.toLowerCase();
 
     // Find or create the user based on the profile data
     let user = await this.userService.getOne({ where: { providerId } });
-
+    // console.log(user, 'usererer');
     if (!user) {
+      // console.log('hererererer');
       user = await this.userService.createWithOauth({
         provider: 'google',
         providerId,
