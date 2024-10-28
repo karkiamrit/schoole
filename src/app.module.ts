@@ -28,6 +28,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { SubEventModule } from './subevent/subEvent.module';
 import { SocialModule } from './social/social.module';
+import { ContactModule } from './contact/contact.module';
 
 @Module({
   imports: [
@@ -75,6 +76,7 @@ import { SocialModule } from './social/social.module';
     OtpModule,
     MailModule,
     SocialModule,
+    ContactModule,
   ],
 })
 export class AppModule {}

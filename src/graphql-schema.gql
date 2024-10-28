@@ -27,6 +27,17 @@ input ChangePasswordInput {
   oldPassword: String!
 }
 
+type Contact {
+  email: String!
+  fullName: String!
+  id: Int!
+  message: String!
+  mobileNumber: String!
+  organizationName: String!
+  phone: String
+  source: [String!]!
+}
+
 input CreateAddressInput {
   address_type: String!
   country: String
@@ -42,6 +53,16 @@ input CreateAddressInput {
 input CreateCertificateInput {
   certificate_title: String!
   photo: String
+}
+
+input CreateContactInput {
+  email: String!
+  fullName: String!
+  message: String!
+  mobileNumber: String!
+  organizationName: String!
+  reCaptchaToken: String!
+  source: [String!]!
 }
 
 input CreateEventInput {
@@ -310,6 +331,7 @@ type Mutation {
   allocateStudentToSubEvent(subEventId: Float!, userId: Float!): JSON!
   changePassword(input: ChangePasswordInput!): Boolean!
   createAddress(input: CreateAddressInput!): Address!
+  createBusinessQueryContact(input: CreateContactInput!): Contact!
   createCertificate(input: CreateCertificateInput!, transactionId: String!): Certificate!
   createEvent(input: CreateEventInput!): Event!
   createEventByInstitution(input: CreateEventInput!): Event!
