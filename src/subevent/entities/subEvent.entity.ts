@@ -39,9 +39,9 @@ export class SubEvent {
   @Column({ enum: SubEventType, default: SubEventType.other })
   type: SubEventType;
 
-  @Field(() => String)
-  @Column()
-  category: string;
+  @Field(() => [String], { nullable: true })
+  @Column('simple-array', { nullable: true })
+  category?: string[];
 
   @Field(() => String, { nullable: true })
   @Column('text', { nullable: true })

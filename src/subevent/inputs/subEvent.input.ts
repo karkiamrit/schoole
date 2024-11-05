@@ -21,9 +21,9 @@ export class CreateSubEventInput {
   @IsNotEmpty()
   type: SubEventType;
 
-  @Field(() => String)
-  @IsNotEmpty()
-  category: string;
+  @Field(() => [String], { nullable: false })
+  @IsOptional()
+  category?: string[];
 
   @Field(() => String, { nullable: true })
   @IsOptional()
@@ -68,9 +68,9 @@ export class UpdateSubEventInput {
   @IsNotEmpty()
   type: SubEventType;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => [String], { nullable: false })
   @IsOptional()
-  category?: string;
+  category?: string[];
 
   @Field(() => String, { nullable: true })
   @IsOptional()

@@ -19,8 +19,7 @@ export class ContactService {
   ): Promise<Contact> {
     const recaptchaToken = input.reCaptchaToken;
 
-    const isCaptchaValid = this.validateCaptcha(recaptchaToken);
-
+    const isCaptchaValid = await this.validateCaptcha(recaptchaToken);
     if (!isCaptchaValid) {
       throw new ApolloError(
         'Captcha Validation Failed',

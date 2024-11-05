@@ -119,7 +119,7 @@ input CreateStudentInput {
 
 input CreateSubEventInput {
   address: CreateAddressInput
-  category: String!
+  category: [String!]!
   description: String!
   end_date: DateTime!
   name: String!
@@ -524,7 +524,7 @@ type Student {
 type SubEvent {
   address: Address
   banner: String
-  category: String!
+  category: [String!]
   createdAt: DateTime!
   created_by: User
   description: String!
@@ -612,7 +612,7 @@ input UpdateStudentInput {
 input UpdateSubEventInput {
   address: CreateAddressInput
   banner: String
-  category: String
+  category: [String!]!
   description: String
   end_date: DateTime
   name: String
