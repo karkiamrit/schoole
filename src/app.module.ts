@@ -60,7 +60,7 @@ import { ContactModule } from './contact/contact.module';
     UserModule,
     AuthModule,
     DeclareModule,
-    CronModule,
+    // CronModule,
     HealthModule,
     StudentModule,
     InstitutionModule,

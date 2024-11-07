@@ -1,8 +1,18 @@
-import { Controller, Get, Res, Req, UseGuards } from '@nestjs/common';
-import { Request } from 'express';
+import {
+  Controller,
+  Get,
+  Res,
+  Req,
+  UseGuards,
+  Post,
+  Body,
+} from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
+import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { GoogleOauthGuard } from './guards/oauth.guard';
 import { ConfigService } from '@nestjs/config';
+import { Context } from '@nestjs/graphql';
 
 @Controller('auth')
 export class AuthController {
@@ -30,23 +40,24 @@ export class AuthController {
     const { accessToken, refreshToken } =
       await this.authService.handleGoogleAuth(user);
 
-    // Optionally set tokens as cookies
-    res.cookie('accessToken', accessToken, {
-      maxAge: 2592000000, // 30 days
-      sameSite: false,
-      secure: false,
+    const authorizationCode = uuidv4();
+    await this.authService.storeAuthorizationCode(authorizationCode, {
+      accessToken,
+      refreshToken,
     });
-
-    res.cookie('refreshToken', refreshToken, {
-      maxAge: 2592000000, // 30 days
-      sameSite: false,
-      secure: false,
-    });
-
     const returnUrl = this.configService.get('CLIENT_URI');
-    res.redirect(
-      `${returnUrl}?accessToken=${accessToken}&refreshToken=${refreshToken}`,
-      301,
-    );
+    res.redirect(`${returnUrl}/${authorizationCode}`);
+  } 
+
+  @Post('exchange-code')
+  async exchangeCode(@Body() body: { code: string }) {
+    const { code } = body;
+    const tokens = await this.authService.exchangeAuthorizationCode(code);
+
+    if (!tokens) {
+      return { message: 'Invalid or expired authorization code' };
+    }
+
+    return { tokens };
   }
 }

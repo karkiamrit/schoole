@@ -18,7 +18,7 @@ export class InstitutionService {
       {
         ...qs,
         relations: ['user'],
-      } || {},
+      },
       query,
     );
   }
