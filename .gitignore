@@ -40,3 +40,4 @@ lerna-debug.log*
 uploads/
 
 .pnpm-store
+pnpm-lock.yaml

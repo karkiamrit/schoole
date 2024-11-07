@@ -20,18 +20,10 @@ import * as crypto from 'crypto';
 import { TokenService } from '@/token/token.service';
 import { createClient } from 'redis';
 import { ConfigService } from '@nestjs/config';
-import { promisify } from 'util';
 
 @Injectable()
 export class AuthService {
   private redisClient: ReturnType<typeof createClient>;
-  private redisSetAsync: (
-    key: string,
-    value: string,
-    mode: string,
-    duration: number,
-  ) => Promise<void>;
-  private redisGetAsync: (key: string) => Promise<string | null>;
 
   constructor(
     /**
@@ -54,7 +46,6 @@ export class AuthService {
       url: `redis://${this.configService.get('REDIS_HOST')}:${this.configService.get('REDIS_PORT')}`,
     });
 
-    console.log(this.redisClient, 'redisClient');
     this.redisClient.on('error', (err) =>
       console.error('Redis Client Error', err),
     );
@@ -615,11 +606,9 @@ export class AuthService {
   ) {
     try {
       const expiration = 300; // 5 minutes
-      console.log('Storing authorization code in Redis...');
       await this.redisClient.set(code, JSON.stringify(tokens), {
         EX: expiration,
       });
-      console.log('Successfully stored authorization code');
     } catch (err) {
       console.error('Error storing authorization code:', err);
     }

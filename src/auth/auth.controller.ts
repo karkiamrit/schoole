@@ -8,11 +8,10 @@ import {
   Body,
 } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { AuthService } from './auth.service';
 import { GoogleOauthGuard } from './guards/oauth.guard';
 import { ConfigService } from '@nestjs/config';
-import { Context } from '@nestjs/graphql';
 
 @Controller('auth')
 export class AuthController {
@@ -45,9 +44,10 @@ export class AuthController {
       accessToken,
       refreshToken,
     });
-    const returnUrl = this.configService.get('CLIENT_URI');
-    res.redirect(`${returnUrl}/${authorizationCode}`);
-  } 
+    const returnUrl =
+      this.configService.get('CLIENT_URI') + `?code=${authorizationCode}`;
+    res.redirect(`${returnUrl}`);
+  }
 
   @Post('exchange-code')
   async exchangeCode(@Body() body: { code: string }) {
