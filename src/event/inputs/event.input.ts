@@ -56,6 +56,10 @@ export class UpdateEventInput {
   @IsOptional()
   banner?: string;
 
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  displayPicture?: string;
+
   @Field(() => Number, { nullable: true })
   @IsOptional()
   entry_fee: number;

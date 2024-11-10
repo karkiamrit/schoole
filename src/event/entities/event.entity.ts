@@ -66,6 +66,10 @@ export class Event {
   @Column({ nullable: true })
   banner: string;
 
+  @Field(() => String, { nullable: true, })
+  @Column({ nullable: true, name: 'display_picture' })
+  displayPicture: string;
+
   @ManyToOne(() => User, {
     onDelete: 'CASCADE',
     nullable: false,

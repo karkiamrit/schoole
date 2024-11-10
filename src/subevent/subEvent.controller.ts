@@ -17,9 +17,9 @@ import { SubEvent } from '@/subevent/entities/subEvent.entity';
 export class SubEventsController {
   constructor(private readonly SubEventService: SubEventService) {}
 
-  @Put('/banner')
+  @Put('/upload')
   @UseInterceptors(
-    FileInterceptor('banner', {
+    FileInterceptor('upload', {
       storage: diskStorage({
         destination: './uploads', // specify the path where the files should be saved
         filename: (req, file, callback) => {
@@ -41,9 +41,16 @@ export class SubEventsController {
   async create(
     @UploadedFile() file: Express.Multer.File,
     @Body('eventId') eventId: number,
+    @Body('type') type: 'banner' | 'displayPicture',
   ): Promise<SubEvent> {
-    return await this.SubEventService.update(eventId, {
-      banner: file.path,
-    } as UpdateSubEventInput);
+    if (type == 'banner') {
+      return await this.SubEventService.update(eventId, {
+        banner: file.path,
+      } as UpdateSubEventInput);
+    } else {
+      return await this.SubEventService.update(eventId, {
+        displayPicture: file.path,
+      } as UpdateSubEventInput);
+    }
   }
 }

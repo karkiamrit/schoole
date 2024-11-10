@@ -167,6 +167,7 @@ type Event {
   banner: String
   created_at: DateTime!
   description: String
+  displayPicture: String
   end_date: String!
   entry_fee: Float
   id: Int!
@@ -528,6 +529,7 @@ type SubEvent {
   createdAt: DateTime!
   created_by: User
   description: String!
+  displayPicture: String
   end_date: DateTime!
   event: Event!
   id: Int!
@@ -570,6 +572,7 @@ input UpdateEventInput {
   address: CreateAddressInput
   banner: String
   description: String
+  displayPicture: String
   end_date: DateTime!
   entry_fee: Float
   name: String!
@@ -614,6 +617,7 @@ input UpdateSubEventInput {
   banner: String
   category: [String!]!
   description: String
+  displayPicture: String
   end_date: DateTime
   name: String
   registration_fee: Float

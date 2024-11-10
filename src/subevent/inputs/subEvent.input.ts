@@ -52,6 +52,10 @@ export class UpdateSubEventInput {
   @IsOptional()
   banner?: string;
 
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  displayPicture?: string;
+
   @Field(() => CreateAddressInput, { nullable: true })
   @IsOptional()
   address?: CreateAddressInput;

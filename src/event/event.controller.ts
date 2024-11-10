@@ -22,9 +22,9 @@ export class EventsController {
   //     return { bannerId };
   //   } @Post()
 
-  @Put('/event-banner')
+  @Put('/upload')
   @UseInterceptors(
-    FileInterceptor('banner', {
+    FileInterceptor('upload', {
       storage: diskStorage({
         destination: './uploads', // specify the path where the files should be saved
         filename: (req, file, callback) => {
@@ -46,9 +46,15 @@ export class EventsController {
   async create(
     @UploadedFile() file: Express.Multer.File,
     @Body('eventId') eventId: number,
+    @Body('type') type: 'banner' | 'displayPicture',
   ) {
+    if (type == 'banner') {
+      return await this.eventService.update(eventId, {
+        banner: file.path,
+      } as UpdateEventInput);
+    }
     return await this.eventService.update(eventId, {
-      banner: file.path,
+      displayPicture: file.path,
     } as UpdateEventInput);
   }
 }
