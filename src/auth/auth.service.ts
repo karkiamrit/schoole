@@ -20,6 +20,7 @@ import * as crypto from 'crypto';
 import { TokenService } from '@/token/token.service';
 import { createClient } from 'redis';
 import { ConfigService } from '@nestjs/config';
+import { InstitutionService } from '@/institution/institution.service';
 
 @Injectable()
 export class AuthService {
@@ -41,6 +42,7 @@ export class AuthService {
     private readonly tokenService: TokenService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly institutionService: InstitutionService,
   ) {
     this.redisClient = createClient({
       url: `redis://${this.configService.get('REDIS_HOST')}:${this.configService.get('REDIS_PORT')}`,
@@ -627,5 +629,42 @@ export class AuthService {
       console.error('Error exchanging authorization code:', err);
       return null;
     }
+  }
+
+  async signInAdmin(input: SignInWithEmailInput): Promise<JwtWithUser> {
+    const user = await this.userService.getOne({
+      where: { email: input.email },
+    });
+
+    if (!user) {
+      throw new ApolloError("User doesn't exist", 'USER_NOT_FOUND', {
+        statusCode: 404,
+      });
+    }
+    if (user.email_verified === false) {
+      throw new ApolloError('Email not verified', 'EMAIL_NOT_VERIFIED', {
+        statusCode: 403,
+      });
+    }
+    if (!user.institution) {
+      throw new ApolloError('Invalid User', 'USER_NOT_FOUND', {
+        statusCode: 404,
+      });
+    }
+
+    const hasValidPassword = await bcrypt.compare(
+      input.password,
+      user.password,
+    );
+    if (!hasValidPassword) {
+      throw new ApolloError('Invalid Password', 'INVALID_PASSWORD', {
+        statusCode: 403,
+      });
+    }
+
+    const accessToken = this.tokenService.generateAccessToken(user);
+    const refreshToken = this.tokenService.generateRefreshToken(user);
+
+    return { user, accessToken, refreshToken };
   }
 }

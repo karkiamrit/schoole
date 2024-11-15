@@ -380,6 +380,7 @@ type Mutation {
   resetPassword(newPassword: String!, token: String!): Boolean!
   reverifyEmail(email: String!, otpCode: String!): Otp!
   signIn(input: SignInInput!): JwtWithUser!
+  signInAdmin(input: SignInWithEmailInput!): JwtWithUser!
   signInWithEmail(input: SignInWithEmailInput!): JwtWithUser!
   signInWithGoogle: JwtWithUser!
   updateAddress(id: Float!, input: UpdateAddressInput!): Address!

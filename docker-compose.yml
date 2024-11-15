@@ -1,37 +1,38 @@
 services:
   db:
-    image: postgres:13
+    image: 'postgres:15.2'
     restart: always
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: p@ssw0rd
+      POSTGRES_DB: schoole
     ports:
-      - 5433:5432
+      - '5431:5432'
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - 'postgres_data:/var/lib/postgresql/data/'
   redis:
-    image: redis:6
+    image: 'redis:6'
     ports:
-      - 6379:6379
+      - '6379:6379'
     environment:
-      REDIS_HOST: ${REDIS_HOST}
-      REDIS_PORT: ${REDIS_PORT}
-      MEMORY_OVERCOMMIT: "1"      
+      REDIS_HOST: '${REDIS_HOST}'
+      REDIS_PORT: '${REDIS_PORT}'
+      MEMORY_OVERCOMMIT: '1'
   app:
     build:
       context: .
       dockerfile: Dockerfile
       target: development
+    depends_on:
+      - db
     command: pnpm dev
     env_file:
       - .env
     ports:
-      - 8000:8000
+      - '5000:5000'
     volumes:
-      - .:/usr/src/app
-      - ./uploads:/usr/src/app/uploads
-      - /usr/src/app/node_modules
-
+      - '.:/usr/src/app'
+      - './uploads:/usr/src/app/uploads'
+      - '/usr/src/app/node_modules'
 volumes:
-  postgres_data:
+  postgres_data: null

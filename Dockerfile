@@ -26,7 +26,7 @@ COPY pnpm.lock ./
 
 RUN npm install -g pnpm
 
-RUN pnpm add @nestjs/cli 
+RUN pnpm add @nestjs/cli
 
 RUN pnpm install --prod
 

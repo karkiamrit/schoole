@@ -16,6 +16,8 @@ import { OtpRepository } from 'src/otp/otp.repository';
 import { TokenService } from '@/token/token.service';
 import { AuthController } from './auth.controller';
 import { GoogleStrategy } from './strategies/google.strategy';
+import { InstitutionService } from '@/institution/institution.service';
+import { InstitutionRepository } from '@/institution/institution.repository';
 
 @Module({
   imports: [
@@ -49,6 +51,8 @@ import { GoogleStrategy } from './strategies/google.strategy';
     GoogleStrategy,
     LocalStrategy,
     TokenService,
+    InstitutionService,
+    InstitutionRepository,
     Http,
     MailRepository,
     OtpRepository,

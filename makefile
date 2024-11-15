@@ -10,3 +10,9 @@ lint-fix:
 
 format:
 	yarn format
+
+docker-build:
+	docker compose -f docker-compose.yml build
+
+docker-start:
+	docker compose -f docker-compose.yml up

@@ -36,7 +36,7 @@ export class AuthResolver {
   }
 
   @Mutation(() => JwtWithUser)
-  @UseGuards(SignInGuard)
+  // @UseGuards(SignInGuard)
   async signIn(
     @Args('input') input: SignInInput,
     @Context() { res }: { res: Response },
@@ -209,4 +209,19 @@ export class AuthResolver {
     }
     return success;
   }
+
+
+  @Mutation(() => JwtWithUser)
+  // @UseGuards(SignInGuard)
+  async signInAdmin(
+    @Args('input') input: SignInWithEmailInput,
+    @Context() { res }: { res: Response },
+  ): Promise<JwtWithUser> {
+    const result = await this.authService.signInAdmin(input);
+    res.cookie('access_token', result.accessToken, { httpOnly: true }); // Set the cookie
+    res.cookie('refresh_token', result.refreshToken, { httpOnly: true });
+    return result;
+  }
+
+
 }
