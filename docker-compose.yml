@@ -23,6 +23,7 @@ services:
       context: .
       dockerfile: Dockerfile
       target: '${NODE_ENV}'
+    image: 'yaksincorporation/achivee'
     depends_on:
       - db
     command: pnpm start:prod

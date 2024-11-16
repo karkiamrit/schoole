@@ -21,8 +21,8 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_IMAGE_NAME }}:latest .
-          docker push ${{ secrets.DOCKER_IMAGE_NAME }}:latest
+          docker compose -f docker-compose.yml build
+          docker compose -f docker-compose.yml push
 
       - name: Deploy to DigitalOcean
         uses: appleboy/ssh-action@v0.1.8
@@ -31,7 +31,7 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            docker pull ${{ secrets.DOCKER_IMAGE_NAME }}:latest
-            docker stop ${{ secrets.CONTAINER_NAME }} || true
-            docker rm ${{ secrets.CONTAINER_NAME }} || true
-            docker run -d --name ${{ secrets.CONTAINER_NAME }} -p ${{ secrets.PORT }}:5000 ${{ secrets.DOCKER_IMAGE_NAME }}:latest
+            cd /etc/achivee/
+            docker-compose down
+            docker-compose pull
+            docker-compose up -d
