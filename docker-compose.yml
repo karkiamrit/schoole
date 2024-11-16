@@ -20,14 +20,14 @@ services:
       MEMORY_OVERCOMMIT: '1'
   app:
     build:
-      context: ..
-      dockerfile: ../Dockerfile
+      context: .
+      dockerfile: Dockerfile
       target: '${NODE_ENV}'
     depends_on:
       - db
-    command: pnpm dev
+    command: pnpm start:prod
     env_file:
-      - ../.env
+      - .env
     ports:
       - '5000:5000'
     volumes:
