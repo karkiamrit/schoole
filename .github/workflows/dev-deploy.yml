@@ -96,9 +96,14 @@ jobs:
           docker compose -f docker-compose.yml build 
           docker compose -f docker-compose.yml push
 
+      - name: Set up SSH agent
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+  
       - name: Test SSH connection
         run: |
-          ssh -i ${{ secrets.SSH_KEY }} -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.HOST }} echo "SSH connection successful"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.HOST }} echo "SSH connection successful"
 
       - name: Deploy to DigitalOcean
         uses: appleboy/ssh-action@v0.1.8
