@@ -103,6 +103,9 @@ jobs:
   
       - name: Test SSH connection
         run: |
+          echo ${{ secrets.SSH_KEY }} > ssh_key
+          echo ${{ secrets.HOST }} > ssh_host
+          echo ${{ secrets.USER }} > ssh_user
           ssh -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.HOST }} echo "SSH connection successful"
 
       - name: Deploy to DigitalOcean
