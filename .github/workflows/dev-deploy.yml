@@ -31,7 +31,7 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd /etc/achivee/
+            cd /etc/achivee/schoole
             docker-compose down
             docker-compose pull
             docker-compose up -d
