@@ -90,9 +90,7 @@ jobs:
           echo "REDIS_HOST=${{ secrets.REDIS_HOST }}" >> .env
           echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> .env
           echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> .env
-          echo "SSH_KEY=${{ secrets.SSH_KEY }}" >> .env
   
-
       - name: Build and push Docker image
         run: |
           docker compose -f docker-compose.yml build 
@@ -101,7 +99,7 @@ jobs:
       - name: Test SSH connection
         run: |
           ssh -i ${{ secrets.SSH_KEY }} -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.HOST }} echo "SSH connection successful"
-          
+
       - name: Deploy to DigitalOcean
         uses: appleboy/ssh-action@v0.1.8
         with:
