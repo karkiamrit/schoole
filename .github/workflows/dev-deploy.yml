@@ -57,40 +57,41 @@ jobs:
     
       - name: Create .env file
         run: |
-            echo "CLIENT_ID=${{ secrets.CLIENT_ID }}" >> .env
-            echo "CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}" >> .env
-            echo "CLIENT_URI=${{ secrets.CLIENT_URI }}" >> .env
-            echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env
-            echo "DOCKER_PASSWORD=${{ secrets.DOCKER_PASSWORD }}" >> .env
-            echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
-            echo "ESEWA_PAYMENT_SECRET_KEY=${{ secrets.ESEWA_PAYMENT_SECRET_KEY }}" >> .env
-            echo "ESEWA_PAYMENT_SUCESS_URL=${{ secrets.ESEWA_PAYMENT_SUCESS_URL }}" >> .env
-            echo "ESEWA_PRODUCT_CODE=${{ secrets.ESEWA_PRODUCT_CODE }}" >> .env
-            echo "ESEWA_RETURN_URL=${{ secrets.ESEWA_RETURN_URL }}" >> .env
-            echo "HOST=${{ secrets.HOST }}" >> .env
-            echo "JWT_ACCESS_PRIVATE_KEY=${{ secrets.JWT_ACCESS_PRIVATE_KEY }}" >> .env
-            echo "JWT_ACCESS_PUBLIC_KEY=${{ secrets.JWT_ACCESS_PUBLIC_KEY }}" >> .env
-            echo "JWT_REFRESH_PRIVATE_KEY=${{ secrets.JWT_REFRESH_PRIVATE_KEY }}" >> .env
-            echo "JWT_REFRESH_PUBLIC_KEY=${{ secrets.JWT_REFRESH_PUBLIC_KEY }}" >> .env
-            echo "KHALTI_LIVE_SECRET_KEY=${{ secrets.KHALTI_LIVE_SECRET_KEY }}" >> .env
-            echo "KHALTI_PAYMENT_API=${{ secrets.KHALTI_PAYMENT_API }}" >> .env
-            echo "KHALTI_PAYMENT_LOOKUP_API=${{ secrets.KHALTI_PAYMENT_LOOKUP_API }}" >> .env
-            echo "KHALTI_PAYMENT_SUCESS_URL=${{ secrets.KHALTI_PAYMENT_SUCESS_URL }}" >> .env
-            echo "KHALTI_PAYMENT_WEBSITE_URL=${{ secrets.KHALTI_PAYMENT_WEBSITE_URL }}" >> .env
-            echo "KHALTI_RETURN_URL=${{ secrets.KHALTI_RETURN_URL }}" >> .env
-            echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> .env
-            echo "PAYMENT_FAILURE_URL=${{ secrets.PAYMENT_FAILURE_URL }}" >> .env
-            echo "PORT=${{ secrets.PORT }}" >> .env
-            echo "POSTGRES_DATABASE=${{ secrets.POSTGRES_DATABASE }}" >> .env
-            echo "POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}" >> .env
-            echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
-            echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
-            echo "RECAPTCHA_SECRET_KEY=${{ secrets.RECAPTCHA_SECRET_KEY }}" >> .env
-            echo "REDIRECT_URI=${{ secrets.REDIRECT_URI }}" >> .env
-            echo "REDIS_HOST=${{ secrets.REDIS_HOST }}" >> .env
-            echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> .env
-            echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> .env
-            echo "SSH_KEY=${{ secrets.SSH_KEY }}" >> .env
+          echo "CLIENT_ID=${{ secrets.CLIENT_ID }}" >> .env
+          echo "CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}" >> .env
+          echo "CLIENT_URI=${{ secrets.CLIENT_URI }}" >> .env
+          echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env
+          echo "DOCKER_PASSWORD=${{ secrets.DOCKER_PASSWORD }}" >> .env
+          echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
+          echo "ESEWA_PAYMENT_SECRET_KEY=${{ secrets.ESEWA_PAYMENT_SECRET_KEY }}" >> .env
+          echo "ESEWA_PAYMENT_SUCESS_URL=${{ secrets.ESEWA_PAYMENT_SUCESS_URL }}" >> .env
+          echo "ESEWA_PRODUCT_CODE=${{ secrets.ESEWA_PRODUCT_CODE }}" >> .env
+          echo "ESEWA_RETURN_URL=${{ secrets.ESEWA_RETURN_URL }}" >> .env
+          echo "HOST=${{ secrets.HOST }}" >> .env
+          echo "JWT_ACCESS_PRIVATE_KEY=${{ secrets.JWT_ACCESS_PRIVATE_KEY }}" >> .env
+          echo "JWT_ACCESS_PUBLIC_KEY=${{ secrets.JWT_ACCESS_PUBLIC_KEY }}" >> .env
+          echo "JWT_REFRESH_PRIVATE_KEY=${{ secrets.JWT_REFRESH_PRIVATE_KEY }}" >> .env
+          echo "JWT_REFRESH_PUBLIC_KEY=${{ secrets.JWT_REFRESH_PUBLIC_KEY }}" >> .env
+          echo "KHALTI_LIVE_SECRET_KEY=${{ secrets.KHALTI_LIVE_SECRET_KEY }}" >> .env
+          echo "KHALTI_PAYMENT_API=${{ secrets.KHALTI_PAYMENT_API }}" >> .env
+          echo "KHALTI_PAYMENT_LOOKUP_API=${{ secrets.KHALTI_PAYMENT_LOOKUP_API }}" >> .env
+          echo "KHALTI_PAYMENT_SUCESS_URL=${{ secrets.KHALTI_PAYMENT_SUCESS_URL }}" >> .env
+          echo "KHALTI_PAYMENT_WEBSITE_URL=${{ secrets.KHALTI_PAYMENT_WEBSITE_URL }}" >> .env
+          echo "KHALTI_RETURN_URL=${{ secrets.KHALTI_RETURN_URL }}" >> .env
+          echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> .env
+          echo "PAYMENT_FAILURE_URL=${{ secrets.PAYMENT_FAILURE_URL }}" >> .env
+          echo "PORT=${{ secrets.PORT }}" >> .env
+          echo "POSTGRES_DATABASE=${{ secrets.POSTGRES_DATABASE }}" >> .env
+          echo "POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}" >> .env
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+          echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
+          echo "RECAPTCHA_SECRET_KEY=${{ secrets.RECAPTCHA_SECRET_KEY }}" >> .env
+          echo "REDIRECT_URI=${{ secrets.REDIRECT_URI }}" >> .env
+          echo "REDIS_HOST=${{ secrets.REDIS_HOST }}" >> .env
+          echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> .env
+          echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> .env
+          echo "SSH_KEY=${{ secrets.SSH_KEY }}" >> .env
+  
 
       - name: Build and push Docker image
         run: |
