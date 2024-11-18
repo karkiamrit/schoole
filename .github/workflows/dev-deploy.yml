@@ -9,6 +9,42 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     environment: develop
+    env:
+      CLIENT_ID: ${{ secrets.CLIENT_ID }}
+      CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+      CLIENT_URI: ${{ secrets.CLIENT_URI }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      ESEWA_PAYMENT_SECRET_KEY: ${{ secrets.ESEWA_PAYMENT_SECRET_KEY }}
+      ESEWA_PAYMENT_SUCESS_URL: ${{ secrets.ESEWA_PAYMENT_SUCESS_URL }}
+      ESEWA_PRODUCT_CODE: ${{ secrets.ESEWA_PRODUCT_CODE }}
+      ESEWA_RETURN_URL: ${{ secrets.ESEWA_RETURN_URL }}
+      HOST: ${{ secrets.HOST }}
+      JWT_ACCESS_PRIVATE_KEY: ${{ secrets.JWT_ACCESS_PRIVATE_KEY }}
+      JWT_ACCESS_PUBLIC_KEY: ${{ secrets.JWT_ACCESS_PUBLIC_KEY }}
+      JWT_REFRESH_PRIVATE_KEY: ${{ secrets.JWT_REFRESH_PRIVATE_KEY }}
+      JWT_REFRESH_PUBLIC_KEY: ${{ secrets.JWT_REFRESH_PUBLIC_KEY }}
+      KHALTI_LIVE_SECRET_KEY: ${{ secrets.KHALTI_LIVE_SECRET_KEY }}
+      KHALTI_PAYMENT_API: ${{ secrets.KHALTI_PAYMENT_API }}
+      KHALTI_PAYMENT_LOOKUP_API: ${{ secrets.KHALTI_PAYMENT_LOOKUP_API }}
+      KHALTI_PAYMENT_SUCESS_URL: ${{ secrets.KHALTI_PAYMENT_SUCESS_URL }}
+      KHALTI_PAYMENT_WEBSITE_URL: ${{ secrets.KHALTI_PAYMENT_WEBSITE_URL }}
+      KHALTI_RETURN_URL: ${{ secrets.KHALTI_RETURN_URL }}
+      NODE_ENV: ${{ secrets.NODE_ENV }}
+      PAYMENT_FAILURE_URL: ${{ secrets.PAYMENT_FAILURE_URL }}
+      PORT: ${{ secrets.PORT }}
+      POSTGRES_DATABASE: ${{ secrets.POSTGRES_DATABASE }}
+      POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
+      REDIRECT_URI: ${{ secrets.REDIRECT_URI }}
+      REDIS_HOST: ${{ secrets.REDIS_HOST }}
+      REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+      REDIS_PORT: ${{ secrets.REDIS_PORT }}
+      SSH_KEY: ${{ secrets.SSH_KEY }}
+      
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
