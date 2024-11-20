@@ -1,12 +1,6 @@
-import { SendMailOptions, createTransport } from 'nodemailer';
-import {
-  MAIL_HOST,
-  MAIL_PORT,
-  MAIL_FROM,
-  MAIL_USER,
-  MAIL_PASS,
-} from './config/config';
+import { SendMailOptions } from 'nodemailer';
 import { Mail } from 'src/mail/entities/mail.entity';
+import { ConfigService } from '@nestjs/config';
 
 export interface EmailArgs {
   mail: Mail;
@@ -24,34 +18,72 @@ export interface StringFields {
   [key: string]: string;
 }
 
+export interface MailArgsSMTP2GO {
+  to: [string];
+  sender: string;
+  subject: string;
+  text_body: string;
+}
+
 export class Mailer {
+  private readonly from: string;
+
   constructor(
-    private readonly from = `Suvaye<${MAIL_FROM}>`,
-    private readonly emailConfig = {
-      host: MAIL_HOST,
-      port: Number(MAIL_PORT),
-      auth: {
-        user: MAIL_USER,
-        pass: MAIL_PASS,
-      },
-    },
-  ) {}
+    protected readonly configService: ConfigService,
+    // private readonly emailConfig = {
+    //   host: this.configService.get<string>('MAIL_HOST'),
+    //   port: this.configService.get<number>('MAIL_PORT'),
+    //   auth: {
+    //     user: this.configService.get<string>('MAIL_USER'),
+    //     pass: this.configService.get<string>('MAIL_PASS'),
+    //   },
+    // },
+  ) {
+    this.from = `achivee<${this.configService.get<string>('MAIL_FROM')}>`;
+  }
 
   async send({ to, mail }: EmailArgs): Promise<boolean> {
     const mailOptions: SendMailOptions = {
-      from: this.from,
-      to,
+      sender: this.from,
+      to: [to],
       subject: mail.subject,
-      text: mail.text_content,
-      html: mail.html_content,
+      text_body: mail.text_content,
+      // html: mail.html_content,
     };
 
-    const transporter = createTransport(this.emailConfig);
+    // const transporter = createTransport(this.emailConfig);
 
     try {
-      return (await transporter.sendMail(mailOptions)) ? true : false;
+      // return (await transporter.sendMail(mailOptions)) ? true : false;
+      return this.sendMailSMTPTOGO(mailOptions) ? true : false;
     } catch (err) {
       return false;
     }
+  }
+
+  private async sendMailSMTPTOGO({
+    sender,
+    to,
+    subject,
+    text_body,
+  }: MailArgsSMTP2GO): Promise<boolean> {
+    const response = await fetch('https://api.smtp2go.com/v3/email/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Smtp2go-Api-Key': this.configService.get<string>('SMTP2GO_API_KEY'),
+        accept: 'application/json',
+      },
+      body: JSON.stringify({
+        sender: sender,
+        to: to,
+        subject: subject,
+        text_body: text_body,
+      }),
+    });
+    if (response.ok) {
+      return true;
+    }
+    return false;
   }
 }

@@ -5,10 +5,14 @@ import { Mail } from './entities/mail.entity';
 import { CreateMailInput, UpdateMailInput } from './inputs/mail.input';
 import * as _ from 'lodash';
 import { Mailer, StringFields } from 'src/util/mailer';
+import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class MailService extends Mailer {
-  constructor(private readonly mailRepository: MailRepository) {
-    super();
+  constructor(
+    private readonly mailRepository: MailRepository,
+    protected readonly configService: ConfigService,
+  ) {
+    super(configService);
   }
 
   create(input: CreateMailInput): Promise<Mail> {
