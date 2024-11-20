@@ -9,7 +9,6 @@ import {
 } from './inputs/auth.input';
 import { JwtWithUser, OnlyJwt } from '@/auth/entities/auth._entity';
 import { UseGuards } from '@nestjs/common';
-import { SignInGuard } from '@/modules/guards/graphql-signin-guard';
 import { Otp, OtpType } from '@/otp/entities/otp.entity';
 import { User } from '@/user/entities/user.entity';
 import { CurrentUser } from 'src/modules/decorators/user.decorator';
@@ -210,7 +209,6 @@ export class AuthResolver {
     return success;
   }
 
-
   @Mutation(() => JwtWithUser)
   // @UseGuards(SignInGuard)
   async signInAdmin(
@@ -222,6 +220,4 @@ export class AuthResolver {
     res.cookie('refresh_token', result.refreshToken, { httpOnly: true });
     return result;
   }
-
-
 }

@@ -7,4 +7,4 @@ export enum ContactType {
 registerEnumType(ContactType, {
   name: 'ContactType',
   description: 'Different type of contact classification',
-})
+});

@@ -72,7 +72,7 @@ export class SubEvent {
   @Column({ nullable: true })
   banner: string;
 
-  @Field(() => String, { nullable: true, })
+  @Field(() => String, { nullable: true })
   @Column({ nullable: true, name: 'display_picture' })
   displayPicture: string;
 

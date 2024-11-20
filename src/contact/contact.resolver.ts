@@ -1,7 +1,5 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { ContactService } from './contact.service';
-import { UseGuards } from '@nestjs/common';
-import { GraphqlPassportAuthGuard } from '@/modules/guards/graphql-passport-auth.guard';
 import { CreateContactInput } from '@/contact/inputs/contact.input';
 import { Contact } from '@/contact/contact.entity';
 

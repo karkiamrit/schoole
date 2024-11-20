@@ -85,7 +85,20 @@ export class UpdateUserInput {
   profile_picture?: string;
 
   @Field(() => String, { nullable: true })
+  @IsOptional()
   refresh_token?: string;
+
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  provider?: string;
+
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  providerId?: string;
+
+  @Field(() => Boolean, { nullable: true })
+  @IsOptional()
+  email_verified?: boolean;
 }
 
 @InputType()

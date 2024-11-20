@@ -577,15 +577,26 @@ export class AuthService {
     let user = await this.userService.getOne({ where: { providerId } });
     // console.log(user, 'usererer');
     if (!user) {
-      // console.log('hererererer');
-      user = await this.userService.createWithOauth({
-        provider: 'google',
-        providerId,
-        email,
-        profile_picture: picture,
-        username,
-        email_verified: true,
-      });
+      const userWithEmail = await this.userService.getOne({ where: { email } });
+
+      if (userWithEmail) {
+        const input = {
+          providerId: providerId,
+          email_verified: true,
+          provider: 'google',
+        };
+        user = await this.userService.update(userWithEmail.id, input);
+      } else {
+        // console.log('hererererer');
+        user = await this.userService.createWithOauth({
+          provider: 'google',
+          providerId,
+          email,
+          profile_picture: picture,
+          username,
+          email_verified: true,
+        });
+      }
     }
 
     // Generate JWT tokens

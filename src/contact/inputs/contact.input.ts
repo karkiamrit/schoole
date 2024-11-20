@@ -30,5 +30,4 @@ export class CreateContactInput {
   @Field(() => [String])
   @IsNotEmpty()
   source: string[];
-
 }
