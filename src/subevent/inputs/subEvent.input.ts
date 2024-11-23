@@ -37,6 +37,10 @@ export class CreateSubEventInput {
   @IsNotEmpty()
   end_date: Date;
 
+  @Field(() => Boolean, { nullable: true })
+  @IsOptional()
+  is_online: boolean;
+
   @Field(() => CreateAddressInput, { nullable: true })
   @IsOptional()
   address: CreateAddressInput;
@@ -55,6 +59,10 @@ export class UpdateSubEventInput {
   @Field(() => String, { nullable: true })
   @IsOptional()
   displayPicture?: string;
+
+  @Field(() => Boolean, { nullable: true })
+  @IsOptional()
+  is_online: boolean;
 
   @Field(() => CreateAddressInput, { nullable: true })
   @IsOptional()

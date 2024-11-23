@@ -104,6 +104,10 @@ export class SubEvent {
   @Field(() => Boolean)
   @Column({ default: false })
   is_featured: boolean;
+
+  @Field(() => Boolean)
+  @Column({ nullable: false, default: false, name: 'is_online' })
+  is_online: boolean;
 }
 
 @ObjectType()

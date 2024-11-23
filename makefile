@@ -1,15 +1,15 @@
 start:
-	yarn install
-	yarn run dev
+	pnpm install
+	pnpm run dev
 
 
 lint-fix:
-	yarn lint:fix
-	yarn format
+	pnpm lint:fix
+	pnpm format
 
 
 format:
-	yarn format
+	pnpm format
 
 docker-build:
 	docker compose -f docker-compose.yml build
