@@ -21,7 +21,14 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "g": "node generator.mjs"
+    "g": "node generator.mjs",
+    "docker:dev": "docker compose -f docker/docker-compose.yml -f docker/docker-compose.dev.yml up",
+    "docker:prod": "docker compose -f docker/docker-compose.yml -f docker/docker-compose.prod.yml up",
+    "docker:dev:build": "docker compose -f docker/docker-compose.yml -f docker/docker-compose.dev.yml up --build",
+    "docker:dev:down": "docker compose -f docker/docker-compose.yml -f docker/docker-compose.dev.yml down",
+    "docker:prod:build": "docker compose -f docker/docker-compose.yml -f docker/docker-compose.prod.yml up --build",
+    "docker:prod:down": "docker compose -f docker/docker-compose.yml -f docker/docker-compose.prod.yml down"
+
   },
   "dependencies": {
     "@apollo/server": "^4.9.0",

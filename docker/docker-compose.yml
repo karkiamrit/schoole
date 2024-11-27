@@ -1,7 +1,6 @@
 services:
   db:
     image: 'postgres:15.2'
-    restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: p@ssw0rd
@@ -10,6 +9,7 @@ services:
       - '5431:5432'
     volumes:
       - 'postgres_data:/var/lib/postgresql/data/'
+
   redis:
     image: 'redis:6'
     ports:
@@ -18,22 +18,18 @@ services:
       REDIS_HOST: '${REDIS_HOST}'
       REDIS_PORT: '${REDIS_PORT}'
       MEMORY_OVERCOMMIT: '1'
+
   app:
     build:
-      context: .
-      dockerfile: Dockerfile
-      target: '${NODE_ENV}'
+      context: ..
+      dockerfile: docker/Dockerfile
     image: 'yaksincorporation/achivee'
     depends_on:
       - db
-    command: pnpm start:prod
     env_file:
-      - .env
+      - ../.env
     ports:
       - '5000:5000'
-    volumes:
-      - '.:/usr/src/app'
-      - './uploads:/usr/src/app/uploads'
-      - '/usr/src/app/node_modules'
+
 volumes:
   postgres_data: null

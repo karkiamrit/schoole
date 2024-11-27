@@ -35,6 +35,9 @@ export class Institution {
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: User;
 
+  @Column({ name: 'user_id', nullable: false })
+  userId: number;
+
   @OneToMany(() => Event, (event) => event.institution)
   events: Event[];
 

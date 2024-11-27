@@ -12,7 +12,6 @@ export class ContactResolver {
   async createBusinessQueryContact(
     @Args('input') input: CreateContactInput,
   ): Promise<Contact> {
-    console.log(input, 'input');
     return this.contactService.createBusinessQueryContactService(input);
   }
 

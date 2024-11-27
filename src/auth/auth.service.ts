@@ -156,6 +156,12 @@ export class AuthService {
       });
     }
 
+    if (!user.password) {
+      throw new ApolloError('Invalid Password', 'INVALID_PASSWORD', {
+        statusCode: 403,
+      });
+    }
+
     const hasValidPassword = await bcrypt.compare(
       input.password,
       user.password,

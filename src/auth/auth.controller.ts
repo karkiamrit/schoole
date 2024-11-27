@@ -33,7 +33,6 @@ export class AuthController {
   async googleAuthCallback(@Req() req: Request, @Res() res: any) {
     // The user profile from Google is attached to the request by the GoogleOauthGuard
     const user = req.user;
-    console.log(req.user, 'req.user');
 
     // Handle business logic: register/login the user
     const { accessToken, refreshToken } =
