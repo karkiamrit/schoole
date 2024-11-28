@@ -3,7 +3,7 @@ FROM node:alpine as build
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml ./
+COPY package.json  ./
 RUN npm install -g pnpm && pnpm install
 
 COPY . .
@@ -14,7 +14,7 @@ FROM node:alpine as development
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml ./
+COPY package.json  ./
 
 # Install all dependencies including devDependencies
 RUN npm install -g pnpm && \
