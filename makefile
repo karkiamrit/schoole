@@ -16,3 +16,12 @@ docker-build:
 
 docker-start:
 	docker compose -f docker-compose.yml up
+
+prod-start:
+    docker compose -f docker/docker-compose.yml -f docker/docker-compose.prod.yml up -d
+
+prod-build:
+    docker compose -f docker/docker-compose.yml -f docker/docker-compose.prod.yml up --build
+
+prod-down:
+    docker compose -f docker/docker-compose.yml -f docker/docker-compose.prod.yml down
