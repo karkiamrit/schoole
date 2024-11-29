@@ -65,10 +65,7 @@ export class UserService {
 
   async updateVerification(id: number, input: UpdateVerificationInput) {
     const user = await this.userRepository.findOne({ where: { id } });
-    await this.userRepository.save({
-      ...user, // don't think this is necessary
-      ...input,
-    });
+    await this.update(user.id, input);
     // Fetch the updated user to verify the changes
     return await this.userRepository.findOne({ where: { id } });
   }

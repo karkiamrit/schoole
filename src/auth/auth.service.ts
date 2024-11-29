@@ -340,8 +340,7 @@ export class AuthService {
         throw new BadRequestException('User not found');
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const otp = await this.otpService.create(user, otpType);
-
+      await this.otpService.create(user, otpType);
       // TODO: need to fix this later
       // const message = `Your OTP for ${otpType.toLowerCase()} is ${otp.code}`;
       // await this.mailService.sendOtpEmail(email, message);
