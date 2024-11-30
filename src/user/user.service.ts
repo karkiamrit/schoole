@@ -60,7 +60,7 @@ export class UserService {
 
   async update(id: number, input: UpdateUserInput): Promise<User> {
     const user = await this.userRepository.findOne({ where: { id } });
-    return await this.socialRepository.update(id, input);
+    return await this.userRepository.update(id, input);
   }
 
   async updateVerification(id: number, input: UpdateVerificationInput) {
