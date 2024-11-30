@@ -60,7 +60,8 @@ export class UserService {
 
   async update(id: number, input: UpdateUserInput): Promise<User> {
     const user = await this.userRepository.findOne({ where: { id } });
-    return await this.userRepository.update(id, { user, ...input });
+    user.email_verified = input.email_verified;
+    return await this.userRepository.save(user);
   }
 
   async updateVerification(id: number, input: UpdateVerificationInput) {
