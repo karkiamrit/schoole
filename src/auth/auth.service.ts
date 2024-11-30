@@ -386,12 +386,11 @@ export class AuthService {
 
       // TODO: NEED TO REMOVE LATER
       if (otpCode === '123456') {
-        const success  = await this.userService.updateVerification(user.id, {
+        await this.userService.updateVerification(user.id, {
           email_verified: true,
           phone_verified: false
         });
-        console.log (success);
-        if (success) return { accessToken, refreshToken };
+        return { accessToken, refreshToken };
       }
       // Verify the OTP code with the user's OTP
       const otp = await this.otpService.getOne(
