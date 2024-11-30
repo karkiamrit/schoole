@@ -64,7 +64,7 @@ export class UserService {
     if (!user) {
       throw new Error(`User with id ${id} not found`);
     }
-    console.log (input, 'inputttt');
+    console.log (input, 'inputttt on update function');
     return await this.userRepository.save({ ...user, ...input });
   }
 

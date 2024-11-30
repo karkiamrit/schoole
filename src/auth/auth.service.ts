@@ -389,10 +389,10 @@ export class AuthService {
       console.log (otpCode =='123456', "otpCode =='123456'");
       console.log (otpCode==='123456', "otpCode =='123456'");
       if (otpCode === '123456') {
-        await this.userService.updateVerification(user.id, {
+        const success  = await this.userService.updateVerification(user.id, {
           email_verified: true,
         });
-        return { accessToken, refreshToken };
+        if (success) return { accessToken, refreshToken };
       }
       // Verify the OTP code with the user's OTP
       const otp = await this.otpService.getOne(
