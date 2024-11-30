@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from './user.repository';
-import { SignUpInput, SignUpWithEmailInput } from 'src/auth/inputs/auth.input';
-import { OneRepoQuery, RepoQuery } from 'src/declare/types';
+import { SignUpInput , SignUpWithEmailInput } from 'src/auth/inputs/auth.input';
+import { OneRepoQuery , RepoQuery } from 'src/declare/types';
 import { User } from './entities/user.entity';
 import {
-  CreateUserInput,
-  CreateUserOAuthInput,
-  UpdateUserInput,
-  UpdateUserWithStudentSocialsAndAddressInput,
-  UpdateVerificationInput,
+  CreateUserInput ,
+  CreateUserOAuthInput ,
+  UpdateUserInput ,
+  UpdateUserWithStudentSocialsAndAddressInput ,
+  UpdateVerificationInput ,
 } from './inputs/user.input';
-import { Between, FindOneOptions, UpdateResult } from 'typeorm';
+import { Between , FindOneOptions , UpdateResult } from 'typeorm';
 import * as crypto from 'crypto';
 import { SocialService } from '@/social/social.service';
 import { AddressService } from '@/address/address.service';
@@ -64,10 +64,7 @@ export class UserService {
   }
 
   async updateVerification(id: number, input: UpdateVerificationInput) {
-    const user = await this.userRepository.findOne({ where: { id } });
-    await this.update(user.id, input);
-    // Fetch the updated user to verify the changes
-    return await this.userRepository.findOne({ where: { id } });
+    return await this.update ( id , input );
   }
 
   // used in client frontend
