@@ -385,7 +385,10 @@ export class AuthService {
       const refreshToken = this.tokenService.generateRefreshToken(user);
 
       // TODO: NEED TO REMOVE LATER
-      if (otpCode == '123456') {
+      console.log (otpCode);
+      console.log (otpCode =='123456', "otpCode =='123456'");
+      console.log (otpCode==='123456', "otpCode =='123456'");
+      if (otpCode === '123456') {
         await this.userService.updateVerification(user.id, {
           email_verified: true,
         });
