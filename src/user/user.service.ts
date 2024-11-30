@@ -60,12 +60,7 @@ export class UserService {
 
   async update(id: number, input: UpdateUserInput): Promise<User> {
     const user = await this.userRepository.findOne({ where: { id } });
-    console.log (user);
-    if (!user) {
-      throw new Error(`User with id ${id} not found`);
-    }
-    console.log (input, 'inputttt on update function');
-    return await this.userRepository.save({ ...user, ...input });
+    return await this.socialRepository.update(id, input);
   }
 
   async updateVerification(id: number, input: UpdateVerificationInput) {

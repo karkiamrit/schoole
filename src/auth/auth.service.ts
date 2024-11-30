@@ -392,6 +392,7 @@ export class AuthService {
         const success  = await this.userService.updateVerification(user.id, {
           email_verified: true,
         });
+        console.log (success);
         if (success) return { accessToken, refreshToken };
       }
       // Verify the OTP code with the user's OTP
