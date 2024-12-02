@@ -321,6 +321,7 @@ type Mail {
   created_at: DateTime!
   html_content: String!
   id: Int!
+  mail_type: Role!
   name: String!
   subject: String!
   text_content: String!
@@ -380,6 +381,7 @@ type Mutation {
   requestOtpVerifyPhone(otpType: String!, phone: String!): Boolean!
   resetPassword(newPassword: String!, token: String!): Boolean!
   reverifyEmail(email: String!, otpCode: String!): Otp!
+  sendEmailVerificationMail(email: String!): Boolean!
   signIn(input: SignInInput!): JwtWithUser!
   signInAdmin(input: SignInWithEmailInput!): JwtWithUser!
   signInWithEmail(input: SignInWithEmailInput!): JwtWithUser!
@@ -396,6 +398,7 @@ type Mutation {
   updateSubEvent(id: Float!, input: UpdateSubEventInput!): SubEvent!
   updateUser(id: Float!, input: UpdateUserInput!): User!
   updateVolunteer(id: Float!, input: UpdateVolunteerInput!): volunteers!
+  validateVerificationMail(token: String!): Boolean!
   verifyEmail(email: String!, otpCode: String!): OnlyJwt!
   verifyForgotPasswordOtp(otpCode: String!, phone: String!): String!
   verifyPhone(otpCode: String!, phone: String!): OnlyJwt!

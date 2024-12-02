@@ -29,7 +29,7 @@ jobs:
       KHALTI_PAYMENT_API: ${{ secrets.KHALTI_PAYMENT_API }}
       KHALTI_PAYMENT_LOOKUP_API: ${{ secrets.KHALTI_PAYMENT_LOOKUP_API }}
       KHALTI_PAYMENT_SUCESS_URL: ${{ secrets.KHALTI_PAYMENT_SUCESS_URL }}
-      KHALTI_PAYMENT_WEBSITE_URL: ${{ secrets.KHALTI_PAYMENT_WEBSITE_URL }}
+      ACHIVEE_ROOT_URL: ${{ secrets.ACHIVEE_ROOT_URL }}
       KHALTI_RETURN_URL: ${{ secrets.KHALTI_RETURN_URL }}
       NODE_ENV: ${{ secrets.NODE_ENV }}
       PAYMENT_FAILURE_URL: ${{ secrets.PAYMENT_FAILURE_URL }}
@@ -76,7 +76,7 @@ jobs:
           echo "KHALTI_PAYMENT_API=${{ secrets.KHALTI_PAYMENT_API }}" >> .env
           echo "KHALTI_PAYMENT_LOOKUP_API=${{ secrets.KHALTI_PAYMENT_LOOKUP_API }}" >> .env
           echo "KHALTI_PAYMENT_SUCESS_URL=${{ secrets.KHALTI_PAYMENT_SUCESS_URL }}" >> .env
-          echo "KHALTI_PAYMENT_WEBSITE_URL=${{ secrets.KHALTI_PAYMENT_WEBSITE_URL }}" >> .env
+          echo "ACHIVEE_ROOT_URL=${{ secrets.ACHIVEE_ROOT_URL }}" >> .env
           echo "KHALTI_RETURN_URL=${{ secrets.KHALTI_RETURN_URL }}" >> .env
           echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> .env
           echo "PAYMENT_FAILURE_URL=${{ secrets.PAYMENT_FAILURE_URL }}" >> .env

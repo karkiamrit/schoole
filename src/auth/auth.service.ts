@@ -70,8 +70,8 @@ export class AuthService {
 
     return this.jwtService.sign(payload, {
       expiresIn: '1h',
-      secret: 'secrectkeyneedtochangelater',
-      privateKey: 'Privatekeyneedtochangelater',
+      secret: this.configService.get('RESET_PASSWORD_TOKEN_SECRET'),
+      privateKey: this.configService.get('RESET_PASSWORD_TOKEN_PRIVATE_KEY'),
     });
   }
 
@@ -247,7 +247,7 @@ export class AuthService {
     try {
       // Verify and decode the token to get user information
       const payload = this.jwtService.verify(token, {
-        secret: 'secrectkeyneedtochangelater',
+        secret: this.configService.get('RESET_PASSWORD_TOKEN_SECRET'),
       });
       const userId = payload.sub; // Assuming 'sub' contains the user's ID
 
@@ -683,5 +683,47 @@ export class AuthService {
     const refreshToken = this.tokenService.generateRefreshToken(user);
 
     return { user, accessToken, refreshToken };
+  }
+
+
+  async  sendEmailVerificationMail(email: string): Promise<Boolean> {
+    const user =  await this.userService.getOne({ where: { email } });
+    if (!user) {
+      throw new ApolloError("User Not Found", "USER_NOT_FOUND", {
+        statusCode: 404,
+      })
+    }
+    if (user.email_verified) {
+      throw new ApolloError('Email already verified', 'EMAIL_ALREADY_VERIFIED', {
+        statusCode: 400,
+      })
+    }
+
+    const verificationToken  = this.generateResetPasswordToken(user)
+
+    const rootUrl  =  this.configService.get('ACHIVEE_ROOT_URL')
+
+    const verificationUrl =  `${rootUrl}/verification/${verificationToken}`
+    console.log (verificationUrl, 'verificationURL');
+    return  await this.mailService.sendVerifyEmailLink(email, verificationUrl)
+
+  }
+
+  async  validateVerificationEmail(token: string): Promise<User> {
+    // Verify and decode the token to get user information
+    const payload = this.jwtService.verify(token, {
+      secret: this.configService.get('RESET_PASSWORD_TOKEN_SECRET'),
+    });
+    const email = payload.email;
+
+    const user = await this.userService.getOne({ where: { email } });
+    if (!user) {
+      throw new ApolloError('User not found', 'USER_NOT_FOUND', {
+        statusCode: 404,
+      });
+    }
+    return   await  this.userService.update(user.id, {
+      'email_verified': true
+    })
   }
 }

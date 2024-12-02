@@ -39,7 +39,7 @@ export class Mailer {
     //   },
     // },
   ) {
-    this.from = `achivee<${this.configService.get<string>('MAIL_FROM')}>`;
+    this.from = `Achivee<${this.configService.get<string>('MAIL_FROM')}>`;
   }
 
   async send({ to, mail }: EmailArgs): Promise<boolean> {
@@ -55,7 +55,7 @@ export class Mailer {
 
     try {
       // return (await transporter.sendMail(mailOptions)) ? true : false;
-      return this.sendMailSMTPTOGO(mailOptions) ? true : false;
+      return !!await this.sendMailSMTPTOGO ( mailOptions );
     } catch (err) {
       return false;
     }
@@ -82,6 +82,7 @@ export class Mailer {
       }),
     });
     if (response.ok) {
+      console.log (response.ok, 'after sending email to');
       return true;
     }
     return false;

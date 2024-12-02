@@ -7,6 +7,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Role } from '@/user/inputs/enums/role.enum';
+import { MailType } from '@/mail/inputs/enums/mail.enum';
 
 @ObjectType()
 @Entity('mail_templates')
@@ -18,6 +20,10 @@ export class Mail extends BaseEntity {
   @Field(() => String)
   @Column()
   name: string;
+
+  @Field(() => Role)
+  @Column({ type: 'enum', enum: MailType })
+  mail_type: MailType;
 
   @Field()
   @Column()

@@ -6,6 +6,7 @@ import { CreateMailInput, UpdateMailInput } from './inputs/mail.input';
 import * as _ from 'lodash';
 import { Mailer, StringFields } from 'src/util/mailer';
 import { ConfigService } from '@nestjs/config';
+import { MailType } from '@/mail/inputs/enums/mail.enum';
 @Injectable()
 export class MailService extends Mailer {
   constructor(
@@ -66,5 +67,19 @@ export class MailService extends Mailer {
     });
 
     return await this.send({ to: email, mail });
+  }
+
+
+  async  sendVerifyEmailLink(email: string, link: string): Promise<boolean> {
+    let mail = await Mail.findOne({ where: { mail_type: MailType.VERIFY_EMAIL_LINK } }); // Adjust this to fetch the correct mail template
+    console.log (mail, 'mail');
+    if (mail == null) return false;
+    mail = _.merge(mail, {
+      html_content: this.resolveTemplateFields(mail.html_content, { link }),
+      text_content: this.resolveTemplateFields(mail.text_content, { link }),
+    });
+
+    return await this.send({ to: email, mail });
+
   }
 }

@@ -220,4 +220,21 @@ export class AuthResolver {
     res.cookie('refresh_token', result.refreshToken, { httpOnly: true });
     return result;
   }
+
+
+  @Mutation(() => Boolean)
+  async  sendEmailVerificationMail(
+    @Args('email') email: string,
+  ): Promise<boolean> {
+    const result  = await  this.authService.sendEmailVerificationMail(email)
+    return  true
+  }
+
+
+  @Mutation(() => Boolean)
+  async validateVerificationMail (
+    @Args('token') token: string,
+  ): Promise<User> {
+    return  this.authService.validateVerificationEmail(token);
+  }
 }

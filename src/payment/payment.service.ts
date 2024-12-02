@@ -134,7 +134,7 @@ export class PaymentService {
   getKhaltiPaymentPayload(paymentInput: Record<string, any>) {
     return {
       return_url: process.env.KHALTI_PAYMENT_SUCESS_URL,
-      website_url: process.env.KHALTI_PAYMENT_WEBSITE_URL,
+      website_url: process.env.ACHIVEE_ROOT_URL,
       amount: paymentInput.amount,
       purchase_order_id: this.createEsewaTransactionUUId(
         paymentInput.sub_event_id,
