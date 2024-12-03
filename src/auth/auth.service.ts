@@ -388,7 +388,7 @@ export class AuthService {
       if (otpCode === '123456') {
         await this.userService.updateVerification(user.id, {
           email_verified: true,
-          phone_verified: false
+          phone_verified: false,
         });
         return { accessToken, refreshToken };
       }
@@ -685,31 +685,33 @@ export class AuthService {
     return { user, accessToken, refreshToken };
   }
 
-
-  async  sendEmailVerificationMail(email: string): Promise<Boolean> {
-    const user =  await this.userService.getOne({ where: { email } });
+  async sendEmailVerificationMail(email: string): Promise<boolean> {
+    const user = await this.userService.getOne({ where: { email } });
     if (!user) {
-      throw new ApolloError("User Not Found", "USER_NOT_FOUND", {
+      throw new ApolloError('User Not Found', 'USER_NOT_FOUND', {
         statusCode: 404,
-      })
+      });
     }
     if (user.email_verified) {
-      throw new ApolloError('Email already verified', 'EMAIL_ALREADY_VERIFIED', {
-        statusCode: 400,
-      })
+      throw new ApolloError(
+        'Email already verified',
+        'EMAIL_ALREADY_VERIFIED',
+        {
+          statusCode: 400,
+        },
+      );
     }
 
-    const verificationToken  = this.generateResetPasswordToken(user)
+    const verificationToken = this.generateResetPasswordToken(user);
 
-    const rootUrl  =  this.configService.get('ACHIVEE_ROOT_URL')
+    const rootUrl = this.configService.get('ACHIVEE_ROOT_URL');
 
-    const verificationUrl =  `${rootUrl}/verification/${verificationToken}`
-    console.log (verificationUrl, 'verificationURL');
-    return  await this.mailService.sendVerifyEmailLink(email, verificationUrl)
-
+    const verificationUrl = `${rootUrl}/verification/${verificationToken}`;
+    console.log(verificationUrl, 'verificationURL');
+    return await this.mailService.sendVerifyEmailLink(email, verificationUrl);
   }
 
-  async  validateVerificationEmail(token: string): Promise<User> {
+  async validateVerificationEmail(token: string): Promise<User> {
     // Verify and decode the token to get user information
     const payload = this.jwtService.verify(token, {
       secret: this.configService.get('RESET_PASSWORD_TOKEN_SECRET'),
@@ -722,8 +724,8 @@ export class AuthService {
         statusCode: 404,
       });
     }
-    return   await  this.userService.update(user.id, {
-      'email_verified': true
-    })
+    return await this.userService.update(user.id, {
+      email_verified: true,
+    });
   }
 }

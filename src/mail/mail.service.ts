@@ -69,10 +69,11 @@ export class MailService extends Mailer {
     return await this.send({ to: email, mail });
   }
 
-
-  async  sendVerifyEmailLink(email: string, link: string): Promise<boolean> {
-    let mail = await Mail.findOne({ where: { mail_type: MailType.VERIFY_EMAIL_LINK } }); // Adjust this to fetch the correct mail template
-    console.log (mail, 'mail');
+  async sendVerifyEmailLink(email: string, link: string): Promise<boolean> {
+    let mail = await Mail.findOne({
+      where: { mail_type: MailType.VERIFY_EMAIL_LINK },
+    }); // Adjust this to fetch the correct mail template
+    console.log(mail, 'mail');
     if (mail == null) return false;
     mail = _.merge(mail, {
       html_content: this.resolveTemplateFields(mail.html_content, { link }),
@@ -80,6 +81,5 @@ export class MailService extends Mailer {
     });
 
     return await this.send({ to: email, mail });
-
   }
 }

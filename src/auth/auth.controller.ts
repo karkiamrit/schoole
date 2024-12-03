@@ -60,11 +60,9 @@ export class AuthController {
     return { tokens };
   }
 
-
   @Post('/verify-email')
   async verifyEmail(@Body() body: { token: string }) {
-    const {token } = body;
-    return  this.authService.validateVerificationEmail(token);
-
+    const { token } = body;
+    return this.authService.validateVerificationEmail(token);
   }
 }

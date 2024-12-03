@@ -221,20 +221,15 @@ export class AuthResolver {
     return result;
   }
 
-
   @Mutation(() => Boolean)
-  async  sendEmailVerificationMail(
+  async sendEmailVerificationMail(
     @Args('email') email: string,
   ): Promise<boolean> {
-    const result  = await  this.authService.sendEmailVerificationMail(email)
-    return  true
+    return await this.authService.sendEmailVerificationMail(email);
   }
 
-
   @Mutation(() => Boolean)
-  async validateVerificationMail (
-    @Args('token') token: string,
-  ): Promise<User> {
-    return  this.authService.validateVerificationEmail(token);
+  async validateVerificationMail(@Args('token') token: string): Promise<User> {
+    return this.authService.validateVerificationEmail(token);
   }
 }

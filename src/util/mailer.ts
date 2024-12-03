@@ -55,7 +55,7 @@ export class Mailer {
 
     try {
       // return (await transporter.sendMail(mailOptions)) ? true : false;
-      return !!await this.sendMailSMTPTOGO ( mailOptions );
+      return !!(await this.sendMailSMTPTOGO(mailOptions));
     } catch (err) {
       return false;
     }
@@ -82,7 +82,7 @@ export class Mailer {
       }),
     });
     if (response.ok) {
-      console.log (response.ok, 'after sending email to');
+      console.log(response.ok, 'after sending email to');
       return true;
     }
     return false;
