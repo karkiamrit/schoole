@@ -27,7 +27,9 @@ export class MailService extends Mailer {
   }
 
   async sendResetPasswordLink(email: string, link: string): Promise<boolean> {
-    let mail = await Mail.findOne({ where: { id: 1 } });
+    let mail = await Mail.findOne({
+      where: { mail_type: MailType.RESET_PASSWORD },
+    });
     if (!mail) return false;
     mail = _.merge(mail, {
       html_content: this.resolveTemplateFields(mail.html_content, { link }),

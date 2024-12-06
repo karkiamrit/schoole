@@ -13,7 +13,6 @@ import { User } from '@/user/entities/user.entity';
 import { JwtWithUser } from './entities/auth._entity';
 import { OtpService } from '@/otp/otp.service';
 import { MailService } from '@/mail/mail.service';
-import { FULL_WEB_URL } from 'src/util/config/config';
 import { Otp, OtpType } from 'src/otp/entities/otp.entity';
 import { ApolloError } from 'apollo-server-core';
 import * as crypto from 'crypto';
@@ -195,8 +194,9 @@ export class AuthService {
     const resetPasswordToken = this.generateResetPasswordToken(user);
 
     // Create a reset password URL with the token
-    const resetPasswordUrl = `${FULL_WEB_URL}/reset-password/${resetPasswordToken}`;
+    const rootUrl = this.configService.get('ACHIVEE_ROOT_URL');
 
+    const resetPasswordUrl = `${rootUrl}/reset-password/${resetPasswordToken}`;
     // Send the reset password link to the user's email
     await this.mailService.sendResetPasswordLink(user.email, resetPasswordUrl);
 

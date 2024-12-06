@@ -22,7 +22,7 @@ export class Mail extends BaseEntity {
   name: string;
 
   @Field(() => Role)
-  @Column({ type: 'enum', enum: MailType })
+  @Column({ type: 'enum', enum: MailType, unique: true, nullable: false })
   mail_type: MailType;
 
   @Field()

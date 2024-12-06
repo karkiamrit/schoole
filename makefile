@@ -1,15 +1,11 @@
 start:
-	pnpm install
-	pnpm run dev
-
+	pnpm docker:dev
 
 lint-fix:
-	pnpm lint:fix
-	pnpm format
-
+	docker exec docker-app-1 pnpm lint:fix && docker exec docker-app-1 pnpm format
 
 format:
-	pnpm format
+	docker exec docker-app-1 pnpm format
 
 docker-build:
 	docker compose -f docker-compose.yml build
@@ -18,10 +14,10 @@ docker-start:
 	docker compose -f docker-compose.yml up
 
 prod-start:
-    docker compose -f docker/docker-compose.yml -f docker/docker-compose.prod.yml up -d
+	docker compose -f docker/docker-compose.yml -f docker/docker-compose.prod.yml up -d
 
 prod-build:
-    docker compose -f docker/docker-compose.yml -f docker/docker-compose.prod.yml up --build
+	docker compose -f docker/docker-compose.yml -f docker/docker-compose.prod.yml up --build
 
 prod-down:
-    docker compose -f docker/docker-compose.yml -f docker/docker-compose.prod.yml down
+	docker compose -f docker/docker-compose.yml -f docker/docker-compose.prod.yml down
