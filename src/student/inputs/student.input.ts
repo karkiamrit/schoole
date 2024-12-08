@@ -24,7 +24,7 @@ export class CreateStudentInput {
 
   @Field(() => String, { nullable: true })
   @IsOptional()
-  bio: string;
+  bio?: string;
 
   @Field(() => Gender)
   @IsNotEmpty()
@@ -34,9 +34,9 @@ export class CreateStudentInput {
   @IsOptional()
   interests?: string[];
 
-  @Field(() => Level)
-  @IsNotEmpty()
-  level: Level;
+  // @Field(() => Level, {nullable: true })
+  // @IsOptional()
+  // level?: Level;
 }
 
 @InputType()

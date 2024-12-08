@@ -113,7 +113,6 @@ input CreateStudentInput {
   gender: Gender!
   interests: [String!]
   last_name: String!
-  level: Level!
   middle_name: String
 }
 
@@ -520,7 +519,7 @@ type Student {
   id: Int!
   interests: [String!]
   last_name: String!
-  level: Level!
+  level: Level
   middle_name: String
   participatedSubEvents: [SubEvent!]
   updated_at: DateTime!

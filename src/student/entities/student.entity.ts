@@ -65,8 +65,8 @@ export class Student {
   @Column('simple-array', { nullable: true })
   interests?: string[];
 
-  @Field(() => Level)
-  @Column({ type: 'enum', enum: Level })
+  @Field(() => Level, {nullable: true})
+  @Column({ type: 'enum', enum: Level, nullable: true })
   level: Level;
 
   @Field(() => Date)
