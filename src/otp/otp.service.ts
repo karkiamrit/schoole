@@ -48,7 +48,7 @@ export class OtpService {
     return this.otpRepository.save(otp);
   }
 
-  async create_password_reset_otp(phone: string): Promise<Otp> {
+  async createPasswordResetOtp( phone: string): Promise<Otp> {
     const otpCode = String(Math.floor(100000 + Math.random() * 900000));
     const expiresIn = new Date(Date.now() + 15 * 60_000);
 

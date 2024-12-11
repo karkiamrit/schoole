@@ -60,7 +60,9 @@ export class MailService extends Mailer {
   }
 
   async sendOtpEmail(email: string, otp: string): Promise<boolean> {
-    let mail = await Mail.findOne({ where: { id: 2 } }); // Adjust this to fetch the correct mail template
+    let mail = await Mail.findOne({
+      where: { mail_type: MailType.VERIFY_EMAIL_OTP }
+    });
 
     if (mail == null) return false;
     mail = _.merge(mail, {

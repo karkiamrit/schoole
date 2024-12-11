@@ -213,7 +213,7 @@ export class AuthService {
 
     // Generate a reset password token
 
-    await this.otpService.create_password_reset_otp(phone);
+    await this.otpService.createPasswordResetOtp(phone);
 
     // ideally this otp is supposed to be sent through sms. currently the otp is static we will change it later
 
@@ -340,10 +340,8 @@ export class AuthService {
         throw new BadRequestException('User not found');
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      await this.otpService.create(user, otpType);
-      // TODO: need to fix this later
-      // const message = `Your OTP for ${otpType.toLowerCase()} is ${otp.code}`;
-      // await this.mailService.sendOtpEmail(email, message);
+      const otp =  await this.otpService.create(user, otpType);
+      await this.mailService.sendOtpEmail(email, otp.code);
       return true;
     } catch (error) {
       // Handle any unexpected errors here
@@ -385,13 +383,13 @@ export class AuthService {
       const refreshToken = this.tokenService.generateRefreshToken(user);
 
       // TODO: NEED TO REMOVE LATER
-      if (otpCode === '123456') {
-        await this.userService.updateVerification(user.id, {
-          email_verified: true,
-          phone_verified: false,
-        });
-        return { accessToken, refreshToken };
-      }
+      // if (otpCode === '123456') {
+      //   await this.userService.updateVerification(user.id, {
+      //     email_verified: true,
+      //     phone_verified: false,
+      //   });
+      //   return { accessToken, refreshToken };
+      // }
       // Verify the OTP code with the user's OTP
       const otp = await this.otpService.getOne(
         otpCode,
@@ -432,10 +430,7 @@ export class AuthService {
         email,
         null,
       );
-
-      // TODO: need to fix this later
-      // const message = `Your OTP for ${otpType.toLowerCase()} is ${otp.code}`;
-      // await this.mailService.sendOtpEmail(email, message);
+      await this.mailService.sendOtpEmail(email, otp.code);
       return true;
     } catch (error) {
       // Handle any unexpected errors here
@@ -463,10 +458,10 @@ export class AuthService {
         user,
       );
       if (!otp) {
-        throw new BadRequestException('Invalid OTP');
+        throw new ApolloError('Invalid OTP Code', 'OTP_NOT_FOUND_OR_EXPIRED', {
+          statusCode: 404,
+        });
       }
-      otp.is_used = true;
-      await this.otpService.update(otp);
       return otp;
     } catch (error) {
       throw new ApolloError(error.message);
