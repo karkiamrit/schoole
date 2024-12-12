@@ -61,7 +61,7 @@ export class MailService extends Mailer {
 
   async sendOtpEmail(email: string, otp: string): Promise<boolean> {
     let mail = await Mail.findOne({
-      where: { mail_type: MailType.VERIFY_EMAIL_OTP }
+      where: { mail_type: MailType.VERIFY_EMAIL_OTP },
     });
 
     if (mail == null) return false;

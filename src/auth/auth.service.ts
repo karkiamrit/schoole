@@ -340,7 +340,7 @@ export class AuthService {
         throw new BadRequestException('User not found');
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const otp =  await this.otpService.create(user, otpType);
+      const otp = await this.otpService.create(user, otpType);
       await this.mailService.sendOtpEmail(email, otp.code);
       return true;
     } catch (error) {
@@ -588,7 +588,6 @@ export class AuthService {
         };
         user = await this.userService.update(userWithEmail.id, input);
       } else {
-        // console.log('hererererer');
         user = await this.userService.createWithOauth({
           provider: 'google',
           providerId,
@@ -601,12 +600,8 @@ export class AuthService {
     }
 
     // Generate JWT tokens
-    const accessToken = this.jwtService.sign({ id: user.id });
-    const refreshToken = this.jwtService.sign(
-      { id: user.id },
-      { expiresIn: '7d' }, // Example expiration time for refresh token
-    );
-
+    const accessToken = this.tokenService.generateAccessToken(user);
+    const refreshToken = this.tokenService.generateRefreshToken(user);
     return {
       user,
       accessToken,
