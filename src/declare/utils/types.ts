@@ -125,7 +125,8 @@ type ExtendedFindOptionsWhere<Entity> = {
 
 export type IWhere<T> =
   | ExtendedFindOptionsWhere<T>
-  | ExtendedFindOptionsWhere<T>[];
+  | ExtendedFindOptionsWhere<T>[]
+  | ExtendedFindOptionsWhere<T>[][];
 
 export interface GetInfoFromQueryProps<Entity> {
   relations: FindOptionsRelations<Entity>;

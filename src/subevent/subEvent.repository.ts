@@ -8,6 +8,48 @@ import { Institution } from '@/institution/entities/institution.entity';
 
 @CustomRepository(SubEvent)
 export class SubEventRepository extends Repository<SubEvent> {
+  // async getManySubEvents(page: number, size: number, orderKey: string, orderDirection: string, filters: any) {
+  //   return await this.createQueryBuilder('se')
+  //     .select([
+  //       'se.id AS id',
+  //       'se.name AS name',
+  //       'se.type AS type',
+  //       'se.category AS category',
+  //       'se.start_date AS start_date',
+  //       'se.end_date AS end_date',
+  //       'e.name AS event_name',
+  //       'e.id AS event_id',
+  //       'ad.display_name AS display_name',
+  //       'se.is_online',
+  //       'se.registration_fee AS registration_fee',
+  //       'se.banner AS banner',
+  //       'se.participant_count AS participant_count',
+  //       'i.name AS organizer',
+  //     ])
+  //     .innerJoin('events', 'e', 'se.event_id = e.id')
+  //     .innerJoin('users', 'u', 'se.created_by = u.id')
+  //     .leftJoin('institutions', 'i', 'i.user_id = u.id')
+  //     .leftJoin('addresses', 'ad', 'ad.id = se.address_id')
+  //     .where(`se.start_date >= CURRENT_DATE`)
+  //     // Filter in WHERE clause using subquery instead of HAVING
+  //     .andWhere(
+  //       `(
+  //         6371 * acos(
+  //           cos(radians(:latitude)) * cos(radians(ad.latitude::numeric))
+  //           * cos(radians(ad.longitude::numeric) - radians(:longitude))
+  //           + sin(radians(:latitude)) * sin(radians(ad.latitude::numeric))
+  //         )
+  //     ) < :radiusInKm`,
+  //       { radiusInKm },
+  //     )
+  //     .orderBy('se.participant_count', 'DESC')
+  //     .addOrderBy('distance', 'ASC')
+  //     .setParameters({ latitude, longitude })
+  //     .limit(10)
+  //     .getRawMany();
+
+  // }
+
   async eventForYou(categories: string[]) {
     const withInterestQuery = this.createQueryBuilder('se')
       .select([
