@@ -31,7 +31,7 @@ export class CreateContactInput {
   @IsNotEmpty()
   source: string[];
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @IsOptional()
   otherSource: string;
 }

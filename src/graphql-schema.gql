@@ -62,7 +62,7 @@ input CreateContactInput {
   message: String!
   mobileNumber: String!
   organizationName: String!
-  otherSource: String!
+  otherSource: String
   reCaptchaToken: String!
   source: [String!]!
 }
