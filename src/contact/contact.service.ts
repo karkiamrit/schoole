@@ -37,6 +37,7 @@ export class ContactService {
       mobileNumber: input.mobileNumber,
       organizationName: input.organizationName,
       source: input.source,
+      otherSource: input.otherSource,
       contactType: ContactType.BUSINESS_QUERY,
     });
     return await this.contactRepository.save(contact);

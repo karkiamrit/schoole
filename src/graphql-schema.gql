@@ -34,6 +34,7 @@ type Contact {
   message: String!
   mobileNumber: String!
   organizationName: String!
+  otherSource: String!
   phone: String
   source: [String!]!
 }
@@ -61,6 +62,7 @@ input CreateContactInput {
   message: String!
   mobileNumber: String!
   organizationName: String!
+  otherSource: String!
   reCaptchaToken: String!
   source: [String!]!
 }

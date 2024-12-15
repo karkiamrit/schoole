@@ -37,6 +37,10 @@ export class Contact {
   @Column('simple-array')
   source: string[];
 
+  @Field(() => String)
+  @Column({ name: 'other_source', unique: false })
+  otherSource: string;
+
   @Column({
     type: 'enum',
     name: 'contact_type',
