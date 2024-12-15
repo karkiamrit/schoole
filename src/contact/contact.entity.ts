@@ -38,7 +38,7 @@ export class Contact {
   source: string[];
 
   @Field(() => String)
-  @Column({ name: 'other_source', unique: false })
+  @Column({ name: 'other_source', unique: false, nullable: true })
   otherSource: string;
 
   @Column({
