@@ -4,6 +4,8 @@ import {
   UploadedFile,
   UseGuards,
   UseInterceptors,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -30,13 +32,19 @@ export class UserController {
         },
       }),
       fileFilter: (req, file, callback) => {
-        // Only accept images
-        if (!file.originalname.match(/\.(jpg|jpeg|png|gif|webp)$/)) {
-          // Reject file
-          return callback(new Error('Only image files are allowed!'), false);
+        if (!file.originalname.match(/\.(jpg|jpeg|png|gif|webp|JPG)$/)) {
+          return callback(
+            new HttpException(
+              'Only image files (jpg, jpeg, png, gif, webp) are allowed!',
+              HttpStatus.BAD_REQUEST,
+            ),
+            false,
+          );
         }
-        // Accept file
         callback(null, true);
+      },
+      limits: {
+        fileSize: 2 * 1024 * 1024,
       },
     }),
   )
