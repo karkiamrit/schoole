@@ -28,6 +28,32 @@ export class SubEventService {
     return this.subEventRepository.getMany(qs || {}, query);
   }
 
+  async getAllEvents(
+    categories?: string[],
+    types?: string[],
+    startDate?: Date,
+    endDate?: Date,
+    registerationFeeLower?: number,
+    registerationFeeUpper?: number,
+    page?: number,
+    size?: number,
+    orderBy?: string,
+    orderDirection?: 'ASC' | 'DESC',
+  ) {
+    return this.subEventRepository.allEvent(
+      categories,
+      types,
+      startDate,
+      endDate,
+      registerationFeeLower,
+      registerationFeeUpper,
+      page,
+      size,
+      orderBy,
+      orderDirection,
+    );
+  }
+
   getOne(qs: OneRepoQuery<SubEvent>, query?: string) {
     if (query) {
       return this.subEventRepository.getOne(qs, query);

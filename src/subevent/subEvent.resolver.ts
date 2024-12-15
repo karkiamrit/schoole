@@ -13,6 +13,7 @@ import GraphQLJSON from 'graphql-type-json';
 import { User } from '@/user/entities/user.entity';
 import { CurrentUser } from '@/modules/decorators/user.decorator';
 import { UserRepository } from '@/user/user.repository';
+import { SubEventResponse } from './responses/subEvent.response';
 @Resolver(() => SubEvent)
 export class SubEventResolver {
   constructor(
@@ -28,6 +29,37 @@ export class SubEventResolver {
     @CurrentQuery() query: string,
   ) {
     return this.subEventService.getMany(qs, query);
+  }
+
+  @Query(() => SubEventResponse)
+  async allEvents(
+    @Args('categories', { type: () => [String], nullable: true })
+    categories?: string[],
+    @Args('types', { type: () => [String], nullable: true }) types?: string[],
+    @Args('startDate', { type: () => Date, nullable: true }) startDate?: Date,
+    @Args('endDate', { type: () => Date, nullable: true }) endDate?: Date,
+    @Args('registerationFeeLower', { type: () => Number, nullable: true })
+    registerationFeeLower?: number,
+    @Args('registerationFeeUpper', { type: () => Number, nullable: true })
+    registerationFeeUpper?: number,
+    @Args('page', { type: () => Number, nullable: true }) page?: number,
+    @Args('size', { type: () => Number, nullable: true }) size?: number,
+    @Args('orderBy', { type: () => String, nullable: true }) orderBy?: string,
+    @Args('orderDirection', { type: () => String, nullable: true })
+    orderDirection?: 'ASC' | 'DESC',
+  ): Promise<SubEventResponse> {
+    return this.subEventService.getAllEvents(
+      categories,
+      types,
+      startDate,
+      endDate,
+      registerationFeeLower,
+      registerationFeeUpper,
+      page,
+      size,
+      orderBy,
+      orderDirection,
+    );
   }
 
   @Query(() => [GraphQLJSON])

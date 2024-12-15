@@ -5,50 +5,105 @@ import { Address } from '@/address/entities/address.entity';
 import { Event } from '@/event/entities/event.entity';
 import { User } from '@/user/entities/user.entity';
 import { Institution } from '@/institution/entities/institution.entity';
+import { Brackets } from 'typeorm';
 
 @CustomRepository(SubEvent)
 export class SubEventRepository extends Repository<SubEvent> {
-  // async getManySubEvents(page: number, size: number, orderKey: string, orderDirection: string, filters: any) {
-  //   return await this.createQueryBuilder('se')
-  //     .select([
-  //       'se.id AS id',
-  //       'se.name AS name',
-  //       'se.type AS type',
-  //       'se.category AS category',
-  //       'se.start_date AS start_date',
-  //       'se.end_date AS end_date',
-  //       'e.name AS event_name',
-  //       'e.id AS event_id',
-  //       'ad.display_name AS display_name',
-  //       'se.is_online',
-  //       'se.registration_fee AS registration_fee',
-  //       'se.banner AS banner',
-  //       'se.participant_count AS participant_count',
-  //       'i.name AS organizer',
-  //     ])
-  //     .innerJoin('events', 'e', 'se.event_id = e.id')
-  //     .innerJoin('users', 'u', 'se.created_by = u.id')
-  //     .leftJoin('institutions', 'i', 'i.user_id = u.id')
-  //     .leftJoin('addresses', 'ad', 'ad.id = se.address_id')
-  //     .where(`se.start_date >= CURRENT_DATE`)
-  //     // Filter in WHERE clause using subquery instead of HAVING
-  //     .andWhere(
-  //       `(
-  //         6371 * acos(
-  //           cos(radians(:latitude)) * cos(radians(ad.latitude::numeric))
-  //           * cos(radians(ad.longitude::numeric) - radians(:longitude))
-  //           + sin(radians(:latitude)) * sin(radians(ad.latitude::numeric))
-  //         )
-  //     ) < :radiusInKm`,
-  //       { radiusInKm },
-  //     )
-  //     .orderBy('se.participant_count', 'DESC')
-  //     .addOrderBy('distance', 'ASC')
-  //     .setParameters({ latitude, longitude })
-  //     .limit(10)
-  //     .getRawMany();
+  async allEvent(
+    categories?: string[],
+    types?: string[],
+    startDate?: Date,
+    endDate?: Date,
+    registerationFeeLower?: number,
+    registerationFeeUpper?: number,
+    page: number = 1,
+    size: number = 10,
+    orderBy: string = 'participant_count',
+    orderDirection: 'ASC' | 'DESC' = 'DESC',
+  ) {
+    const query = this.createQueryBuilder('se')
+      .select([
+        'se.id AS id',
+        'se.name AS name',
+        'se.type AS type',
+        'se.category AS category',
+        'se.start_date AS start_date',
+        'se.end_date AS end_date',
+        'e.name AS event_name',
+        'e.id AS event_id',
+        'ad.display_name AS display_name',
+        'se.is_online',
+        'se.banner AS banner',
+        'se.participant_count AS participant_count',
+        'i.name AS organizer',
+      ])
+      .innerJoin('events', 'e', 'se.event_id = e.id')
+      .innerJoin('users', 'u', 'se.created_by = u.id')
+      .leftJoin('institutions', 'i', 'i.user_id = u.id')
+      .leftJoin('addresses', 'ad', 'ad.id = se.address_id');
 
-  // }
+    if (startDate) {
+      query.andWhere('se.start_date >= :startDate', { startDate });
+    }
+
+    if (endDate) {
+      query.andWhere('se.end_date <= :endDate', { endDate });
+    }
+
+    if (categories && categories.length > 0) {
+      query.andWhere(
+        new Brackets((qb) => {
+          qb.where(
+            `ARRAY(SELECT TRIM(elem) FROM UNNEST(string_to_array(se.category, ',')) AS elem) && ARRAY[:...categories]`,
+            { categories },
+          );
+        }),
+      );
+    }
+
+    if (types && types.length > 0) {
+      query.andWhere(
+        new Brackets((qb) => {
+          qb.where(
+            `ARRAY(SELECT TRIM(elem) FROM UNNEST(string_to_array(se.type, ',')) AS elem) && ARRAY[:...types]`,
+            { types },
+          );
+        }),
+      );
+    }
+
+    if (
+      registerationFeeLower !== undefined &&
+      registerationFeeUpper !== undefined
+    ) {
+      query.andWhere(
+        new Brackets((qb) => {
+          qb.where('se.registration_fee >= :registerationFeeLower', {
+            registerationFeeLower,
+          }).andWhere('se.registration_fee <= :registerationFeeUpper', {
+            registerationFeeUpper,
+          });
+        }),
+      );
+    }
+
+    query.orderBy(`se.${orderBy}`, orderDirection);
+
+    const [results, count] = await query
+      .offset((page - 1) * size)
+      .limit(size)
+      .getManyAndCount();
+
+    // Transform the category field from a comma-separated string to an array
+    const transformedResults = results.map((result) => ({
+      ...result,
+      category: result.category
+        ? result.category.map((cat: string) => cat.trim())
+        : [],
+    }));
+
+    return { results: transformedResults, count };
+  }
 
   async eventForYou(categories: string[]) {
     const withInterestQuery = this.createQueryBuilder('se')

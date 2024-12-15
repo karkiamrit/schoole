@@ -441,6 +441,7 @@ type Payment {
 }
 
 type Query {
+  allEvents(categories: [String!], endDate: DateTime, orderBy: String, orderDirection: String, page: Float, registerationFeeLower: Float, registerationFeeUpper: Float, size: Float, startDate: DateTime, types: [String!]): SubEventResponse!
   getEventForYou(interests: [String!]!): [JSON!]!
   getEventNearMe(latitude: Float!, longitude: Float!): [JSON!]!
   getManyAddresss(input: GetManyInput): GetAddressType!
@@ -549,6 +550,11 @@ type SubEvent {
   start_date: DateTime!
   type: SubEventType!
   updatedAt: DateTime!
+}
+
+type SubEventResponse {
+  count: Int!
+  results: [SubEvent!]!
 }
 
 """The type of the subevent"""
