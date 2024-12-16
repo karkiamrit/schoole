@@ -7,13 +7,13 @@ import {
   UpdateSubEventInput,
 } from './inputs/subEvent.input';
 
-import { FindOneOptions } from 'typeorm';
+import { FindOneOptions, In } from 'typeorm';
 import { User } from '@/user/entities/user.entity';
-import { In } from 'typeorm';
 import { EventService } from '@/event/event.service';
 import { AddressService } from '@/address/address.service';
 import { StudentRepository } from '@/student/student.repository';
 import { ParticipantRepository } from '@/participant/participant.repository';
+
 @Injectable()
 export class SubEventService {
   constructor(
@@ -81,14 +81,19 @@ export class SubEventService {
   }
 
   async update(id: number, input: UpdateSubEventInput): Promise<SubEvent> {
-    const SubEvent = await this.subEventRepository.findOne({ where: { id } });
+    const subEvent = await this.subEventRepository.findOne({ where: { id } });
     // check address in the input and if the address is available update its address as well
     if (input.address) {
-      await this.addressService.update(SubEvent.address.id, {
-        ...input.address,
-      });
+      if (subEvent.address && subEvent.address.id) {
+        await this.addressService.update(subEvent.address.id, {
+          ...input.address,
+        });
+      } else {
+        subEvent.address = await this.addressService.create(input.address);
+        await this.subEventRepository.update(subEvent.id, subEvent);
+      }
     }
-    return this.subEventRepository.save({ ...SubEvent, ...input });
+    return this.subEventRepository.save({ ...subEvent, ...input });
   }
 
   async delete(id: number) {
