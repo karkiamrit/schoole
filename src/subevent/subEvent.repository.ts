@@ -44,8 +44,8 @@ export class SubEventRepository extends Repository<SubEvent> {
       .leftJoin('institutions', 'i', 'i.user_id = u.id')
       .leftJoin('addresses', 'ad', 'ad.id = se.address_id');
 
-    if (whereFilter) {
-      query.andWhere(whereFilter);
+    if (whereFilter && Object.keys(whereFilter).length > 0) {
+      query.andWhere('se.name ILIKE :name', { name: `%${whereFilter.name}%` });
     }
     if (startDate) {
       query.andWhere('se.start_date >= :startDate', { startDate });
@@ -67,7 +67,7 @@ export class SubEventRepository extends Repository<SubEvent> {
     }
 
     if (types && types.length > 0) {
-      query.andWhere('se.type IN :types', { types });
+      query.andWhere('se.type IN (:...types)', { types });
     }
     if (
       registrationFeeLower !== undefined &&
