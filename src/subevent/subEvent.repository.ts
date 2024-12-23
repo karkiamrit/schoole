@@ -148,6 +148,7 @@ export class SubEventRepository extends Repository<SubEvent> {
         'ad.display_name as "display_name"',
         'se.is_online',
         'se.banner as banner',
+        'se.displayPicture as displayPicture',
         'se.participant_count as "participant_count"',
         'i.name as "organizer"',
       ])
@@ -196,6 +197,7 @@ export class SubEventRepository extends Repository<SubEvent> {
         'ad.display_name AS display_name',
         'se.is_online',
         'se.banner AS banner',
+        'se.displayPicture as displayPicture',
         'se.participant_count AS participant_count',
         'i.name AS organizer',
       ])
