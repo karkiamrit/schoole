@@ -33,6 +33,8 @@ export class SubEventResolver {
 
   @Query(() => SubEventResponse)
   async allEvents(
+    @Args('whereFilter', { type: () => GraphQLJSON, nullable: true })
+    whereFilter?: any,
     @Args('categories', { type: () => [String], nullable: true })
     categories?: string[],
     @Args('types', { type: () => [String], nullable: true }) types?: string[],
@@ -49,6 +51,7 @@ export class SubEventResolver {
     orderDirection?: 'ASC' | 'DESC',
   ): Promise<SubEventResponse> {
     return this.subEventService.getAllEvents(
+      whereFilter,
       categories,
       types,
       startDate,

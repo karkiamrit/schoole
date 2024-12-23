@@ -10,6 +10,7 @@ import { Brackets } from 'typeorm';
 @CustomRepository(SubEvent)
 export class SubEventRepository extends Repository<SubEvent> {
   async allEvent(
+    whereFilter: any,
     categories?: string[],
     types?: string[],
     startDate?: Date,
@@ -34,6 +35,7 @@ export class SubEventRepository extends Repository<SubEvent> {
         'ad.display_name AS display_name',
         'se.is_online',
         'se.banner AS banner',
+        'se.displayPicture AS displayPicture',
         'se.participant_count AS participant_count',
         'i.name AS organizer',
       ])
@@ -42,6 +44,9 @@ export class SubEventRepository extends Repository<SubEvent> {
       .leftJoin('institutions', 'i', 'i.user_id = u.id')
       .leftJoin('addresses', 'ad', 'ad.id = se.address_id');
 
+    if (whereFilter) {
+      query.andWhere(whereFilter);
+    }
     if (startDate) {
       query.andWhere('se.start_date >= :startDate', { startDate });
     }
@@ -71,7 +76,6 @@ export class SubEventRepository extends Repository<SubEvent> {
         }),
       );
     }
-
     if (
       registerationFeeLower !== undefined &&
       registerationFeeUpper !== undefined
@@ -87,21 +91,25 @@ export class SubEventRepository extends Repository<SubEvent> {
       );
     }
 
-    query.orderBy(`se.${orderBy}`, orderDirection);
+    query.orderBy(
+      `se.${orderBy || 'createdAt'}`,
+      orderDirection.toUpperCase() as 'ASC' | 'DESC',
+    );
 
-    const [results, count] = await query
+    const [data, count] = await query
       .offset((page - 1) * size)
       .limit(size)
       .getManyAndCount();
 
     // Transform the category field from a comma-separated string to an array
-    const transformedResults = results.map((result) => ({
+    const transformedResults = data.map((result: any) => ({
       ...result,
-      category: result.category
-        ? result.category.map((cat: string) => cat.trim())
-        : [],
+      category: Array.isArray(result.category)
+        ? result.category
+        : typeof result.category === 'string'
+          ? result.category.split(',').map((cat: string) => cat.trim())
+          : [],
     }));
-
     return { results: transformedResults, count };
   }
 
