@@ -30,6 +30,8 @@ services:
       - ../.env
     ports:
       - '5000:5000'
+    volumes:
+      - ./uploads:/app/uploads
 
 volumes:
   postgres_data: null
