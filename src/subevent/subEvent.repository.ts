@@ -10,12 +10,13 @@ import { Brackets } from 'typeorm';
 @CustomRepository(SubEvent)
 export class SubEventRepository extends Repository<SubEvent> {
   async allEvent(
+    whereFilter: any,
     categories?: string[],
     types?: string[],
     startDate?: Date,
     endDate?: Date,
-    registerationFeeLower?: number,
-    registerationFeeUpper?: number,
+    registrationFeeLower?: number,
+    registrationFeeUpper?: number,
     page: number = 1,
     size: number = 10,
     orderBy: string = 'participant_count',
@@ -32,8 +33,9 @@ export class SubEventRepository extends Repository<SubEvent> {
         'e.name AS event_name',
         'e.id AS event_id',
         'ad.display_name AS display_name',
-        'se.is_online',
+        'se.is_online AS is_online',
         'se.banner AS banner',
+        'se.displayPicture AS displayPicture',
         'se.participant_count AS participant_count',
         'i.name AS organizer',
       ])
@@ -42,6 +44,9 @@ export class SubEventRepository extends Repository<SubEvent> {
       .leftJoin('institutions', 'i', 'i.user_id = u.id')
       .leftJoin('addresses', 'ad', 'ad.id = se.address_id');
 
+    if (whereFilter && Object.keys(whereFilter).length > 0) {
+      query.andWhere('se.name ILIKE :name', { name: `%${whereFilter.name}%` });
+    }
     if (startDate) {
       query.andWhere('se.start_date >= :startDate', { startDate });
     }
@@ -62,47 +67,34 @@ export class SubEventRepository extends Repository<SubEvent> {
     }
 
     if (types && types.length > 0) {
-      query.andWhere(
-        new Brackets((qb) => {
-          qb.where(
-            `ARRAY(SELECT TRIM(elem) FROM UNNEST(string_to_array(se.type, ',')) AS elem) && ARRAY[:...types]`,
-            { types },
-          );
-        }),
-      );
+      query.andWhere('se.type IN (:...types)', { types });
     }
-
     if (
-      registerationFeeLower !== undefined &&
-      registerationFeeUpper !== undefined
+      registrationFeeLower !== undefined &&
+      registrationFeeUpper !== undefined
     ) {
       query.andWhere(
-        new Brackets((qb) => {
-          qb.where('se.registration_fee >= :registerationFeeLower', {
-            registerationFeeLower,
-          }).andWhere('se.registration_fee <= :registerationFeeUpper', {
-            registerationFeeUpper,
+        new Brackets((qb: any) => {
+          qb.where('se.registration_fee >= :registrationFeeLower', {
+            registrationFeeLower,
+          }).andWhere('se.registration_fee <= :registrationFeeUpper', {
+            registrationFeeUpper,
           });
         }),
       );
     }
 
-    query.orderBy(`se.${orderBy}`, orderDirection);
+    query.orderBy(
+      `se.${orderBy || 'createdAt'}`,
+      orderDirection.toUpperCase() as 'ASC' | 'DESC',
+    );
 
-    const [results, count] = await query
+    const data = await query
       .offset((page - 1) * size)
       .limit(size)
-      .getManyAndCount();
+      .getRawMany();
 
-    // Transform the category field from a comma-separated string to an array
-    const transformedResults = results.map((result) => ({
-      ...result,
-      category: result.category
-        ? result.category.map((cat: string) => cat.trim())
-        : [],
-    }));
-
-    return { results: transformedResults, count };
+    return { results: data, count: data.length };
   }
 
   async eventForYou(categories: string[]) {

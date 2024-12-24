@@ -29,6 +29,7 @@ export class SubEventService {
   }
 
   async getAllEvents(
+    whereFilter: any,
     categories?: string[],
     types?: string[],
     startDate?: Date,
@@ -40,7 +41,20 @@ export class SubEventService {
     orderBy?: string,
     orderDirection?: 'ASC' | 'DESC',
   ) {
-    return this.subEventRepository.allEvent(
+    const params: {
+      whereFilter: any;
+      categories?: string[];
+      types?: string[];
+      startDate?: Date;
+      endDate?: Date;
+      registerationFeeLower?: number;
+      registerationFeeUpper?: number;
+      page?: number;
+      size?: number;
+      orderBy?: string;
+      orderDirection?: 'ASC' | 'DESC';
+    } = {
+      whereFilter,
       categories,
       types,
       startDate,
@@ -51,6 +65,25 @@ export class SubEventService {
       size,
       orderBy,
       orderDirection,
+    };
+
+    // Filter out null or undefined values
+    const filteredParams = Object.fromEntries(
+      Object.entries(params).filter(([, v]) => v != null),
+    );
+
+    return this.subEventRepository.allEvent(
+      filteredParams.whereFilter,
+      filteredParams.categories,
+      filteredParams.types,
+      filteredParams.startDate,
+      filteredParams.endDate,
+      filteredParams.registerationFeeLower,
+      filteredParams.registerationFeeUpper,
+      filteredParams.page,
+      filteredParams.size,
+      filteredParams.orderBy,
+      filteredParams.orderDirection,
     );
   }
 
