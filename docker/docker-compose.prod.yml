@@ -2,5 +2,7 @@ services:
   app:
     build:
       target: production
+    volumes:
+      - ./uploads:/app/uploads
     environment:
       - NODE_ENV=production
