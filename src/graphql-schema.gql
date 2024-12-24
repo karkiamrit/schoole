@@ -441,7 +441,7 @@ type Payment {
 }
 
 type Query {
-  allEvents(categories: [String!], endDate: DateTime, orderBy: String, orderDirection: String, page: Float, registerationFeeLower: Float, registerationFeeUpper: Float, size: Float, startDate: DateTime, types: [String!], whereFilter: JSON): SubEventResponse!
+  allEvents(categories: [String!], endDate: DateTime, orderBy: String, orderDirection: String, page: Float, registrationFeeLower: Float, registrationFeeUpper: Float, size: Float, startDate: DateTime, types: [String!]): SubEventResponse!
   getEventForYou(interests: [String!]!): [JSON!]!
   getEventNearMe(latitude: Float!, longitude: Float!): [JSON!]!
   getManyAddresss(input: GetManyInput): GetAddressType!

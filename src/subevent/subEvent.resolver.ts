@@ -40,10 +40,10 @@ export class SubEventResolver {
     @Args('types', { type: () => [String], nullable: true }) types?: string[],
     @Args('startDate', { type: () => Date, nullable: true }) startDate?: Date,
     @Args('endDate', { type: () => Date, nullable: true }) endDate?: Date,
-    @Args('registerationFeeLower', { type: () => Number, nullable: true })
-    registerationFeeLower?: number,
-    @Args('registerationFeeUpper', { type: () => Number, nullable: true })
-    registerationFeeUpper?: number,
+    @Args('registrationFeeLower', { type: () => Number, nullable: true })
+    registrationFeeLower?: number,
+    @Args('registrationFeeUpper', { type: () => Number, nullable: true })
+    registrationFeeUpper?: number,
     @Args('page', { type: () => Number, nullable: true }) page?: number,
     @Args('size', { type: () => Number, nullable: true }) size?: number,
     @Args('orderBy', { type: () => String, nullable: true }) orderBy?: string,
@@ -56,8 +56,8 @@ export class SubEventResolver {
       types,
       startDate,
       endDate,
-      registerationFeeLower,
-      registerationFeeUpper,
+      registrationFeeLower,
+      registrationFeeUpper,
       page,
       size,
       orderBy,
