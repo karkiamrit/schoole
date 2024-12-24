@@ -47,8 +47,8 @@ export class SubEventService {
       types?: string[];
       startDate?: Date;
       endDate?: Date;
-      registerationFeeLower?: number;
-      registerationFeeUpper?: number;
+      registrationFeeLower?: number;
+      registrationFeeUpper?: number;
       page?: number;
       size?: number;
       orderBy?: string;
@@ -78,8 +78,8 @@ export class SubEventService {
       filteredParams.types,
       filteredParams.startDate,
       filteredParams.endDate,
-      filteredParams.registerationFeeLower,
-      filteredParams.registerationFeeUpper,
+      filteredParams.registrationFeeLower,
+      filteredParams.registrationFeeUpper,
       filteredParams.page,
       filteredParams.size,
       filteredParams.orderBy,
