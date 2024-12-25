@@ -30,6 +30,8 @@ export class SubEventRepository extends Repository<SubEvent> {
         'se.category AS category',
         'se.start_date AS start_date',
         'se.end_date AS end_date',
+        'se.registration_fee AS registration_fee',
+        'ad.display_name AS address',
         'e.name AS event_name',
         'e.id AS event_id',
         'ad.display_name AS display_name',
@@ -94,7 +96,9 @@ export class SubEventRepository extends Repository<SubEvent> {
       .limit(size)
       .getRawMany();
 
-    return { results: data, count: data.length };
+    const count = await query.getCount();
+
+    return { results: data, count };
   }
 
   async eventForYou(categories: string[]) {
