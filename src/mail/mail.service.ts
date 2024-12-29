@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-// import { OneRepoQuery, RepoQuery } from 'src/declare/types';
 import { MailRepository } from './mail.repository';
 import { Mail } from './entities/mail.entity';
 import { CreateMailInput, UpdateMailInput } from './inputs/mail.input';
@@ -77,7 +76,6 @@ export class MailService extends Mailer {
     let mail = await Mail.findOne({
       where: { mail_type: MailType.VERIFY_EMAIL_LINK },
     }); // Adjust this to fetch the correct mail template
-    console.log(mail, 'mail');
     if (mail == null) return false;
     mail = _.merge(mail, {
       html_content: this.resolveTemplateFields(mail.html_content, { link }),
@@ -85,5 +83,17 @@ export class MailService extends Mailer {
     });
 
     return await this.send({ to: email, mail });
+  }
+
+  async sendParticipationCofirmationEmail(email, mailData): Promise<boolean> {
+    let mail = await Mail.findOne({
+      where: { mail_type: MailType.SEND_PARTICIPANT_CONFIRMATION },
+    });
+    if (mail == null) return false;
+    mail = _.merge(mail, {
+      html_content: this.resolveTemplateFields(mail.html_content, mailData),
+      text_content: this.resolveTemplateFields(mail.text_content, mailData),
+    });
+    return await this.sendHtml({ to: email, mail });
   }
 }

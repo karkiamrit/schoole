@@ -14,6 +14,8 @@ import { SubEventsController } from './subEvent.controller';
 import { StudentService } from '@/student/student.service';
 import { StudentRepository } from '@/student/student.repository';
 import { ParticipantRepository } from '@/participant/participant.repository';
+import { MailService } from '@/mail/mail.service';
+import { MailRepository } from '@/mail/mail.repository';
 
 @Module({
   imports: [
@@ -25,6 +27,7 @@ import { ParticipantRepository } from '@/participant/participant.repository';
       UserRepository,
       StudentRepository,
       ParticipantRepository,
+      MailRepository,
     ]),
   ],
   controllers: [SubEventsController],
@@ -35,6 +38,7 @@ import { ParticipantRepository } from '@/participant/participant.repository';
     InstitutionService,
     AddressService,
     StudentService,
+    MailService,
   ],
   exports: [SubEventService],
 })

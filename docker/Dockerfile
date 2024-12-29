@@ -18,7 +18,7 @@ COPY package.json  ./
 
 # Install all dependencies including devDependencies
 RUN npm install -g pnpm && \
-    pnpm install && \
+    pnpm install --force && \
     pnpm install eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin -D
 
 COPY .eslintrc.js .

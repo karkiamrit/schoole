@@ -12,6 +12,15 @@ export class Participant {
   @PrimaryColumn()
   sub_event_id: number;
 
+  @Column({
+    type: 'varchar',
+    length: 100,
+    nullable: true,
+    name: 'registration_id',
+  })
+  @Field(() => String)
+  registrationId: string;
+
   @Column({ type: 'varchar', length: 255, nullable: true })
   @Field(() => String)
   transaction_code: string;

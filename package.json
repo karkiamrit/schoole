@@ -58,6 +58,7 @@
     "class-validator": "^0.14.0",
     "cookie-parser": "^1.4.6",
     "crypto": "^1.0.1",
+    "date-fns": "^4.1.0",
     "decode": "^0.3.0",
     "encode": "^1.0.1",
     "export": "^0.1.337",

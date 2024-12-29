@@ -6,13 +6,16 @@ import {
   CreateSubEventInput,
   UpdateSubEventInput,
 } from './inputs/subEvent.input';
-
+import { ConfigService } from '@nestjs/config';
 import { FindOneOptions, In } from 'typeorm';
 import { User } from '@/user/entities/user.entity';
 import { EventService } from '@/event/event.service';
 import { AddressService } from '@/address/address.service';
 import { StudentRepository } from '@/student/student.repository';
 import { ParticipantRepository } from '@/participant/participant.repository';
+import { MailService } from '@/mail/mail.service';
+import { format } from 'date-fns';
+import { generateRegistrationId } from '@/subevent/subEvent.utils';
 
 @Injectable()
 export class SubEventService {
@@ -22,6 +25,8 @@ export class SubEventService {
     private readonly addressService: AddressService,
     private readonly studentRepository: StudentRepository,
     private readonly participantRepository: ParticipantRepository,
+    private readonly mailService: MailService,
+    private readonly configService: ConfigService,
   ) {}
 
   getMany(qs?: RepoQuery<SubEvent>, query?: string) {
@@ -159,32 +164,73 @@ export class SubEventService {
     }
 
     // Add the student to the SubEvent's participants
-    subEvent.participants.push(user.student);
+    // subEvent.participants.push(user.student);
+
+    const registrationId = generateRegistrationId({
+      length: 12,
+      includeNumbers: true,
+      includeUppercase: true,
+      includeLowercase: false,
+      prefix: 'EVENT',
+      includeYear: true,
+    });
+    const participationData = {
+      student_id: user.student.id,
+      sub_event_id: subEvent.id,
+      registrationId: registrationId,
+      transaction_code: options?.transaction_code,
+      transaction_uuid: options?.transaction_uuid,
+      status: options?.status,
+      total_amount: options?.total_amount,
+      payment_method: options?.payment_method,
+    };
 
     subEvent.participant_count += 1;
     // Save the updated SubEvent
     await this.subEventRepository.save(subEvent);
+    const participateInstance = await this.participantRepository.save({
+      ...participationData,
+    });
 
-    if (options) {
-      const participation = await this.participantRepository.findOne({
-        where: {
-          student_id: user.student.id,
-          sub_event_id: subEvent.id,
-        },
-      });
-      const optionData = {
-        transaction_code: options.transaction_code,
-        transaction_uuid: options.transaction_uuid,
-        status: options.status,
-        total_amount: options.total_amount,
-        payment_method: options.payment_method,
-      };
-      await this.participantRepository.save({
-        ...participation,
-        ...optionData,
-      });
-    }
-
+    // if (options) {
+    //   const participation = await this.participantRepository.findOne({
+    //     where: {
+    //       student_id: user.student.id,
+    //       sub_event_id: subEvent.id,
+    //     },
+    //   });
+    //   const optionData = {
+    //     transaction_code: options.transaction_code,
+    //     transaction_uuid: options.transaction_uuid,
+    //     status: options.status,
+    //     total_amount: options.total_amount,
+    //     payment_method: options.payment_method,
+    //   };
+    //   participateInstance  = await this.participantRepository.save({
+    //     ...participation,
+    //     ...optionData,
+    //   });
+    // }
+    const eventDetailUrl = `${this.configService.get<string>('ACHIVEE_ROOT_URL')}/events/${subEvent.id}`;
+    const mailData = {
+      participantName: user?.student.first_name ?? 'User',
+      eventName: subEvent.name,
+      eventDate: format(subEvent.start_date, 'do MMMM, yyyy'),
+      eventTime: format(subEvent.start_date, 'hh:mm aa'),
+      eventLocation: subEvent?.address?.display_name ?? 'Online',
+      registrationId: participateInstance?.registrationId,
+      eventDetailsUrl: eventDetailUrl,
+      supportEmail: 'support@achivee.com',
+      organizationName: 'Achivee',
+      participantEmail: user.email,
+      organizationAddress: 'Kathmandu',
+      unsubscribeUrl: 'https://achivee.com',
+    };
+    console.log(mailData);
+    await this.mailService.sendParticipationCofirmationEmail(
+      user.email,
+      mailData,
+    );
     return { message: 'Successfully registered for the SubEvent' };
   }
 

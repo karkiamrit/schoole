@@ -48,25 +48,36 @@ export class Mailer {
       to: [to],
       subject: mail.subject,
       text_body: mail.text_content,
-      // html: mail.html_content,
     };
 
     // const transporter = createTransport(this.emailConfig);
 
     try {
       // return (await transporter.sendMail(mailOptions)) ? true : false;
-      return !!(await this.sendMailSMTPTOGO(mailOptions));
+      const body = JSON.stringify(mailOptions);
+      return !!(await this.sendMailSMTPTOGO(body));
     } catch (err) {
       return false;
     }
   }
 
-  private async sendMailSMTPTOGO({
-    sender,
-    to,
-    subject,
-    text_body,
-  }: MailArgsSMTP2GO): Promise<boolean> {
+  async sendHtml({ to, mail }: EmailArgs): Promise<boolean> {
+    const mailOptions: SendMailOptions = {
+      sender: this.from,
+      to: [to],
+      subject: mail.subject,
+      html_body: mail.html_content,
+    };
+    try {
+      // return (await transporter.sendMail(mailOptions)) ? true : false;
+      const body = JSON.stringify(mailOptions);
+      return !!(await this.sendMailSMTPTOGO(body));
+    } catch (err) {
+      return false;
+    }
+  }
+
+  private async sendMailSMTPTOGO(body: string): Promise<boolean> {
     const response = await fetch('https://api.smtp2go.com/v3/email/send', {
       method: 'POST',
       headers: {
@@ -74,12 +85,7 @@ export class Mailer {
         'X-Smtp2go-Api-Key': this.configService.get<string>('SMTP2GO_API_KEY'),
         accept: 'application/json',
       },
-      body: JSON.stringify({
-        sender: sender,
-        to: to,
-        subject: subject,
-        text_body: text_body,
-      }),
+      body: body,
     });
     if (response.ok) {
       console.log(response.ok, 'after sending email to');

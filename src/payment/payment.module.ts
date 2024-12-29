@@ -14,6 +14,8 @@ import { InstitutionService } from '@/institution/institution.service';
 import { AddressRepository } from '@/address/address.repository';
 import { InstitutionRepository } from '@/institution/institution.repository';
 import { ParticipantRepository } from '@/participant/participant.repository';
+import { MailService } from '@/mail/mail.service';
+import { MailRepository } from '@/mail/mail.repository';
 
 @Module({
   imports: [
@@ -25,6 +27,7 @@ import { ParticipantRepository } from '@/participant/participant.repository';
       AddressRepository,
       InstitutionRepository,
       ParticipantRepository,
+      MailRepository,
     ]),
   ],
   providers: [
@@ -34,6 +37,7 @@ import { ParticipantRepository } from '@/participant/participant.repository';
     EventService,
     AddressService,
     InstitutionService,
+    MailService,
   ],
   controllers: [PaymentController],
   exports: [PaymentService],
