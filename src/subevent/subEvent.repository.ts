@@ -112,8 +112,9 @@ export class SubEventRepository extends Repository<SubEvent> {
         'e.name as "event_name"',
         'e.id as "event_id"',
         'ad.display_name as "display_name"',
-        'se.is_online',
+        'se.is_online as is_online',
         'se.banner as banner',
+        'se.displayPicture as "displayPicture"',
         'se.participant_count as "participant_count"',
         'i.name as "organizer"',
       ])
@@ -132,20 +133,20 @@ export class SubEventRepository extends Repository<SubEvent> {
       .limit(5);
     const withoutInterestQuery = this.createQueryBuilder('se')
       .select([
-        'se.id as id',
-        'se.name as name',
-        'se.type as type',
-        'se.category as category',
-        'se.start_date as "start_date"',
-        'se.end_date as "end_date"',
-        'e.name as "event_name"',
-        'e.id as "event_id"',
-        'ad.display_name as "display_name"',
-        'se.is_online',
-        'se.banner as banner',
-        'se.displayPicture as displayPicture',
-        'se.participant_count as "participant_count"',
-        'i.name as "organizer"',
+        'se.id AS id',
+        'se.name AS name',
+        'se.type AS type',
+        'se.category AS category',
+        'se.start_date AS "start_date"',
+        'se.end_date AS "end_date"',
+        'e.name AS "event_name"',
+        'e.id AS "event_id"',
+        'ad.display_name AS "display_name"',
+        'se.is_online AS is_online',
+        'se.banner AS banner',
+        'se.displayPicture AS "displayPicture"',
+        'se.participant_count As "participant_count"',
+        'i.name AS "organizer"',
       ])
       .innerJoin(Event, 'e', 'se.event_id = e.id')
       .innerJoin(User, 'u', 'se.created_by =  u.id')
@@ -190,9 +191,9 @@ export class SubEventRepository extends Repository<SubEvent> {
         'e.name AS event_name',
         'e.id AS event_id',
         'ad.display_name AS display_name',
-        'se.is_online',
+        'se.is_online AS is_online',
         'se.banner AS banner',
-        'se.displayPicture as displayPicture',
+        'se.displayPicture AS 1111"displayPicture"',
         'se.participant_count AS participant_count',
         'i.name AS organizer',
       ])
