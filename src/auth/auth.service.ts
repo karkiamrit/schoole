@@ -20,6 +20,8 @@ import { TokenService } from '@/token/token.service';
 import { createClient } from 'redis';
 import { ConfigService } from '@nestjs/config';
 import { InstitutionService } from '@/institution/institution.service';
+import { Role } from '@/user/inputs/enums/role.enum';
+import { UserType } from '@/user/inputs/enums/usertype.enum';
 
 @Injectable()
 export class AuthService {
@@ -644,7 +646,7 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new ApolloError("User doesn't exist", 'USER_NOT_FOUND', {
+      throw new ApolloError('Invalid User', 'USER_NOT_FOUND', {
         statusCode: 404,
       });
     }
@@ -653,18 +655,22 @@ export class AuthService {
         statusCode: 403,
       });
     }
+
     if (!user.institution) {
       throw new ApolloError('Invalid User', 'USER_NOT_FOUND', {
         statusCode: 404,
       });
     }
 
-    const hasValidPassword = await bcrypt.compare(
-      input.password,
-      user.password,
-    );
+    if (user.user_type !== UserType.institution || user.role !== Role.Admin) {
+      throw new ApolloError('Invalid User', 'USER_NOT_FOUND', {
+        statusCode: 404,
+      });
+    }
+
+    const hasValidPassword = bcrypt.compare(input.password, user.password);
     if (!hasValidPassword) {
-      throw new ApolloError('Invalid Password', 'INVALID_PASSWORD', {
+      throw new ApolloError('Invalid User', 'INVALID_PASSWORD', {
         statusCode: 403,
       });
     }

@@ -15,6 +15,8 @@ import { CurrentUser } from '@/modules/decorators/user.decorator';
 import { ApolloError } from 'apollo-server-core';
 import { StudentService } from '@/student/student.service';
 import { SubEvent } from '@/subevent/entities/subEvent.entity';
+import { Role } from '@/user/inputs/enums/role.enum';
+import { UserType } from '@/user/inputs/enums/usertype.enum';
 
 @Resolver()
 export class UserResolver {
@@ -84,7 +86,36 @@ export class UserResolver {
   @UseGuards(new GraphqlPassportAuthGuard('User'))
   getMe(@CurrentUser() user: User) {
     if (!user) {
-      return null;
+      throw new ApolloError('Unauthorized access', 'FORBIDDEN', {
+        statusCode: 403,
+      });
+    }
+    if (
+      (user && user.role !== Role.user) ||
+      user.user_type !== UserType.student
+    ) {
+      throw new ApolloError('Unauthorized access', 'FORBIDDEN', {
+        statusCode: 403,
+      });
+    }
+    return user;
+  }
+
+  @Query(() => User)
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
+  getAdminMe(@CurrentUser() user: User) {
+    if (!user) {
+      throw new ApolloError('Unauthorized access', 'FORBIDDEN', {
+        statusCode: 403,
+      });
+    }
+    if (
+      (user && user.role !== Role.Admin) ||
+      user.user_type !== UserType.institution
+    ) {
+      throw new ApolloError('Unauthorized access', 'FORBIDDEN', {
+        statusCode: 403,
+      });
     }
     return user;
   }

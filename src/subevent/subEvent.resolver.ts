@@ -92,7 +92,7 @@ export class SubEventResolver {
   }
 
   @Mutation(() => SubEvent)
-  @UseGuards(new GraphqlPassportAuthGuard('User'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   createSubEvent(
     @Args('input') input: CreateSubEventInput,
     @Args('eventID') eventID: number,
@@ -110,7 +110,7 @@ export class SubEventResolver {
   }
 
   @Mutation(() => SubEvent)
-  @UseGuards(new GraphqlPassportAuthGuard('User'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   updateSubEvent(
     @Args('id') id: number,
     @Args('input') input: UpdateSubEventInput,
@@ -146,7 +146,7 @@ export class SubEventResolver {
   }
 
   @Mutation(() => GraphQLJSON)
-  @UseGuards(new GraphqlPassportAuthGuard('User'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   async participateMany(
     @Args({ name: 'subEventId', type: () => Int }) subEventId: number,
     @Args({ name: 'studentIds', type: () => [Int] }) studentIds: number[],

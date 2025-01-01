@@ -4,6 +4,7 @@ import {
   IsStrongPassword,
   MaxLength,
   MinLength,
+  IsEmail,
 } from 'class-validator';
 import { ForgotPasswordMethod } from '@/auth/auth.enums';
 
@@ -24,12 +25,21 @@ export class SignUpInput {
 }
 
 @InputType()
-export class SignInInput extends SignUpInput {}
+export class SignInInput {
+  @Field(() => String, { nullable: false })
+  @IsNotEmpty()
+  phone: string;
+
+  @Field()
+  @IsNotEmpty()
+  password: string;
+}
 
 @InputType()
 export class SignUpWithEmailInput {
   @Field(() => String, { nullable: false })
   @IsNotEmpty()
+  @IsEmail({}, { message: 'Please provide a valid email address' })
   email: string;
 
   @Field()
@@ -41,7 +51,16 @@ export class SignUpWithEmailInput {
 }
 
 @InputType()
-export class SignInWithEmailInput extends SignUpWithEmailInput {}
+export class SignInWithEmailInput {
+  @Field(() => String, { nullable: false })
+  @IsNotEmpty()
+  @IsEmail({}, { message: 'Please provide a valid email address' })
+  email: string;
+
+  @Field()
+  @IsNotEmpty()
+  password: string;
+}
 
 @InputType()
 export class ForgotPasswordInput {

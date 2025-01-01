@@ -37,7 +37,7 @@ export class EventResolver {
   }
 
   @Mutation(() => Event)
-  @UseGuards(new GraphqlPassportAuthGuard('User'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   async createEventWithSubEvents(
     @Args('input') input: CreateEventWithSubEventsInput,
     @CurrentUser() user: User,
@@ -52,7 +52,7 @@ export class EventResolver {
   }
 
   @Mutation(() => Event)
-  @UseGuards(new GraphqlPassportAuthGuard('User'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   createEventByInstitution(
     @Args('input') input: CreateEventInput,
     @CurrentUser() user: User,
@@ -70,7 +70,7 @@ export class EventResolver {
   }
 
   @Mutation(() => Event)
-  @UseGuards(new GraphqlPassportAuthGuard('User'))
+  @UseGuards(new GraphqlPassportAuthGuard('Admin'))
   updateEvent(@Args('id') id: number, @Args('input') input: UpdateEventInput) {
     return this.eventService.update(id, input);
   }
