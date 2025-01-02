@@ -37,8 +37,7 @@ export class SubEventService {
     whereFilter: any,
     categories?: string[],
     types?: string[],
-    startDate?: Date,
-    endDate?: Date,
+    status?: string[],
     registrationFeeLower?: number,
     registrationFeeUpper?: number,
     page?: number,
@@ -50,8 +49,7 @@ export class SubEventService {
       whereFilter: any;
       categories?: string[];
       types?: string[];
-      startDate?: Date;
-      endDate?: Date;
+      status?: string[];
       registrationFeeLower?: number;
       registrationFeeUpper?: number;
       page?: number;
@@ -62,8 +60,7 @@ export class SubEventService {
       whereFilter,
       categories,
       types,
-      startDate,
-      endDate,
+      status,
       registrationFeeLower,
       registrationFeeUpper,
       page,
@@ -81,8 +78,7 @@ export class SubEventService {
       filteredParams.whereFilter,
       filteredParams.categories,
       filteredParams.types,
-      filteredParams.startDate,
-      filteredParams.endDate,
+      filteredParams.status,
       filteredParams.registrationFeeLower,
       filteredParams.registrationFeeUpper,
       filteredParams.page,

@@ -41,3 +41,4 @@ uploads/
 
 .pnpm-store
 pnpm-lock.yaml
+load_test.js

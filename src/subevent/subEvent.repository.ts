@@ -13,8 +13,7 @@ export class SubEventRepository extends Repository<SubEvent> {
     whereFilter: any,
     categories?: string[],
     types?: string[],
-    startDate?: Date,
-    endDate?: Date,
+    status?: string[],
     registrationFeeLower?: number,
     registrationFeeUpper?: number,
     page: number = 1,
@@ -48,14 +47,21 @@ export class SubEventRepository extends Repository<SubEvent> {
     if (whereFilter && Object.keys(whereFilter).length > 0) {
       query.andWhere('se.name ILIKE :name', { name: `%${whereFilter.name}%` });
     }
-    if (startDate) {
-      query.andWhere('se.start_date >= :startDate', { startDate });
-    }
 
-    if (endDate) {
-      query.andWhere('se.end_date <= :endDate', { endDate });
-    }
-
+    status.forEach((s) => {
+      switch (s) {
+        case 'upcoming':
+          query.andWhere('se.start_date >= :now', { now: new Date() });
+          break;
+        case 'open':
+          query.andWhere('se.start_date <= :now', { now: new Date() });
+          query.andWhere('se.end_date >= :now', { now: new Date() });
+          break;
+        case 'ended':
+          query.andWhere('se.end_date < :now', { now: new Date() });
+          break;
+      }
+    });
     if (categories && categories.length > 0) {
       query.andWhere(
         new Brackets((qb) => {

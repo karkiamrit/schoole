@@ -38,8 +38,7 @@ export class SubEventResolver {
     @Args('categories', { type: () => [String], nullable: true })
     categories?: string[],
     @Args('types', { type: () => [String], nullable: true }) types?: string[],
-    @Args('startDate', { type: () => Date, nullable: true }) startDate?: Date,
-    @Args('endDate', { type: () => Date, nullable: true }) endDate?: Date,
+    @Args('status', { type: () => [String], nullable: true }) status?: string[],
     @Args('registrationFeeLower', { type: () => Number, nullable: true })
     registrationFeeLower?: number,
     @Args('registrationFeeUpper', { type: () => Number, nullable: true })
@@ -54,8 +53,7 @@ export class SubEventResolver {
       whereFilter,
       categories,
       types,
-      startDate,
-      endDate,
+      status,
       registrationFeeLower,
       registrationFeeUpper,
       page,
