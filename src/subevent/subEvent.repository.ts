@@ -21,6 +21,7 @@ export class SubEventRepository extends Repository<SubEvent> {
     orderBy: string = 'participant_count',
     orderDirection: 'ASC' | 'DESC' = 'DESC',
   ) {
+    status = status.length > 0 ? status : ['Upcoming', 'Open'];
     const query = this.createQueryBuilder('se')
       .select([
         'se.id AS id',
@@ -47,21 +48,29 @@ export class SubEventRepository extends Repository<SubEvent> {
     if (whereFilter && Object.keys(whereFilter).length > 0) {
       query.andWhere('se.name ILIKE :name', { name: `%${whereFilter.name}%` });
     }
+    query.andWhere(
+      new Brackets((qb) => {
+        status.forEach((s) => {
+          switch (s) {
+            case 'Upcoming':
+              qb.orWhere('se.start_date >= :now', { now: new Date() });
+              break;
+            case 'Open':
+              qb.orWhere(
+                new Brackets((q) => {
+                  q.andWhere('se.start_date <= :now', { now: new Date() });
+                  q.andWhere('se.end_date >= :now', { now: new Date() });
+                }),
+              );
+              break;
+            case 'Ended':
+              qb.orWhere('se.end_date < :now', { now: new Date() });
+              break;
+          }
+        });
+      }),
+    );
 
-    status.forEach((s) => {
-      switch (s) {
-        case 'upcoming':
-          query.andWhere('se.start_date >= :now', { now: new Date() });
-          break;
-        case 'open':
-          query.andWhere('se.start_date <= :now', { now: new Date() });
-          query.andWhere('se.end_date >= :now', { now: new Date() });
-          break;
-        case 'ended':
-          query.andWhere('se.end_date < :now', { now: new Date() });
-          break;
-      }
-    });
     if (categories && categories.length > 0) {
       query.andWhere(
         new Brackets((qb) => {
