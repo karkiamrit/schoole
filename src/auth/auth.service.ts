@@ -151,6 +151,15 @@ export class AuthService {
         statusCode: 404,
       });
     }
+    if (
+      (user && user.role !== Role.user) ||
+      user.user_type !== UserType.student
+    ) {
+      throw new ApolloError("User doesn't exist", 'USER_NOT_FOUND', {
+        statusCode: 403,
+      });
+    }
+
     if (user.email_verified === false) {
       throw new ApolloError('Email not verified', 'EMAIL_NOT_VERIFIED', {
         statusCode: 403,
