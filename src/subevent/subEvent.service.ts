@@ -151,6 +151,10 @@ export class SubEventService {
       throw new Error('Event not found!!');
     }
 
+    if (subEvent.start_date < new Date()) {
+      throw new Error('This event has been archived');
+    }
+
     const isAlreadyParticipating = subEvent.participants.some(
       (participant) => participant.id === user.student.id,
     );
