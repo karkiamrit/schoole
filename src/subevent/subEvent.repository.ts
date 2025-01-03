@@ -46,7 +46,7 @@ export class SubEventRepository extends Repository<SubEvent> {
       .leftJoin('addresses', 'ad', 'ad.id = se.address_id');
 
     if (whereFilter && Object.keys(whereFilter).length > 0) {
-      query.andWhere('se.name ILIKE :name', { name: `%${whereFilter.name}%` });
+      query.orWhere('se.name ILIKE :name', { name: `%${whereFilter.name}%` });
     }
     query.andWhere(
       new Brackets((qb) => {
